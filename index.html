@@ -2,207 +2,63 @@
 <html>
     <head>
         <title>
-            Splash Page
+            Eli Jordan - home
         </title>
-        <style type="text/css">
-          .chessboard {
-          width: 640px;
-          height: 640px;
-          margin: 20px;
-          border: 3px solid #333;
-          }
-          .black {
-          width: 80px;
-          height: 80px;
-          background-color: rgb(99, 76, 41);
-          font-size:50px;
-          text-align:center;
-          display: table-cell;
-          vertical-align:middle;
-          }
-          .white {
-          width: 80px;
-          height: 80px;
-          background-color: #fff;
-          font-size:50px;
-          text-align:center;
-          display: table-cell;
-          vertical-align:middle;
-          }
-          .divTable
-    {
-        display:  table;
-        width:auto;
-        background-color:#fff;
-        border:1px solid  #fff;
-        border-spacing:5px;/*cellspacing:poor IE support for  this*/
-       /* border-collapse:separate;*/
-    }
-
-    .divRow
-    {
-       display:table-row;
-       width:auto;
-    }
-
-    .divCell
-    {
-        float:left;/*fix for  buggy browsers*/
-        display:table-cell;
-        width:200px;
-        background-color:#fff;
-        padding-right:0%;
-    }
-        </style>
+        <link href="css/styles.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100&family=Dancing+Script:wght@500&family=Fjalla+One&family=Lora&family=Montserrat:wght@700&family=Oswald&family=Raleway:wght@700&display=swap" rel="stylesheet">
+<style>
+h1{
+    font-family: 'Fjalla One', sans-serif;
+}
+h2{
+    font-family: 'Dancing Script', cursive;
+}
+h3{
+    font-family: 'Catamaran', sans-serif;
+}
+h4{
+    font-family: 'Raleway', sans-serif;
+}
+h5{
+    font-family: 'Oswald', sans-serif;
+}
+h6{
+    font-family: 'Montserrat', sans-serif;
+}
+p{
+    font-family: 'Lora', serif;
+}
+</style>
     </head>
-            <td><h1>Assignments</h1></td>
-            <hr>
-            <!--Nav Tag! Talk about it-->
+  <body>
+  <div class="grid-container" style="background-color: transparent;margin-bottom:25px">
+    <div class="grid-sidebar">
+        <div class="grid-item-head">
+            <h1 style="text-align: center;">
+                <img src="img/me.jpg" style="border-radius: 50%;width: 150px;height: 150px;">
+                About</h1>
+        </div>
+        <div>
             <nav>
-            <a href = "/assignment1.html">Assignment 1</a>
-            <a href = "/assignment2.html">Assignment 2</a>
-            <a href = "/assignment3.html">Assignment 3</a>
-            <a href="/assignment5.html">Assignment 5</a>
-            </nav> 
-            <p><em>I changed the anchors to be included in a <a href="https://www.w3schools.com/tags/tag_nav.asp">nav tag.</a></em></p>
-            <hr>
-            <div>
-            <h2>Challenge 2: Build a Chessboard</h2>
-
-                <table class="chessboard">
-                <tbody>
-                  <tr>
-                    <!--Row 1-->
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black">&#9814;</td>
-                    <td class="white">&#9812;</td>
-                    <td class="black">&#9814;</td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                  </tr>
-                  <tr>
-                    <!--Row 2-->
-                    <td class="white"></td>
-                    <td class="black">&#9817;</td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white">&#9816;</td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black">&#9817;</td>
-                  </tr>
-                  <tr>
-                    <!--Row 3-->
-                    <td class="black"></td>
-                    <td class="white">&#9815;</td>
-                    <td class="black">&#9817;</td>
-                    <td class="white">&#9819;</td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black">&#9817;</td>
-                    <td class="white"></td>
-                  </tr>
-                  <tr>
-                    <!--Row 4-->
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black">&#9817;</td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                  </tr>
-                  <tr>
-                    <!--Row 5-->
-                    <td class="black">&#9815;</td>
-                    <td class="white">&#9823;</td>
-                    <td class="black"></td>
-                    <td class="white">&#9823;</td>
-                    <td class="black"></td>
-                    <td class="white">&#9823;</td>
-                    <td class="black">&#9823;</td>
-                    <td class="white"></td>
-                  </tr>
-                  <tr>
-                    <!--Row 6-->
-                    <td class="white">&#9818;</td>
-                    <td class="black"></td>
-                    <td class="white">&#9822;</td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black">&#9823;</td>
-                  </tr>
-                  <tr>
-                    <!--Row 7-->
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                  </tr>
-                  <tr>
-                    <!--Row 8-->
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                    <td class="white">&#9820;</td>
-                    <td class="black"></td>
-                    <td class="white"></td>
-                    <td class="black"></td>
-                  </tr>
-                </tbody>
-                </table>
-                <form>
-                  <label for="PGN"></label>
-                </form>
-                </div>
-                <hr>
-                <div>
-                <h2>Challenge 3: Create a Form</h2>
-                <form style="padding:3%">
-                  <p><em>I added a padding style to the form to space out the elements.</em></p>
-                    <label for="fname">First Name: </label>
-                    <input type="text" id="fname">
-                    <label for= "lname">Last Name: </label>
-                    <input type="text" id="lname">
-                    <label for="water">How much water do your drink daily?</label>
-                    <input type="range" id="water">
-                </form>
-                <p><em>I didn't have anything to change, forms are pretty straightforward. I'm still looking for how to use the user input.</em></p>
-                </div>
-                <hr>
-                <div>
-                  <h2><a href="#">ATLAS Institute | University of Colorado Boulder</a></h2>
-                  <p>ATLAS is an interdisciplinary institute for radical creativity and invention. We transform ingenious ideas into reality through research</p>
-                  <div class="divTable">
-                    <div class = "divRow">
-                      <div class="divCell"><h3><a href="#">Graduate Degrees in Creative Technology and Design</a></h3><p>Radically interdisciplinary, ATLAS graduate programs nurture</p></div>
-                      <div class="divCell"><h3><a href="#">Faculty</a></h3><p>Lecturer, Co-chair Board of Directors</p></div>
-                    </div>
-                    <div class="divRow">
-                      <div class = "divCell"><h3><a href="#">Academics</a></h3><p>Granted through the college of engineering and applied science</p></div>
-                      <div class = "divCell"><h3><a href="#">About</a></h3><p>ATLAS is an interdisciplinary institute for radical creativity and.</p></div>
-                    </div>
-
-                  </div>
-                  <h2><a href="#">ATLAS Institute | Innovation & Entrepreneurship - University of Colorado Boulder</a></h2>
-                  <p>Resource that sponsors diverse interdisciplinary academic and research programs, challenging community members to explore, innovate, create and design well ...</p>
-                  <h2><a href="#">ATLAS Institute at CU Boulder Employees, Location, Alumni</a></h2>
-                  <p>ATLAS is an interdisciplinary institute for radical creativity and invention where ingenious ideas become reality. · ATLAS Institute at CU Boulder. View all open ...</p>
-                </div>
-                <hr>
-<div>
-<h2>Challenge 5: Accessibility Concerns</h2>
-<p>Most of the elements in HTML have accessibility built into it like img. Some of the <b>text</b> elements like for the chess pieces or some links are technically human readable, but not a language, so it would be hard for a machine to read to a person. A screen reader might have issues determining what order to read the screen in for some webpage layouts that isn't necessarily meant to be read left-right, top-bottom.</p>
-<p>I didn't change anything in this section.</p>
-</div>
+                <a href="./index.html"><h3>Home</h3></a>
+                <a href="./work.html"><h3>Work</h3></a>
+                <a href="./apps.html"><h3>Apps</h3></a>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="grid-container" style="display:block;">
+        <h2>Welcome!</h2>
+        <p>I am a Creative Technology and Design student in the 
+            <a href="https://www.colorado.edu/atlas/">ATLAS Institute</a>
+            at CU Boulder with a minor in Computer Science. </p>
+    </div>
+  </div >
+  <div class="grid-container">
+    <h2>Contact Me</h2>
+    <form></form>
+  </div>
+  </body>
 </html>
