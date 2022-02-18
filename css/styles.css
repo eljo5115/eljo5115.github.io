@@ -4,11 +4,12 @@
 .PLANTA-Web-Design-3-hex { color: #F2D0A7; }
 .PLANTA-Web-Design-4-hex { color: #8C6542; }
 .PLANTA-Web-Design-5-hex { color: #0D0D0D; }
-
+/*elements*/
 img{
     max-width: 300px;
     max-height:300px;
     border-radius: inherit;
+    margin:auto;
 }
 body{
     background: repeating-linear-gradient(
@@ -25,10 +26,28 @@ nav{
 }
 a{
     color:#66A3D9;
+    text-decoration: none;
 }
 a:hover{
     color:#8C6542;
 }
+h3:hover{
+  color:#8C6542
+}
+hr{
+  border-top: 15px solid ;
+  padding:0;
+  
+  margin:0;
+}
+form{
+  display:flex;
+  text-align: center;
+  flex-direction: column;
+  margin:auto;
+  flex-grow:inherit;
+}
+/*classes*/
 .grid-container {
     background-color: ivory;
     border-color:#8C6542;
@@ -40,12 +59,13 @@ a:hover{
     border-radius: 25px;
   }
 .grid-item {
-    color:#455931;
-    border: 0px solid  ;
-    padding: 5px;
-    font-size: 30px;
+    display:block;
+    color:#8C6542;
+    font-size: inherit;
+    padding:10px;
     margin:15px;
-    text-align: center;
+    border: solid 5px;
+    text-align: left;
     border-radius: 50px;
     background-color: ivory;
   }
@@ -70,10 +90,30 @@ a:hover{
     grid-row-end: 3;
     width: 200px;
   }
-hr{
-    border-top: 15px solid ;
-    padding:0;
-    
-    margin:0;
+
+.flex-grid{
+  background-color: ivory;
+  border-color:#8C6542;
+  border-radius: 50px;
+  display:flex;
+  flex-direction:row;
+  flex-grow: 1;
+  align-items: baseline;
+  
+}
+
+/*ids*/
+#invisible-container{
+  background-color: transparent;
+  border: 0;
+}
+#pictures{
+ margin:5%;
+}
+/*unused*/
+.flex-container{
+flex-basis:content;
+align-self:right;
+
 }
 
