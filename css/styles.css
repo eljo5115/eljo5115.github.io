@@ -117,4 +117,28 @@ flex-basis:content;
 align-self:right;
 
 }
-
+h1{
+  font-family: 'Fjalla One', sans-serif;
+}
+h2{
+  font-family: 'Dancing Script', cursive;
+  color:#455931;
+}
+h3{
+  font-family: 'Catamaran', sans-serif;
+  color:#455931 
+  
+}
+h4{
+  font-family: 'Raleway', sans-serif;
+}
+h5{
+  font-family: 'Oswald', sans-serif;
+}
+h6{
+  font-family: 'Montserrat', sans-serif;
+}
+p{
+  font-family: 'Lora', serif;
+  color:#455931;
+}
