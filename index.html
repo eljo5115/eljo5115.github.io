@@ -4,7 +4,9 @@
         <title>
             Eli Jordan - home
         </title>
-        <link href="css/styles.css" rel="stylesheet">
+        <link href="css/desktop.css" media="screen and (min-width:1001px)" rel="stylesheet">
+        <link href="css/mobile.css" media="screen and (max-width:1000px)" rel="stylesheet">
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100&family=Dancing+Script:wght@500&family=Fjalla+One&family=Lora&family=Montserrat:wght@700&family=Oswald&family=Raleway:wght@700&display=swap" rel="stylesheet">
@@ -16,10 +18,11 @@
     <div class="grid-sidebar">
         <div class="grid-item-head">
             <h1 style="text-align: center;">
-                <img src="img/me.jpg" style="border-radius: 50%;width: 150px;height: 150px;">
-                Home</h1>
+                <img src="img/me.jpg" style="border-radius: 50%;max-width: 100%;max-height: 100%;">
+                Home
+            </h1>
         </div>
-        <div>
+        <div class="grid-item" style="background-color: transparent; border:0;">
             <nav>
                 <a href="./index.html"><h3>Home</h3></a>
                 <a href="./work.html"><h3>Work</h3></a>
@@ -30,18 +33,17 @@
         </div>
     </div>
     <div class="grid-item" id="invisible-container">
-    <div class="grid-item">
-        <h3>Eli is a <s>front-end</s>, <s>back-end</s>, do anything you need developer</h3>
-        <p>My favorite project so far is the <a href="https://www.apps.elijordan.me/KATI">Kraken Automated Trading Application.</a> 
-        An algorithmic trading bot I designed to
-        trade cryptocurrencies using the Kraken Exchange API.</p>
-    </div>
-    <div class="grid-item" id="pictures">
-        <!--Template Pictures-->
-        <h2>Latest Post</h2>
-        <p>this should automatically pull from the blog page. use your imagination this time</p>
-        <p>youtube video embed, any sort of progress posts</p>
-    </div>
+        <div class="grid-item">
+            <h1>Eli is a full-stack developer living in Denver</h1>
+            <p>My favorite project so far is the <a href="https://www.apps.elijordan.me/KATI">Kraken Automated Trading Application.</a> 
+            An algorithmic trading bot I designed to
+            trade cryptocurrencies using the Kraken Exchange API.</p>
+        </div>
+        <div class="grid-item" id="pictures">
+            <!--Template Pictures-->
+            <h2>Latest Post</h2>
+            <iframe src="https://dozencrust.wordpress.com/2021/12/10/bitcoin-trading-bot-update/"></iframe>
+        </div>
     </div>
   </div >
 
