@@ -33,7 +33,10 @@ nav{
 a{
     color:#66A3D9;
     text-decoration: none;
+    margin:auto;
+    transition: color 2s;
 }
+
 a:hover{
     color:#8C6542;
 }
@@ -62,6 +65,7 @@ form{
     padding: 10px;
     margin-top:100px;
     border-radius: 25px;
+    background-color: transparent;
   }
 .grid-item {
     display:block;
@@ -84,7 +88,7 @@ form{
     display:flex;
     flex-flow: row wrap;
     color:#455931;
-    border: 5px solid  ;
+    border: 5px solid;
     padding: 0px;
     font-size: 30px;
     margin:0px;
@@ -107,7 +111,11 @@ form{
   align-items: baseline;
   
 }
-
+.picture-display{
+  display: flex;
+  flex-flow: row wrap;
+  align-content: left;
+}
 /*ids*/
 #invisible-container{
   background-color: transparent;
@@ -115,6 +123,12 @@ form{
 }
 #pictures{
  margin:5%;
+}
+#nav-container{
+  text-align: center;
+}
+#bottom-nav{
+  text-align: center;
 }
 /*unused*/
 .flex-container{

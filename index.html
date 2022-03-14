@@ -11,8 +11,8 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100&family=Dancing+Script:wght@500&family=Fjalla+One&family=Lora&family=Montserrat:wght@700&family=Oswald&family=Raleway:wght@700&display=swap" rel="stylesheet">
 
-    </head>
-  <body>
+</head>
+<body>
   <div class="grid-container" style="background-color: transparent;">
     <!--container for sidebar + main content-->
     <div class="grid-sidebar">
@@ -22,26 +22,23 @@
                 Home
             </h1>
         </div>
-        <div class="grid-item" style="background-color: transparent; border:0;">
-            <nav>
-                <a href="./index.html"><h3>Home</h3></a>
-                <a href="./work.html"><h3>Work</h3></a>
-                <a href="https://blog.elijordan.me"><h3>Blog</h3></a>
-                <a href="https://apps.elijordan.me"><h3>Apps</h3></a>
-                
-            </nav>
-        </div>
+        <nav id="nav-container">
+            <a href="./index.html"><h3 class="anchor">Home</h3></a>
+            <a href="./work.html"><h3 class="anchor">Work</h3></a>
+            <a href="./blog.html"><h3 class="anchor">Blog</h3></a>
+            <a href="./about.html"><h3 class="anchor">About</h3></a>
+        </nav>
+        
     </div>
     <div class="grid-item" id="invisible-container">
         <div class="grid-item">
             <h1>Eli is a full-stack developer living in Denver</h1>
             <p>My favorite project so far is the <a href="https://www.apps.elijordan.me/KATI">Kraken Automated Trading Application.</a> 
-            An algorithmic trading bot I designed to
-            trade cryptocurrencies using the Kraken Exchange API.</p>
+            An algorithmic trading bot I designed to trade cryptocurrency pairs using the Kraken Exchange API.</p>
         </div>
         <div class="grid-item" id="pictures">
             <!--Template Pictures-->
-            <h2>Latest Post</h2>
+            <h3>Latest Post</h3>
             <iframe src="https://dozencrust.wordpress.com/2021/12/10/bitcoin-trading-bot-update/"></iframe>
         </div>
     </div>
@@ -49,7 +46,7 @@
 
 
   <!--container for contact info and socials-->
-  <div class="grid-container" style="background-color: transparent;">
+  <div class="grid-container">
       
     <div class="grid-item">
         <h2 style="text-align: center;">Contact Me</h2>
@@ -69,7 +66,7 @@
     <div>
         <p> </p>
     </div>
-    <div class="grid-item" style="text-align: center;">
+    <div class="grid-item" id="bottom-nav">
         <nav>
             <a href="https://www.twitter.com/e_eazy11"><h4>Twitter</h4></a>
             <a href="https://www.github.com/jordane101"><h4>GitHub</h4></a>

@@ -1,3 +1,3 @@
 # atls2200
-I like fried chicken and ice cream.
+This repo is source code for my portfolio website.
 

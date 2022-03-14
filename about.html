@@ -9,33 +9,6 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100&family=Dancing+Script:wght@500&family=Fjalla+One&family=Lora&family=Montserrat:wght@700&family=Oswald&family=Raleway:wght@700&display=swap" rel="stylesheet">
-<style>
-h1{
-    font-family: 'Fjalla One', sans-serif;
-}
-h2{
-    font-family: 'Dancing Script', cursive;
-    color:#455931;
-}
-h3{
-    font-family: 'Catamaran', sans-serif;
-    color:#455931 
-    
-}
-h4{
-    font-family: 'Raleway', sans-serif;
-}
-h5{
-    font-family: 'Oswald', sans-serif;
-}
-h6{
-    font-family: 'Montserrat', sans-serif;
-}
-p{
-    font-family: 'Lora', serif;
-    color:#455931;
-}
-</style>
     </head>
   <body>
   <div class="grid-container" style="background-color: transparent;">
@@ -46,19 +19,16 @@ p{
                 <img src="img/me.jpg" style="border-radius: 50%;width: 150px;height: 150px;">
                 Home</h1>
         </div>
-        <div>
-            <nav>
-                <a href="./index.html"><h3>Home</h3></a>
-                <a href="./work.html"><h3>Work</h3></a>
-                <a href="https://blog.elijordan.me"><h3>Blog</h3></a>
-                <a href="https://apps.elijordan.me"><h3>Apps</h3></a>
-                
-            </nav>
-        </div>
+        <nav id="nav-container">
+            <a href="./index.html"><h3>Home</h3></a>
+            <a href="./work.html"><h3>Work</h3></a>
+            <a href="./blog.html"><h3>Blog</h3></a>
+            <a href="./about.html"><h3>About</h3></a>
+        </nav>
     </div>
     <div class="grid-item" id="invisible-container">
     <div class="grid-item">
-        <h2>Welcome!</h2>
+        <h3>Welcome!</h3>
         <p>My name is Eli Jordan, I grew up in rural Tennessee before starting my education at the University of Mississippi.
             After 2 undergraduate years wandering through a Mechanical Engineering path, I decided to transfer to CU Boulder
             to study Creative Technology and Design and Computer Science in the <a href="https://www.colorado.edu/atlas/">ATLAS Institute</a>. 
@@ -71,9 +41,13 @@ p{
     </div>
     <div class="grid-item" id="pictures">
         <!--Template Pictures-->
-        <h2>Latest Post</h2>
-        <p>this should automatically pull from the blog page. use your imagination this time</p>
-        <p>youtube video embed, any sort of progress posts</p>
+        <h3>Some pictures of my life</h3>
+        <div class="picture-display">
+            <img src="/img/skiing.jpeg">
+            <img src="/img/mountain.jpeg">
+            
+            
+        </div>
     </div>
     </div>
   </div >

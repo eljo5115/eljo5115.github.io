@@ -20,20 +20,43 @@
                 <img src="img/me.jpg" style="border-radius: 50%;width: 150px;height: 150px;">
                 Home</h1>
         </div>
-        <div>
-            <nav>
-                <a href="./index.html"><h3>Home</h3></a>
-                <a href="./work.html"><h3>Work</h3></a>
-                <a href="https://blog.elijordan.me"><h3>Blog</h3></a>
-                <a href="https://apps.elijordan.me"><h3>Apps</h3></a>
-                
-            </nav>
-        </div>
+        <nav id="nav-container">
+            <a href="./index.html"><h3>Home</h3></a>
+            <a href="./work.html"><h3>Work</h3></a>
+            <a href="./blog.html"><h3>Blog</h3></a>
+            <a href="./about.html"><h3>About</h3></a>
+        </nav>
     </div>
+    
     <div class="grid-item" id="invisible-container">
-    <div class="grid-item">
-        <h1>This will become the </h1>
-    </div>
+        <div class="grid-item" id="blog-title">
+            <h1>In the past, people only wrote down their thoughts in a private book, now everyone does it on the internet for 
+                anyone to see, this is where I do that
+            </h1>
+        </div>
+        <div class="grid-item">
+            <h3 class="ignore-hover">Bitcoin Trading Bot</h3>
+            <p><!-- wp:paragraph -->
+                <p>I've been working on a python script that will trade Bitcoin for me. Due to the high volatility of the market, I think this is a viable strategy for making passive income. I've published the code onto Github and am currently running a trial with only $100. It wouldn't take much to change the code to buy with much more money and the results would be scalable. This trading strategy basically relies on the volatility of the asset and results could vary from day to day. The end result would actually be a program that shows account balance, open orders, price charts, trades various assets and probably some sort of GUI. Currently I just have a command line script with a while loop calling someone else's analysis API and trading through the Kraken API. What I have is a rudimentary proof of concept, but using the power of AI this could be much better at predicting the future price and buying and selling. </p>
+                <!-- /wp:paragraph -->
+                
+                <!-- wp:paragraph -->
+                <p>I'll keep updating the code in this Github repo as I add features and iron out any bugs. </p>
+                <!-- /wp:paragraph -->
+                
+                <!-- wp:paragraph -->
+                <p>https://github.com/jordane101/KATI</p>
+                <!-- /wp:paragraph --></p>
+        </div>
+        <div class="grid-item">
+            <h3>A Silly Solution to a Simple Problem</h3>
+            <p>As I was walking through Trader Joe's on my weekly shopping trip, per usual the store was quite busy so I had to navigate through a crowd just to see if the items on my list were in stock.
+                most of the time, it wasn't. Wider aisles might fix the problem, or having an app with store inventory, but that doesn't fit the Trader Joe's brand.
+                Trader Joe's needs a solution that almost doesn't make sense to people except their most loyal customers, like the constant need to change their product selections.
+                A silly light on the shelf that tells you, and only you, that exactly what you're looking for is almost out of stock is the perfect solution to fix the crowd of people gathering around the dip section blocking my 
+                line of sight from the out-of-stock jalepeño artichoke dip that was the number one item on my list. 
+            </p>
+        </div>
     </div>
   </div >
 
@@ -57,6 +80,7 @@
         </form>
     </div>
     <div>
+        <!--spacer paragraph between contact and links-->
         <p> </p>
     </div>
     <div class="grid-item" style="text-align: center;">
