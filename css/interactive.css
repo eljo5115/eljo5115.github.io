@@ -1,0 +1,14 @@
+button{
+    font-size: 40px;
+    transition: all 1000ms ease-in-out ;
+}
+.was_clicked{
+    padding: 20px;
+    color:rebeccapurple;
+}
+
+.was-double-clicked{
+    background-color: green ;
+    padding: 50%;
+    
+}
