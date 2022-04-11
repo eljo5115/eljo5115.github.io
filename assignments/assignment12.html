@@ -1,24 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Assignment 12 - Song Generator</title>
-    <link rel="stylesheet" href="../css/desktop.css">
-    <link rel = "stylesheet" href="../css/quote.css">
-    <script defer src="../js/quote.js" charset="utf-8"></script>
+<html>
+<head>
+  <title>Random Song Generator</title>
+  <link href="https://fonts.googleapis.com/css?family=Hammersmith+One" rel="stylesheet">
+  <link href="../css/songGenerator.css" rel="stylesheet">
+  <script defer src= "../js/song.js"></script>
   </head>
-  <body>
-    <div class="app">
-  <header>Random Song Generator</header>
-  <section class="quotes">
-    <div class="quote-text" id="js-quote-text"></div>
-    <div class="quote-text" id="js-song-text"></div>
-  </section>
-  <section class="controls">
-    <button type="button" id="js-new-quote" class="new-quote button">
-      Generate a new song
-    </button>
-  </section>
-</div>
-  </body>
-</html>
+  <body> 
+  <div class="container-fluid" >
+    <div class="row text-center">
+      <h2 >GENIUS</h2>  
+    </div>
+    <div class="row text-center">
+      <h3>RANDOM SONG GENERATOR</h3><br>
+    </div>
+    <div class="row text-center">
+      <div class="col-xs-6 text-right" id="songImage"></div>
+      <div class="col-xs-6 text-left">
+        <p id="song"></p>
+        <p id="artist"></p>
+        <p id="releaseDate"></p>
+        <button class="button" onclick="newRandomSong()"><span>NEW SONG</span></button>
+        <br>
+        <p>I found this code at <a href="https://codepen.io/bobhami/pen/gwrJNp">this codepen</a> and decided it was the fastes and easiest way to build a base for a Genius api song generator.
+        I had to make some changes to get it to display properly on a full page as well as some styling changes.</p>        
+  
+      </div>
+    </div>
+    <!--<div class="row text-center">
+      <button class="button" onclick="newRandomSong()"><span>NEW SONG</span></button>
+    </div>-->
+  </div>
+  </body> 
+  
+  <!-- Colours 
+  RGB: 41, 41, 41
+  RGB: 255, 255, 100
+  RGB: 153, 167, 238
+  RGB: 255, 20, 100
+  -->
+  </html>
