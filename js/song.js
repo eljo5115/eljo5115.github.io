@@ -25,10 +25,9 @@ xhr.onreadystatechange = function() {
   }
 };
 xhr.open("GET", APISong+songID+accessToken, false);
-//xhr.open("GET", API+accessToken+ '&q=Kendrick%20Lamar', false);
 
 xhr.send(); 
-//console.log(xhr.status);
+console.log(xhr.status);
 //console.log(xhr.statusText);
 demo=xhr.response;
 
