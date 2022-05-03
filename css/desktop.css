@@ -15,12 +15,7 @@ iframe{
   border-radius:10px;
 }
 body{
-  background: repeating-linear-gradient(
-  45deg,
-  #F2D0A7,
-  #F2D0A7 18px,
-  #455930,
-  #455931 20px)
+  background: #F2D0A7;
 }
 iframe{
   width:100%;
