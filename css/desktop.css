@@ -66,8 +66,8 @@ form{
     display:block;
     color:#8C6542;
     font-size: inherit;
-    padding:10px;
-    margin:15px;
+    padding:0px;
+    margin:0px;
     border: solid 5px;
     text-align: left;
     border-radius: 50px;
@@ -83,7 +83,9 @@ form{
       grid-column-start: 1;
       grid-column-end: 4;
       text-align: center;
-      padding-bottom: 20px;
+      padding: 0px;
+      margin:0px;
+
   }
 .grid-sidebar{
     color:#455931;
@@ -91,6 +93,7 @@ form{
     padding: 0px;
     font-size: 30px;
     margin:0px;
+    padding:0px;
     text-align: center;
     border-radius: 50px;
     background-color: ivory;
