@@ -25,6 +25,8 @@ nav{
     display:grid;
     grid-template-rows: 1fr 1fr 1fr 1fr;
 
+    display:flex;
+    flex-direction: row;
 }
 a{
     color:#66A3D9;
@@ -62,6 +64,10 @@ form{
     margin-top:100px;
     border-radius: 25px;
     background-color: transparent;
+  }
+  .blah-blah-blah{
+    display: grid;
+    
   }
 .grid-item {
     display:block;
