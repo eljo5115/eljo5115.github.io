@@ -22,11 +22,11 @@ iframe{
   height:300px;
 }
 nav{
-    display:grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    /* display:grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr; */
 
     display:flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 a{
     color:#66A3D9;
