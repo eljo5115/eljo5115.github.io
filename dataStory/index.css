@@ -1,0 +1,68 @@
+html{
+    background:dimgray;
+}
+h1, h2, h3, h4, h5, h6,p {
+    font-family: ropa-mix-pro;
+    text-align: center;
+}
+
+.title h1,h2,h4{
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    
+}
+h1 {
+    font-family: ropa-mix-pro,sans-serif;
+    font-weight: 1000;
+    font-style: normal;
+    text-align: center;
+    font-size: 80pt;
+    max-width: 100%;
+}
+h2{
+    font-size: 30pt;
+}
+h4{
+    text-align: center;
+    max-width: 100%;
+}
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width:100%;
+    grid-template-columns: repeat(4,1fr);
+}
+.content p{
+    /* centered on the page*/
+    font-size: 14pt;
+    max-width:70%;
+    background:green;
+}
+.flourish-chart{
+    width:80%;
+    margin-left:15%;
+    margin-right:15%;
+}
+.flourish-scatter{
+    width:70%;
+}
+.basket{
+    font-size:50pt;
+}
+.money-text{
+    /* outlines text */
+    -webkit-text-stroke:1px white; /*for readability*/
+    /*set background to money pattern*/
+    background: url("./MoneyPattern.png") no-repeat center center;
+    background-size: cover;
+    color:#fff;
+    background-clip: text;
+    /*text is transparent*/
+    -webkit-text-fill-color: transparent;
+    /*background fills the text*/
+    -webkit-background-clip: text;
+
+}

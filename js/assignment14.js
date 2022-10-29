@@ -4,7 +4,8 @@ Mary, Finance, Trainee, 18500, true
 Bill, HR, Executive, 21200, false
 */
 
-
+Sam.name = "Sam"
+Sam["name"] = "Sam"
 let Sam = {
         name: "Sam",
         department: "Tech",
@@ -12,14 +13,14 @@ let Sam = {
         salary: 40000,
         raise: true
     };
-let   Mary ={
+let Mary = {
         name: "Mary",
         department: "Finance",
         job: "Trainee",
         salary: 18500,
         raise: true
     };
-let   Bill = {
+let  Bill = {
         name: "Bill",
         department: "HR",
         job: "Executive",
