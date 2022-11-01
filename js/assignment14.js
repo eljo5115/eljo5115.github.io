@@ -3,9 +3,6 @@ Sam, Tech, Manager, 40000, true
 Mary, Finance, Trainee, 18500, true
 Bill, HR, Executive, 21200, false
 */
-
-Sam.name = "Sam"
-Sam["name"] = "Sam"
 let Sam = {
         name: "Sam",
         department: "Tech",
