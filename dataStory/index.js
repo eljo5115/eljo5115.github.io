@@ -1164,7 +1164,10 @@ initDropdown({
   cssElementExpanded: 'is-expanded',
 });
 
-
+function updateFigure(){
+    var figure = d3.select("figure");
+    figure.insert("div").class("flourish-embed flourish-chart");
+}
 
 
 
