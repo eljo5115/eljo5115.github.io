@@ -1108,7 +1108,7 @@ class Dropdown {
     this.colorize(mode);
     this.setIcon(mode);
     this.updateText(mode);
-    this.unsetExpanded();
+    this.toggleExpanded();
 
   }
   
@@ -1147,7 +1147,6 @@ class Dropdown {
     `;
     this.paragraph2.textContent = `It could always be worse, you could be the ${teamData[teamRanks[curRank+1]]['Team']['name']}, but the ${team.name} 
     have some work to do before they beat the ${teamData[teamRanks[curRank-1]]['Team']['name']}.`;
-    this.paragraph3.textContent = "";
   }
 }
 
@@ -1169,8 +1168,53 @@ function updateFigure(){
     figure.insert("div").class("flourish-embed flourish-chart");
 }
 
+/* side-saddle-scrollytelling-code*/
 
+const container = d3.select('#team-scrolly');
+const stepSel = container.select(".text-container").selectAll('.step');
 
+function updateChart(index) {
+    console.log(index);
+  const sel = container.select(`[data-index='${index}']`);
+  stepSel.classed('is-active', (d, i) => i === index);
+  switch(index){
+      case 0:{
+        container.select("#pie-chart").style("display","block");
+        break;
+      }
+      case 1:{
+          container.select("#pie-chart").style("display","none");
+          container.select("#chart1").style("display","block");
+          break;
+        }
+        case 2:{
+          container.select("#pie-chart").style("display","none");
+          container.select("#chart1").style("display","none");
+          container.select("#chart2").style("display","block");
+          break;
+        }
+  }
+}
+
+function scrollyInit() {
+  Stickyfill.add(d3.select('.sticky').node());
+
+  enterView({
+    selector: stepSel.nodes(),
+    offset: 0.5,
+    enter: el => {
+      const index = +d3.select(el).attr('data-index');
+      updateChart(index);
+    },
+    exit: el => {
+      let index = +d3.select(el).attr('data-index');
+      index = Math.max(0, index - 1);
+      updateChart(index);
+    } });
+
+}
+
+scrollyInit();
 
 
 
