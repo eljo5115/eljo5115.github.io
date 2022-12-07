@@ -1193,6 +1193,14 @@ function updateChart(index) {
           container.select("#chart2").style("display","block");
           break;
         }
+        case 3:{
+        container.select("#pie-chart").style("display","none");
+        container.select("#chart1").style("display","none");
+        container.select("#chart2").style("display","none");
+        container.select("#chart3").style("display","block");
+
+            break;
+        }
   }
 }
 
