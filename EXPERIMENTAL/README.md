@@ -1,1 +1,0 @@
-This folder is just for short code-snippet like projects with JS libraries or css tricks that I'd like to save for later.
