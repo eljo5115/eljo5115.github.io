@@ -198,10 +198,10 @@ let airTexture;
 let playerImg;
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
-  playerImg = loadImage("./img/player_image.png");
+  playerImg = loadImage("./img/player2-07.png");
   dirtTexture = loadImage("./img/dirt-02.png");
   stoneTexture = loadImage("./img/stone-02.png");
-  airTexture = loadImage("./img/air.png");
+  airTexture = loadImage("./img/air-01.png");
 }
 
 function setup() 
