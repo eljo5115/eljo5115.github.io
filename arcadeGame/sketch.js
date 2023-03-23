@@ -17,7 +17,7 @@ class Block
     this.x = ex*TILE_SIZE+HALF_TILE;
     this.y = ey*TILE_SIZE+HALF_TILE;
 
-    this.texture = color(0,0,0); //TODO
+    this.texture = ""; //path to img
 
     this.self = new Sprite(this.x,this.y,TILE_SIZE,TILE_SIZE,this.texture)
     this.self.bounciness = 0;
@@ -29,32 +29,20 @@ class Block
     switch(type)
     {
       case 0:{
-        this.self.color = color(0,0,100); //open space
+        this.self.image = airTexture; //open space
         this.self.collider = "none";
         this.diggable = false;
         break;
       }
       case 1:{
-        this.self.color = color(165,42,42); //brown for dirt (diggable)
+        this.self.image = dirtTexture; //brown for dirt (diggable)
         this.diggable = true;
         break;
       }
       case 2:{
-        this.self.color = color(220,220,220); // grey for stone (not diggable)
+        this.self.image = stoneTexture; // grey for stone (not diggable)
         this.diggable = false;
         break;
-      }
-      case 3:{
-        //left edge
-        this.self.collider = "static";
-        this.self.visible = false;
-        this.x = -HALF_TILE;
-      }
-      case 4:{
-        //right edge
-        this.self.collider = "static";
-        this.self.visible = false;
-        this.x = WIDTH*TILE_SIZE + HALF_TILE;
       }
     }    
   }
@@ -62,7 +50,7 @@ class Block
   {
     if(this.diggable)
     {
-      this.self.color = color(0,0,100);
+      this.self.image=airTexture;
       this.self.collider = "none";
     }
     else
@@ -90,11 +78,24 @@ class Block
   // }
 }
 
+
+class Item{
+  constructor(x,y){
+
+  }
+}
+
+
+class Bomb extends Item{}
+class Diamond extends Item{}
+
+
+
 class Player
 {
   constructor(x,y)
   {
-  this.self = new Sprite(x,y,TILE_SIZE-16,TILE_SIZE-16);
+  this.self = new Sprite(x,y,TILE_SIZE-16,TILE_SIZE-2);
   this.self.img = playerImg;
   this.self.collider="d";
   this.self.rotationLock = true;
@@ -172,7 +173,7 @@ function createBlocks()
         }
         else
         {
-          let types = [0,1,1,1,1,2,2]; //types weighted within array
+          let types = [0,1,1,1,2]; //types weighted within array
           const t = types[Math.floor(Math.random() * types.length)];
           b = new Block(col,row,t);
         }
@@ -187,46 +188,6 @@ function createBlocks()
   return mapArray;
 }
 
-function createRow(number)
-{
-  let newRow = [];
-  for(let i = 0; i < WIDTH;i++){
-
-    let types = [0,0,0,0,0,1,1,1,1,2,2,2]; //types weighted within array
-    const t = types[Math.floor(Math.random() * types.length)];
-    b = new Block(i,number,t);
-
-    newRow[i] = b;
-  }
-
-  let types = [0,0,0,0,0,1,1,1,1,2]; //types weighted within array
-  const t = types[Math.floor(Math.random() * types.length)];
-  b = new Block(col,row,t);
-  console.log("noopy nubers");
-  return newRow;
-}
-
-function genBlocks()
-{
-//TODO
-//function to make new blocks
-//and remove old ones
-
-  for(let i = 0;i<=2;i++)
-  {
-    for(let col = 0;col<WIDTH;col++)
-    {
-      delete mapArray[i][col];
-    }
-  }
-
-  while(mapArray[0].length<WIDTH)
-  {
-    console.log("beeeeeeep");
-    mapArray[HEIGHT] = createRow(HEIGHT);
-  }
-}
-
 let player;
 let cameraDY = 0.1;
 let mapArray;
@@ -238,9 +199,9 @@ let playerImg;
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
   playerImg = loadImage("./img/player_image.png");
-  // dirtTexture = loadImage();
-  // stoneTexture = loadImage();
-  // airTexture = loadImage();
+  dirtTexture = loadImage("./img/dirt-02.png");
+  stoneTexture = loadImage("./img/stone-02.png");
+  airTexture = loadImage("./img/air.png");
 }
 
 function setup() 
