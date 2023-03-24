@@ -4,9 +4,9 @@ const WIDTH = 12;
 const HEIGHT = 9;
 //TODOS
 /* 
-Infinite world gen
-character and block art
-???swapping rows and columns???
+add items
+game over condition
+
 */
 
 class Block
@@ -32,7 +32,7 @@ class Block
         this.self.image = airTexture; //open space
         this.self.collider = "none";
         this.diggable = false;
-        break;
+        //choose item randomly
       }
       case 1:{
         this.self.image = dirtTexture; //brown for dirt (diggable)
@@ -80,14 +80,57 @@ class Block
 
 
 class Item{
-  constructor(x,y){
-
+  constructor(ex,ey){
+    this.x = ex*TILE_SIZE+HALF_TILE;
+    this.y = ey*TILE_SIZE+HALF_TILE;
+    this.self = new Sprite(this.x,this.y,TILE_SIZE,TILE_SIZE);
+    this.self.collider="none"
   }
 }
 
 
-class Bomb extends Item{}
-class Diamond extends Item{}
+class Bomb extends Item{
+  constructor(x,y){
+    super(x,y);
+    this.ex = x;
+    this.ey = y;
+    this.self.image=bombImage;
+  }
+  pickUp(){
+    if(player.self.overlaps(this.self)){
+      //blow up
+      console.log("boom");
+      this.blowUp();
+      this.self.remove();
+    }
+  }
+  blowUp(){
+    for(let i = -1; i < 2;i++){
+      for(let j = -1; j < 2; j++){
+        console.log(i,j,mapArray[this.ex+i][this.ey+j]);
+        // mapArray[this.ex+i][this.ey+j].self.collider = "none";
+        // mapArray[this.ex+i][this.ey+j].self.image = airTexture;
+
+      }
+    }
+  }
+  
+}
+
+class Diamond extends Item{
+  constructor(x,y){
+    super(x,y)
+    this.self.image=diamondImage;
+  }
+  pickUp(){
+    if(this.self.overlaps(player.self)){
+      //increase score
+      score++;
+      console.log("woohoo points");
+      this.self.remove();
+    }
+  }
+}
 
 
 
@@ -142,6 +185,10 @@ class Player
       activeBlocks.down.digBlock();
     }
     this.self.x = activeBlocks.inside.x;
+
+    if(activeBlocks.inside.item){
+      activeBlocks.inside.item.pickUp();
+    }
   }
 }
 
@@ -195,13 +242,20 @@ let blockRow;
 let dirtTexture;
 let stoneTexture;
 let airTexture;
+let diamondImage;
+let bombImage;
 let playerImg;
+let score = 0;
+
+
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
   playerImg = loadImage("./img/player2-07.png");
   dirtTexture = loadImage("./img/dirt-02.png");
   stoneTexture = loadImage("./img/stone-02.png");
   airTexture = loadImage("./img/air-01.png");
+  diamondImage = loadImage("./img/diamond.png");
+  bombImage = loadImage("./img/bomb.png");
 }
 
 function setup() 
@@ -218,6 +272,8 @@ function setup()
 
 function draw() 
 {
+  let scoreStr = "Score: " + score.toString();
+  
   blockRow = Math.floor(player.self.y/TILE_SIZE);
   background(220);
 
@@ -234,7 +290,10 @@ function draw()
     player = new Player(px,HALF_TILE-2);
   }
   player.move();
-
+  // fill(255,255,255);
+  // textSize(30);
+  // textAlign(CENTER,CENTER);
+  // text(scoreStr,WIDTH/2,40);
 }
 
 //debug functions
