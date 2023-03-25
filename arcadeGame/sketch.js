@@ -11,36 +11,61 @@ game over condition
 
 class Block
 {
-  constructor(ex,ey,type=0)
+  constructor(ex,ey,type=0,itemType=2)
   {
   //ex,ey are indexes in mapArray
     this.x = ex*TILE_SIZE+HALF_TILE;
     this.y = ey*TILE_SIZE+HALF_TILE;
 
-    this.texture = ""; //path to img
 
     this.self = new Sprite(this.x,this.y,TILE_SIZE,TILE_SIZE,this.texture)
     this.self.bounciness = 0;
+    this.destructable = true;
     //set block types
-
-    this.adjBlocks = {};
 
     this.self.collider="static";
     switch(type)
     {
       case 0:{
+        // air, may contain item
         this.self.image = airTexture; //open space
         this.self.collider = "none";
         this.diggable = false;
-        //choose item randomly
+
+        if(ey > 1){
+          switch(itemType){
+            case 0:{
+              this.item = new Bomb(ex,ey);
+              break;
+            }
+            case 1:{
+              this.item = new Diamond(ex,ey);
+              break;
+            }
+            default:{
+              this.item = null;
+              break;
+            }
+          }
+        }
+        break;
       }
       case 1:{
-        this.self.image = dirtTexture; //brown for dirt (diggable)
+        //dirt (diggable)
+        this.self.image = dirtTexture; 
         this.diggable = true;
         break;
       }
       case 2:{
-        this.self.image = stoneTexture; // grey for stone (not diggable)
+        // stone (not diggable)
+        this.self.image = stoneTexture; 
+        this.diggable = false;
+        break;
+      }
+      case 3:{
+        // obsidian (unbreakable)
+        this.self.image = unbreakableTexture;
+        this.destructable = false;
         this.diggable = false;
         break;
       }
@@ -58,6 +83,7 @@ class Block
       return 1;
     }
   }
+
   // updateAdjBlocks(){
   //   let ex = (this.x-HALF_TILE)/TILE_SIZE;
   //   let ey = (this.y-HALF_TILE)/TILE_SIZE
@@ -90,10 +116,10 @@ class Item{
 
 
 class Bomb extends Item{
-  constructor(x,y){
-    super(x,y);
-    this.ex = x;
-    this.ey = y;
+  constructor(ex,ey){
+    super(ex,ey);
+    this.ex = ex;
+    this.ey = ey;
     this.self.image=bombImage;
   }
   pickUp(){
@@ -105,16 +131,15 @@ class Bomb extends Item{
     }
   }
   blowUp(){
+    for(let j = -1; j < 2; j++){
     for(let i = -1; i < 2;i++){
-      for(let j = -1; j < 2; j++){
-        console.log(i,j,mapArray[this.ex+i][this.ey+j]);
-        // mapArray[this.ex+i][this.ey+j].self.collider = "none";
-        // mapArray[this.ex+i][this.ey+j].self.image = airTexture;
-
+        if((mapArray[this.ey+i][this.ex+j].destructable)){
+        mapArray[this.ey+i][this.ex+j].self.collider = "none";
+        mapArray[this.ey+i][this.ex+j].self.image = airTexture;
+        }
       }
     }
   }
-  
 }
 
 class Diamond extends Item{
@@ -149,11 +174,11 @@ class Player
     let blockColumn = Math.floor(this.self.x/TILE_SIZE);
     let blockRow = Math.floor(this.self.y/TILE_SIZE);
 
-    if(blockColumn <= 0){
-      this.self.x=HALF_TILE;
+    if(blockColumn >= 0){
+      this.self.x = WIDTH*TILE_SIZE-HALF_TILE;
     }
     else if(blockColumn >= WIDTH){
-      this.self.x=WIDTH*TILE_SIZE-HALF_TILE;
+      this.self.x=HALF_TILE;
     }
 
   //let activeBlocks = mapArray[blockColumn][blockRow].adjBlocks;
@@ -169,18 +194,16 @@ class Player
     //console.log(activeBlocks);
 
     this.self.vel.x = 0;
-
+    if(true){
     if(kb.pressed('left') && activeBlocks.left.self.collider=="none"){
       this.self.moveTowards(
-        createVector(this.self.x-TILE_SIZE,this.self.y)
-        ,1);
+        createVector(this.self.x-TILE_SIZE,this.self.y),1);
     }
     if(kb.pressed('right') && activeBlocks.right.self.collider=="none"){
       this.self.moveTowards(
-        createVector(this.self.x+TILE_SIZE,this.self.y)
-        ,1);
+        createVector(this.self.x+TILE_SIZE,this.self.y),1);
     }
-
+  }
     if(kb.pressed("x")){
       activeBlocks.down.digBlock();
     }
@@ -201,6 +224,7 @@ function createBlocks()
     let a = new Array(WIDTH);
     mapArray[i] = a;
   }
+
   let row;
   for(let col=0;col<WIDTH;col++)
   {
@@ -209,31 +233,31 @@ function createBlocks()
       let b;
 
       //MAP INITIALIZATION
-      //IN PROGRESS
 
       //random types
-      if(row > 0)
-      {  
-        if(col==0 || col==WIDTH-1)
-        {
-          b = new Block(col,row,2);
-        }
-        else
-        {
-          let types = [0,1,1,1,2]; //types weighted within array
-          const t = types[Math.floor(Math.random() * types.length)];
-          b = new Block(col,row,t);
-        }
+      if(col==0 || col==WIDTH-1)
+      {
+        b = new Block(col,row,3);
       }
       else
       {
-        b = new Block(col,row,0); // air block
+        if(row > 0)
+        {  
+          let blockTypes = [0,1,1,1,2]; //types weighted within array
+          let itemTypes = [0,1,2];
+          const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
+          const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+          b = new Block(col,row,t,it);
+        }
+        else
+        b = new Block(col,row,0,2); // air block, no item
       }
       mapArray[row][col] = b; // [y][x]
+      }
     }
+    return mapArray;
   }
-  return mapArray;
-}
+
 
 let player;
 let cameraDY = 0.1;
@@ -245,6 +269,7 @@ let airTexture;
 let diamondImage;
 let bombImage;
 let playerImg;
+let unbreakableTexture;
 let score = 0;
 
 
@@ -256,6 +281,7 @@ function preload(){
   airTexture = loadImage("./img/air-01.png");
   diamondImage = loadImage("./img/diamond.png");
   bombImage = loadImage("./img/bomb.png");
+  unbreakableTexture = loadImage("./img/obsidian.png");
 }
 
 function setup() 
