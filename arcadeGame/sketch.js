@@ -1,12 +1,10 @@
 const TILE_SIZE = 64;
 const HALF_TILE = TILE_SIZE / 2;
-const WIDTH = 16;
+const WIDTH = 14;
 const HEIGHT = 30;
 //TODOS
 /* 
-add items
 game over condition
-
 */
 
 class Block
@@ -126,7 +124,6 @@ class Bomb extends Item{
     if(player.self.overlaps(this.self)){
       //blow up
       score++;
-      console.log("boom");
       this.blowUp();
       this.self.remove();
     }
@@ -152,7 +149,6 @@ class Diamond extends Item{
     if(this.self.overlaps(player.self)){
       //increase score
       score++;
-      console.log("woohoo points");
       this.self.remove();
     }
   }
@@ -192,7 +188,6 @@ class Player
       "down":mapArray[blockRow+1][blockColumn]
     };
     
-    //console.log(activeBlocks);
 
     this.self.vel.x = 0;
     if(true){
@@ -213,7 +208,7 @@ class Player
     if(activeBlocks.inside.item){
       activeBlocks.inside.item.pickUp();
     }
-    console.log(activeBlocks);
+
   }
 }
 
@@ -271,15 +266,17 @@ let diamondImage;
 let bombImage;
 let playerImg;
 let unbreakableTexture;
+let gameOver;
+let stuckCounter;
 let score = 0;
 
 
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
-  playerImg = loadImage("./img/player2-07.png");
-  dirtTexture = loadImage("./img/dirt-02.png");
-  stoneTexture = loadImage("./img/stone-02.png");
-  airTexture = loadImage("./img/air-01.png");
+  playerImg = loadImage("./img/player.png");
+  dirtTexture = loadImage("./img/dirt.png");
+  stoneTexture = loadImage("./img/stone.png");
+  airTexture = loadImage("./img/air.png");
   diamondImage = loadImage("./img/diamond.png");
   bombImage = loadImage("./img/bomb.png");
   unbreakableTexture = loadImage("./img/obsidian.png");
@@ -287,43 +284,81 @@ function preload(){
 
 function setup() 
 {
-  let canvas = createCanvas(WIDTH * TILE_SIZE, HEIGHT*TILE_SIZE);
+  let canvas = new Canvas(WIDTH * TILE_SIZE, HEIGHT*TILE_SIZE);
   world.gravity.y=1;
   canvas.center("horizontal");
   background(255);
-  stroke(255);
+  stroke(0);
   strokeWeight(1);
+  gameOver = false;
   mapArray = createBlocks();
   player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
 }
 
+function cleanup()
+{
+  // removes all sprites for reset
+  for(let i = 0; i<HEIGHT;i++){
+    for(let j = 0; j<WIDTH;j++){
+    mapArray[i][j].self.remove();
+    }
+  }
+  player.self.remove();
+  delete player;
+}
+
+
 function draw() 
 {
   clear();
-  fill("blue");
-  rect(0,-HEIGHT*TILE_SIZE,WIDTH,HEIGHT*TILE_SIZE);
-  let scoreStr = "Score: " + score.toString();
-  
-  blockRow = Math.floor(player.self.y/TILE_SIZE);
-  background(220);
+    if(!gameOver)
+    {
+      let scoreStr = "Score: " + score.toString();
+      
+      blockRow = Math.floor(player.self.y/TILE_SIZE);
+      //background(21,21,21);
+      background(116,204,229);//01110100 11001100 11100101
 
-  if(blockRow > (HEIGHT-2)){
-    for(let i = 0; i<HEIGHT;i++){
-      for(let j = 0; j<WIDTH;j++){
-      mapArray[i][j].self.remove();
-      }
+      if(blockRow > (HEIGHT-2)){
+        cleanup();
+        mapArray = createBlocks();
+        let px = player.self.x;
+        player = new Player(px,HALF_TILE-2);
     }
-    mapArray = createBlocks();
-    let px = player.self.x;
-    player.self.remove();
-    delete player;
-    player = new Player(px,HALF_TILE-2);
+
+    player.move();
+    camera.y = player.self.y+600;
+    textSize(10);
+    strokeWeight(0);
+    mapArray[0][0].self.textColor = "white"
+    mapArray[0][0].self.text = scoreStr;
+
+    if(player.self.vel.y == 0)
+    {
+      stuckCounter++;
+    }
+    else
+    {
+      stuckCounter = 0;
+    }
+    if(stuckCounter > 600)
+    {
+      gameOver = true;
+    }
   }
-  player.move();
-  camera.y = player.self.y+800;
-  console.log(mapArray[0][0]);
-  mapArray[0][0].self.textColor = "white"
-  mapArray[0][0].self.text = scoreStr;
+  else
+  {
+    //draw game over screen, play again?
+    
+
+    text("GAME OVER",WIDTH*HALF_TILE,HEIGHT*TILE_SIZE/2);
+    text("Press 'r' to restart",WIDTH*HALF_TILE+100,HEIGHT*TILE_SIZE/2);
+    if(kb.presses("r")){
+      score = 0;
+      cleanup();
+      setup();
+    }
+  }
 }
 
 //debug functions
