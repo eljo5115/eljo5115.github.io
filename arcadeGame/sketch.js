@@ -1,7 +1,7 @@
 const TILE_SIZE = 64;
 const HALF_TILE = TILE_SIZE / 2;
-const WIDTH = 12;
-const HEIGHT = 9;
+const WIDTH = 16;
+const HEIGHT = 30;
 //TODOS
 /* 
 add items
@@ -125,6 +125,7 @@ class Bomb extends Item{
   pickUp(){
     if(player.self.overlaps(this.self)){
       //blow up
+      score++;
       console.log("boom");
       this.blowUp();
       this.self.remove();
@@ -212,6 +213,7 @@ class Player
     if(activeBlocks.inside.item){
       activeBlocks.inside.item.pickUp();
     }
+    console.log(activeBlocks);
   }
 }
 
@@ -243,14 +245,13 @@ function createBlocks()
       {
         if(row > 0)
         {  
-          let blockTypes = [0,1,1,1,2]; //types weighted within array
+          let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3]; //types weighted within array
           let itemTypes = [0,1,2];
           const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
           const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
           b = new Block(col,row,t,it);
         }
-        else
-        b = new Block(col,row,0,2); // air block, no item
+        else { b = new Block(col,row,0,2); }// air block, no item
       }
       mapArray[row][col] = b; // [y][x]
       }
@@ -298,6 +299,9 @@ function setup()
 
 function draw() 
 {
+  clear();
+  fill("blue");
+  rect(0,-HEIGHT*TILE_SIZE,WIDTH,HEIGHT*TILE_SIZE);
   let scoreStr = "Score: " + score.toString();
   
   blockRow = Math.floor(player.self.y/TILE_SIZE);
@@ -316,10 +320,10 @@ function draw()
     player = new Player(px,HALF_TILE-2);
   }
   player.move();
-  // fill(255,255,255);
-  // textSize(30);
-  // textAlign(CENTER,CENTER);
-  // text(scoreStr,WIDTH/2,40);
+  camera.y = player.self.y+800;
+  console.log(mapArray[0][0]);
+  mapArray[0][0].self.textColor = "white"
+  mapArray[0][0].self.text = scoreStr;
 }
 
 //debug functions
