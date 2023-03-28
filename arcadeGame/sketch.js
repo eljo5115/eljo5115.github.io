@@ -4,7 +4,7 @@ const WIDTH = 14;
 const HEIGHT = 30;
 //TODOS
 /* 
-game over condition
+game over text pop up
 */
 
 class Block
@@ -112,7 +112,6 @@ class Item{
   }
 }
 
-
 class Bomb extends Item{
   constructor(ex,ey){
     super(ex,ey);
@@ -153,8 +152,6 @@ class Diamond extends Item{
     }
   }
 }
-
-
 
 class Player
 {
@@ -240,7 +237,7 @@ function createBlocks()
       {
         if(row > 0)
         {  
-          let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3]; //types weighted within array
+          let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3]; //types weighted within array (change for balancing)
           let itemTypes = [0,1,2];
           const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
           const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
@@ -268,6 +265,8 @@ let playerImg;
 let unbreakableTexture;
 let gameOver;
 let stuckCounter;
+let textSprite;
+let scoreStr;
 let score = 0;
 
 
@@ -293,6 +292,9 @@ function setup()
   gameOver = false;
   mapArray = createBlocks();
   player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
+  textSprite= new Sprite(player.self.x+ HALF_TILE, player.self.y - HALF_TILE ,0,0);
+  textSprite.collider = "static";
+  textSprite.visible = false;
 }
 
 function cleanup()
@@ -307,23 +309,24 @@ function cleanup()
   delete player;
 }
 
-
 function draw() 
 {
   clear();
-    if(!gameOver)
-    {
-      let scoreStr = "Score: " + score.toString();
-      
-      blockRow = Math.floor(player.self.y/TILE_SIZE);
-      //background(21,21,21);
-      background(116,204,229);//01110100 11001100 11100101
+  if(!gameOver)
+  {
+    scoreStr = "Score: " + score.toString();
+    
+    blockRow = Math.floor(player.self.y/TILE_SIZE);
+    //background(21,21,21);
+    background(116,204,229);//01110100 11001100 11100101
 
-      if(blockRow > (HEIGHT-2)){
-        cleanup();
-        mapArray = createBlocks();
-        let px = player.self.x;
-        player = new Player(px,HALF_TILE-2);
+    if(blockRow > (HEIGHT-2))
+    {
+      cleanup();
+      mapArray = createBlocks();
+      let px = player.self.x;
+      player = new Player(px,HALF_TILE-2);
+      score+=10;
     }
 
     player.move();
@@ -349,14 +352,18 @@ function draw()
   else
   {
     //draw game over screen, play again?
-    
-
-    text("GAME OVER",WIDTH*HALF_TILE,HEIGHT*TILE_SIZE/2);
-    text("Press 'r' to restart",WIDTH*HALF_TILE+100,HEIGHT*TILE_SIZE/2);
+    textSprite.y = player.self.y;
+    textSprite.visible = true;
+    textSprite.textColor = color(255,255,255);
+    textSprite.textSize = 50;
+    textSprite.text = scoreStr+"\nGAME OVER\nPress'r' to restart\n";
+    //textSize(50);
     if(kb.presses("r")){
       score = 0;
       cleanup();
       setup();
+      textSprite.remove();
+      gameOver = false;
     }
   }
 }
