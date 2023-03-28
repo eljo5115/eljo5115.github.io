@@ -4,7 +4,8 @@ const WIDTH = 14;
 const HEIGHT = 30;
 //TODOS
 /* 
-game over text pop up
+  sound (bomb,dig,music?,diamond, undiggable)
+  animation (bomb, dig)
 */
 
 class Block
@@ -75,10 +76,11 @@ class Block
     {
       this.self.image=airTexture;
       this.self.collider = "none";
+      return 1; // successful dig
     }
     else
     {
-      return 1;
+      return 0; // unsuccessful dig
     }
   }
 
@@ -158,6 +160,8 @@ class Player
   constructor(x,y)
   {
   this.self = new Sprite(x,y,TILE_SIZE-16,TILE_SIZE-2);
+  this.self.addAni("dig","./img/digginAnimations/digginAnimation-01.png",6);
+  this.self.addAni("idle","./img/idleAnimation/idleAnimation-01.png",3);
   this.self.img = playerImg;
   this.self.collider="d";
   this.self.rotationLock = true;
@@ -165,6 +169,8 @@ class Player
   }
   move()
   {
+    this.self.ani = "idle";
+    this.self.ani.frameDelay = 25;
     let blockColumn = Math.floor(this.self.x/TILE_SIZE);
     let blockRow = Math.floor(this.self.y/TILE_SIZE);
 
@@ -197,9 +203,18 @@ class Player
         createVector(this.self.x+TILE_SIZE,this.self.y),1);
     }
   }
-    if(kb.pressed("x")){
-      activeBlocks.down.digBlock();
+    if(kb.pressed("x"))
+    {
+      this.self.ani.frameDelay = 10;
+      this.self.ani = ["dig","idle"];
+      let success = activeBlocks.down.digBlock();
+      if(success){
+        //play dig sound
+      }else{
+        //play doink sound
+      }
     }
+    
     this.self.x = activeBlocks.inside.x;
 
     if(activeBlocks.inside.item){
@@ -266,6 +281,7 @@ let unbreakableTexture;
 let gameOver;
 let stuckCounter;
 let textSprite;
+let diggingAni;
 let scoreStr;
 let score = 0;
 
@@ -292,9 +308,8 @@ function setup()
   gameOver = false;
   mapArray = createBlocks();
   player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
-  textSprite= new Sprite(player.self.x+ HALF_TILE, player.self.y - HALF_TILE ,0,0);
-  textSprite.collider = "static";
-  textSprite.visible = false;
+  // textSprite.collider = "static";
+  // textSprite.visible = false;
 }
 
 function cleanup()
@@ -351,19 +366,25 @@ function draw()
   }
   else
   {
+    if(!textSprite)
+    {
+      textSprite= new Sprite(TILE_SIZE * HALF_TILE, player.self.y - HALF_TILE ,0,0);
+    }
+    else
+    {
     //draw game over screen, play again?
-    textSprite.y = player.self.y;
-    textSprite.visible = true;
-    textSprite.textColor = color(255,255,255);
-    textSprite.textSize = 50;
-    textSprite.text = scoreStr+"\nGAME OVER\nPress'r' to restart\n";
-    //textSize(50);
-    if(kb.presses("r")){
-      score = 0;
-      cleanup();
-      setup();
-      textSprite.remove();
-      gameOver = false;
+      player.self.ani.stop();
+      textSprite.textColor = color(255,255,255);
+      textSprite.textSize = 50;
+      textSprite.text = scoreStr+"\nGAME OVER\nPress'r' to restart\n";
+      //textSize(50);
+      if(kb.presses("r")){
+        score = 0;
+        cleanup();
+        setup();
+        textSprite.remove();
+        gameOver = false;
+      }
     }
   }
 }
