@@ -169,7 +169,7 @@ class Player
   }
   move()
   {
-    this.self.ani = "idle";
+    //this.self.ani = "idle";
     this.self.ani.frameDelay = 25;
     let blockColumn = Math.floor(this.self.x/TILE_SIZE);
     let blockRow = Math.floor(this.self.y/TILE_SIZE);
@@ -235,6 +235,7 @@ function createBlocks()
   }
 
   let row;
+
   for(let col=0;col<WIDTH;col++)
   {
     for (row=0;row<HEIGHT;row++)
@@ -300,7 +301,7 @@ function preload(){
 function setup() 
 {
   let canvas = new Canvas(WIDTH * TILE_SIZE, HEIGHT*TILE_SIZE);
-  world.gravity.y=1;
+  world.gravity.y=3;
   canvas.center("horizontal");
   background(255);
   stroke(0);
@@ -308,8 +309,9 @@ function setup()
   gameOver = false;
   mapArray = createBlocks();
   player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
-  // textSprite.collider = "static";
-  // textSprite.visible = false;
+  textSprite= new Sprite(TILE_SIZE * HALF_TILE, player.self.y - HALF_TILE ,0,0);
+  textSprite.collider = "static";
+  textSprite.visible = false;
 }
 
 function cleanup()
@@ -366,25 +368,22 @@ function draw()
   }
   else
   {
-    if(!textSprite)
+    
+    
+  //draw game over screen, play again?
+    player.self.ani.stop();
+    textSprite.y = player.self.y;
+    textSprite.textColor = color(255,255,255);
+    textSprite.textSize = 50;
+    textSprite.text = scoreStr+"\nGAME OVER\nPress'r' to restart\n";
+    textSprite.visible = true;
+    //textSize(50);
+    if(kb.presses("r"))
     {
-      textSprite= new Sprite(TILE_SIZE * HALF_TILE, player.self.y - HALF_TILE ,0,0);
-    }
-    else
-    {
-    //draw game over screen, play again?
-      player.self.ani.stop();
-      textSprite.textColor = color(255,255,255);
-      textSprite.textSize = 50;
-      textSprite.text = scoreStr+"\nGAME OVER\nPress'r' to restart\n";
-      //textSize(50);
-      if(kb.presses("r")){
-        score = 0;
-        cleanup();
-        setup();
-        textSprite.remove();
-        gameOver = false;
-      }
+      score = 0;
+      cleanup();
+      setup();
+      gameOver = false;
     }
   }
 }
