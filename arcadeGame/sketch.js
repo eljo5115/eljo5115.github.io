@@ -281,7 +281,7 @@ let playerImg;
 let unbreakableTexture;
 let gameOver;
 let stuckCounter;
-let textSprite;
+let textSprite = null;
 let diggingAni;
 let scoreStr;
 let score = 0;
@@ -301,7 +301,7 @@ function preload(){
 function setup() 
 {
   let canvas = new Canvas(WIDTH * TILE_SIZE, HEIGHT*TILE_SIZE);
-  world.gravity.y=3;
+  world.gravity.y=10;
   canvas.center("horizontal");
   background(255);
   stroke(0);
@@ -309,9 +309,8 @@ function setup()
   gameOver = false;
   mapArray = createBlocks();
   player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
-  textSprite= new Sprite(TILE_SIZE * HALF_TILE, player.self.y - HALF_TILE ,0,0);
-  textSprite.collider = "static";
-  textSprite.visible = false;
+  cameraDY = 0;
+  
 }
 
 function cleanup()
@@ -322,6 +321,10 @@ function cleanup()
     mapArray[i][j].self.remove();
     }
   }
+  if(textSprite){
+    textSprite.remove();
+  }
+  textSprite = null;
   player.self.remove();
   delete player;
 }
@@ -329,6 +332,8 @@ function cleanup()
 function draw() 
 {
   clear();
+  camera.on();
+
   if(!gameOver)
   {
     scoreStr = "Score: " + score.toString();
@@ -347,7 +352,8 @@ function draw()
     }
 
     player.move();
-    camera.y = player.self.y+600;
+    //camera.y = player.self.y+600;
+    camera.y= player.self.y + 800;
     textSize(10);
     strokeWeight(0);
     mapArray[0][0].self.textColor = "white"
@@ -355,28 +361,38 @@ function draw()
 
     if(player.self.vel.y == 0)
     {
+      //flash MOVE
+      camera.off();
+      fill("red");
+      //textSize(32);
+      text("move",WIDTH*TILE_SIZE,player.self.y,0,0);
       stuckCounter++;
     }
     else
     {
       stuckCounter = 0;
     }
-    if(stuckCounter > 600)
+    if(stuckCounter > 300)
     {
       gameOver = true;
     }
   }
   else
   {
-    
-    
-  //draw game over screen, play again?
+    if(!textSprite){
+      textSprite= new Sprite(WIDTH * HALF_TILE, player.self.y - HALF_TILE ,0,0);
+      console.log(textSprite);
+    }
+    //draw game over screen, play again?
+    cameraDY = 0;
     player.self.ani.stop();
+    textSprite.collider = "static";
     textSprite.y = player.self.y;
     textSprite.textColor = color(255,255,255);
     textSprite.textSize = 50;
     textSprite.text = scoreStr+"\nGAME OVER\nPress'r' to restart\n";
-    textSprite.visible = true;
+
+
     //textSize(50);
     if(kb.presses("r"))
     {
