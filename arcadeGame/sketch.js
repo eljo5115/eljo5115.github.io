@@ -4,6 +4,13 @@ const WIDTH = 14;
 const HEIGHT = 30;
 //TODOS
 /* 
+  camera movement, camera == canvas, sprites exist in world.
+  canvas smaller
+  main menu
+  score GUI
+  death penalty GUI? mechanic
+  redo textures
+  inventory? save bombs for later
   sound (bomb,dig,music?,diamond, undiggable)
   animation (bomb, dig)
 */
@@ -104,11 +111,12 @@ class Block
   // }
 }
 
-
 class Item{
   constructor(ex,ey){
     this.x = ex*TILE_SIZE+HALF_TILE;
     this.y = ey*TILE_SIZE+HALF_TILE;
+    this.indexX = ex;
+    this.indexY = ey;
     this.self = new Sprite(this.x,this.y,TILE_SIZE,TILE_SIZE);
     this.self.collider="none"
   }
@@ -127,6 +135,7 @@ class Bomb extends Item{
       score++;
       this.blowUp();
       this.self.remove();
+      mapArray[this.indexY][this.indexX].item=null;
     }
   }
   blowUp(){
@@ -151,6 +160,7 @@ class Diamond extends Item{
       //increase score
       score++;
       this.self.remove();
+      mapArray[this.indexY][this.indexX].item=null;
     }
   }
 }
@@ -265,11 +275,10 @@ function createBlocks()
       }
     }
     return mapArray;
-  }
-
+}
 
 let player;
-let cameraDY = 0.1;
+let cameraDY = 0.01;
 let mapArray;
 let blockRow;
 let dirtTexture;
@@ -300,16 +309,17 @@ function preload(){
 
 function setup() 
 {
-  let canvas = new Canvas(WIDTH * TILE_SIZE, HEIGHT*TILE_SIZE);
+  let canvas = new Canvas(WIDTH * TILE_SIZE, (HEIGHT/3)*TILE_SIZE);
   world.gravity.y=10;
   canvas.center("horizontal");
+  //canvas.center("vertical")
   background(255);
   stroke(0);
   strokeWeight(1);
   gameOver = false;
   mapArray = createBlocks();
   player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
-  cameraDY = 0;
+  cameraDY = 1;
   
 }
 
@@ -319,6 +329,9 @@ function cleanup()
   for(let i = 0; i<HEIGHT;i++){
     for(let j = 0; j<WIDTH;j++){
     mapArray[i][j].self.remove();
+    if(mapArray[i][j].item)
+      mapArray[i][j].item.self.remove();
+      mapArray[i][j].item = null;
     }
   }
   if(textSprite){
@@ -327,22 +340,53 @@ function cleanup()
   textSprite = null;
   player.self.remove();
   delete player;
+  camera.y = 0
 }
 
 function draw() 
 {
   clear();
   camera.on();
+  if(gameOver)
+  {
+    // if(!textSprite){
+    //   textSprite= new Sprite(WIDTH * HALF_TILE, player.self.y - HALF_TILE ,0,0);
+    //   console.log(textSprite);
+    // }
+    //draw game over screen, play again?
+    //rewrite using camera.off()
+    for (let i =0; i<HEIGHT;i++){
+      for (let j = 0; j< WIDTH;j++){
+        mapArray[i][j].self.visible = false;
+        if (mapArray[i][j].item){
+          mapArray[i][j].item.self.visible = false;
+        }
+      }
+    }
+    camera.off();
+    fill(255);
+    textSize(50);
+    text(scoreStr+"\nGame Over!\nPress 'r' to restart",canvas.w/2-50,canvas.h/2);
+    //rect(0,0,canvas.w,canvas.h);
+    cameraDY = 0;
+    player.self.ani.stop();
 
-  if(!gameOver)
+    if(kb.presses("r"))
+    {
+      score = 0;
+      cleanup();
+      setup();
+      gameOver = false;
+    }
+  }
+  else
   {
     scoreStr = "Score: " + score.toString();
     
     blockRow = Math.floor(player.self.y/TILE_SIZE);
-    //background(21,21,21);
-    background(116,204,229);//01110100 11001100 11100101
+    background(116,204,229);
 
-    if(blockRow > (HEIGHT-2))
+    if(blockRow > (HEIGHT-2)) //player made it to the bottom
     {
       cleanup();
       mapArray = createBlocks();
@@ -352,56 +396,34 @@ function draw()
     }
 
     player.move();
-    //camera.y = player.self.y+600;
-    camera.y= player.self.y + 800;
-    textSize(10);
-    strokeWeight(0);
-    mapArray[0][0].self.textColor = "white"
-    mapArray[0][0].self.text = scoreStr;
-
-    if(player.self.vel.y == 0)
-    {
-      //flash MOVE
-      camera.off();
-      fill("red");
-      //textSize(32);
-      text("move",WIDTH*TILE_SIZE,player.self.y,0,0);
-      stuckCounter++;
+    if(player.self.y > camera.y){
+      camera.y = player.self.y
     }
-    else
+    else if(player.self.y > 3*TILE_SIZE)
     {
-      stuckCounter = 0;
-    }
-    if(stuckCounter > 300)
-    {
-      gameOver = true;
-    }
+      camera.y += cameraDY;
+    } 
+        for (var i=0;i<HEIGHT;i++){
+          for (var j=0;j<WIDTH;j++){
+            mapArray[i][j].self.draw()
+            if(mapArray[i][j].item){
+              mapArray[i][j].item.self.draw()
+            }
+          }
+        }
+        player.self.draw()
+      if(player.self.y < camera.y - canvas.h/2-TILE_SIZE)//game over check
+      {
+        gameOver = true;
+      }
+    //console.log("camera:",camera.y-(HEIGHT/6)*TILE_SIZE,"player:",player.self.y)
+  
   }
-  else
-  {
-    if(!textSprite){
-      textSprite= new Sprite(WIDTH * HALF_TILE, player.self.y - HALF_TILE ,0,0);
-      console.log(textSprite);
-    }
-    //draw game over screen, play again?
-    cameraDY = 0;
-    player.self.ani.stop();
-    textSprite.collider = "static";
-    textSprite.y = player.self.y;
-    textSprite.textColor = color(255,255,255);
-    textSprite.textSize = 50;
-    textSprite.text = scoreStr+"\nGAME OVER\nPress'r' to restart\n";
-
-
-    //textSize(50);
-    if(kb.presses("r"))
-    {
-      score = 0;
-      cleanup();
-      setup();
-      gameOver = false;
-    }
-  }
+  //drawing UI
+  camera.off()
+  fill(255)
+  textSize(20)
+  text("Score: " + score.toString(), 16,16)
 }
 
 //debug functions
