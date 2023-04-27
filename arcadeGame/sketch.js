@@ -4,11 +4,7 @@ const WIDTH = 14;
 const HEIGHT = 30;
 //TODOS
 /* 
-  camera movement, camera == canvas, sprites exist in world.
-  canvas smaller
   main menu
-  score GUI
-  death penalty GUI? mechanic
   redo textures
   inventory? save bombs for later
   sound (bomb,dig,music?,diamond, undiggable)
@@ -263,11 +259,55 @@ function createBlocks()
       {
         if(row > 0)
         {  
-          let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3]; //types weighted within array (change for balancing)
-          let itemTypes = [0,1,2];
-          const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
-          const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
-          b = new Block(col,row,t,it);
+          if(pageNumber==0)
+          {
+            if(row == 1)
+            {
+              b = new Block(col,row,1,2)
+            }
+            else if(row == 2)
+            {
+              if(col == 3)
+              {
+                b = new Block(col,row,0,0)
+              }
+              else
+              {
+                b = new Block(col,row,2)
+              }
+            }
+            else if(row == 3)
+            {
+              if (col == 3)
+              {
+                b = new Block(col,row,0,0)
+              }
+              else if (col == 2 || col == 4){
+                b = new Block(col,row,2,2)
+              }
+              else
+              {
+                b = new Block(col,row,3)
+              }
+            }
+            else
+            {
+              let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3]; //types weighted within array (change for balancing)
+              let itemTypes = [0,1,2];
+              const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
+              const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+              b = new Block(col,row,t,it);
+            }
+            
+          }
+          else
+          {
+            let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3]; //types weighted within array (change for balancing)
+            let itemTypes = [0,1,2];
+            const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
+            const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+            b = new Block(col,row,t,it);
+          }
         }
         else { b = new Block(col,row,0,2); }// air block, no item
       }
@@ -294,7 +334,8 @@ let textSprite = null;
 let diggingAni;
 let scoreStr;
 let score = 0;
-
+let pageNumber;
+let inMenu = true;
 
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
@@ -309,18 +350,18 @@ function preload(){
 
 function setup() 
 {
-  let canvas = new Canvas(WIDTH * TILE_SIZE, (HEIGHT/3)*TILE_SIZE);
+  let canvas = new Canvas(WIDTH * TILE_SIZE, visualViewport.height);
   world.gravity.y=10;
+  //canvas.center("vertical");
   canvas.center("horizontal");
-  //canvas.center("vertical")
   background(255);
   stroke(0);
   strokeWeight(1);
   gameOver = false;
+  pageNumber = 0;
   mapArray = createBlocks();
   player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
   cameraDY = 1;
-  
 }
 
 function cleanup()
@@ -389,6 +430,7 @@ function draw()
     if(blockRow > (HEIGHT-2)) //player made it to the bottom
     {
       cleanup();
+      pageNumber++;
       mapArray = createBlocks();
       let px = player.self.x;
       player = new Player(px,HALF_TILE-2);
@@ -403,19 +445,19 @@ function draw()
     {
       camera.y += cameraDY;
     } 
-        for (var i=0;i<HEIGHT;i++){
-          for (var j=0;j<WIDTH;j++){
-            mapArray[i][j].self.draw()
-            if(mapArray[i][j].item){
-              mapArray[i][j].item.self.draw()
-            }
-          }
+    for (var i=0;i<HEIGHT;i++){
+      for (var j=0;j<WIDTH;j++){
+        mapArray[i][j].self.draw()
+        if(mapArray[i][j].item){
+          mapArray[i][j].item.self.draw()
         }
-        player.self.draw()
-      if(player.self.y < camera.y - canvas.h/2-TILE_SIZE)//game over check
-      {
-        gameOver = true;
       }
+    }
+    player.self.draw()
+    if(player.self.y < camera.y - canvas.h/2-TILE_SIZE)//game over check
+    {
+      gameOver = true;
+    }
     //console.log("camera:",camera.y-(HEIGHT/6)*TILE_SIZE,"player:",player.self.y)
   
   }
