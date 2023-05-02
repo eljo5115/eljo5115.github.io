@@ -13,7 +13,7 @@ const HEIGHT = 30;
 
 class Block
 {
-  constructor(ex,ey,type=0,itemType=2)
+  constructor(ex,ey,blockType=0,itemType=2)
   {
   //ex,ey are indexes in mapArray
     this.x = ex*TILE_SIZE+HALF_TILE;
@@ -26,7 +26,7 @@ class Block
     //set block types
 
     this.self.collider="static";
-    switch(type)
+    switch(blockType)
     {
       case 0:{
         // air, may contain item
@@ -317,6 +317,21 @@ function createBlocks()
     return mapArray;
 }
 
+function drawAllBlocks(){
+  for (var i=0;i<HEIGHT;i++){
+      for (var j=0;j<WIDTH;j++){
+        mapArray[i][j].self.draw()
+        if(mapArray[i][j].item){
+          mapArray[i][j].item.self.draw()
+        }
+      }
+    }
+}
+
+function drawTitleScreen()
+{
+
+}
 let player;
 let cameraDY = 0.01;
 let mapArray;
@@ -335,7 +350,7 @@ let diggingAni;
 let scoreStr;
 let score = 0;
 let pageNumber;
-let inMenu = true;
+let isTitleScreen = true;
 
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
@@ -418,7 +433,12 @@ function draw()
       cleanup();
       setup();
       gameOver = false;
+      isTitleScreen = true;
     }
+  }
+  else if(isTitleScreen)
+  {
+
   }
   else
   {
@@ -436,23 +456,18 @@ function draw()
       player = new Player(px,HALF_TILE-2);
       score+=10;
     }
-
+    drawAllBlocks();
     player.move();
-    if(player.self.y > camera.y){
+    
+    if(player.self.y > camera.y)//if player gets ahead of the camera
+    {
       camera.y = player.self.y
     }
-    else if(player.self.y > 3*TILE_SIZE)
+    else if(player.self.y > 3*TILE_SIZE)//normal camera movement starts after player gets to 3rd row
     {
       camera.y += cameraDY;
     } 
-    for (var i=0;i<HEIGHT;i++){
-      for (var j=0;j<WIDTH;j++){
-        mapArray[i][j].self.draw()
-        if(mapArray[i][j].item){
-          mapArray[i][j].item.self.draw()
-        }
-      }
-    }
+    
     player.self.draw()
     if(player.self.y < camera.y - canvas.h/2-TILE_SIZE)//game over check
     {
