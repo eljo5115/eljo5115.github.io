@@ -1,15 +1,21 @@
 const TILE_SIZE = 64;
 const HALF_TILE = TILE_SIZE / 2;
-const WIDTH = 14;
-const HEIGHT = 30;
+const WIDTH = Math.floor(visualViewport.width/TILE_SIZE);
+const HEIGHT = Math.floor(visualViewport.height/TILE_SIZE);
+//var scoreFile = require("high_scores.txt")
 //TODOS
 /* 
-  main menu
-  redo textures
-  inventory? save bombs for later
+
   sound (bomb,dig,music?,diamond, undiggable)
   animation (bomb, dig)
 */
+const States = {
+  gameOver: 0,
+  isTitleScreen: 1,
+  isGamePlay: 2,
+
+}
+
 
 class Block
 {
@@ -30,7 +36,7 @@ class Block
     {
       case 0:{
         // air, may contain item
-        this.self.image = airTexture; //open space
+        this.self.image = airTexture //open space
         this.self.collider = "none";
         this.diggable = false;
 
@@ -199,7 +205,7 @@ class Player
     
 
     this.self.vel.x = 0;
-    if(true){
+
     if(kb.pressed('left') && activeBlocks.left.self.collider=="none"){
       this.self.moveTowards(
         createVector(this.self.x-TILE_SIZE,this.self.y),1);
@@ -208,7 +214,6 @@ class Player
       this.self.moveTowards(
         createVector(this.self.x+TILE_SIZE,this.self.y),1);
     }
-  }
     if(kb.pressed("x"))
     {
       this.self.ani.frameDelay = 10;
@@ -292,7 +297,7 @@ function createBlocks()
             }
             else
             {
-              let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3]; //types weighted within array (change for balancing)
+              let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3,0,0,1,1,1,1]; //types weighted within array (change for balancing)
               let itemTypes = [0,1,2];
               const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
               const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
@@ -330,10 +335,18 @@ function drawAllBlocks(){
 
 function drawTitleScreen()
 {
+  let startText;
+  image(titleBackground, 0,0,WIDTH*TILE_SIZE,HEIGHT*TILE_SIZE)
+  stroke(0);
+  fill(0);
+  textSize(24)
+  strokeWeight(1);
+  startText = text("Press x to start", 400,400);
 
 }
+
 let player;
-let cameraDY = 0.01;
+let cameraDY;
 let mapArray;
 let blockRow;
 let dirtTexture;
@@ -343,24 +356,38 @@ let diamondImage;
 let bombImage;
 let playerImg;
 let unbreakableTexture;
-let gameOver;
 let stuckCounter;
-let textSprite = null;
 let diggingAni;
 let scoreStr;
+let titleBackground;
 let score = 0;
-let pageNumber;
-let isTitleScreen = true;
+let pageNumber = 0;
+let state = States.isTitleScreen;
+let gameAssets = false;
 
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
   playerImg = loadImage("./img/player.png");
-  dirtTexture = loadImage("./img/dirt.png");
-  stoneTexture = loadImage("./img/stone.png");
+  dirtTexture = loadImage("./img/dark-dirt-ai.png");
+  stoneTexture = loadImage("./img/stone-04.png");
   airTexture = loadImage("./img/air.png");
   diamondImage = loadImage("./img/diamond.png");
   bombImage = loadImage("./img/bomb.png");
-  unbreakableTexture = loadImage("./img/obsidian.png");
+  unbreakableTexture = loadImage("./img/obsidian-ai2.png");
+  titleBackground = loadImage("./img/background.png")
+}
+
+function gameSetup(px)
+{
+  if (px != 0){
+    player = new Player(px,HALF_TILE-2);
+  }
+  else
+  {
+    player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
+  }
+  mapArray = createBlocks();
+  gameAssets = true;
 }
 
 function setup() 
@@ -372,116 +399,143 @@ function setup()
   background(255);
   stroke(0);
   strokeWeight(1);
-  gameOver = false;
-  pageNumber = 0;
-  mapArray = createBlocks();
-  player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
+  score = 0;
   cameraDY = 1;
+  state = States.isTitleScreen;
+  //camera.y = 0;
 }
 
 function cleanup()
 {
   // removes all sprites for reset
-  for(let i = 0; i<HEIGHT;i++){
-    for(let j = 0; j<WIDTH;j++){
-    mapArray[i][j].self.remove();
-    if(mapArray[i][j].item)
-      mapArray[i][j].item.self.remove();
-      mapArray[i][j].item = null;
+  for(let i = 0; i<HEIGHT;i++)
+  {
+    for(let j = 0; j<WIDTH;j++)
+    {
+      if (mapArray)
+      {
+        if(mapArray[i][j].self)
+        {
+          mapArray[i][j].self.remove();
+        if(mapArray[i][j].item)
+          {
+            mapArray[i][j].item.self.remove();
+            mapArray[i][j].item = null;
+          }
+        } 
+      }
     }
   }
-  if(textSprite){
-    textSprite.remove();
-  }
-  textSprite = null;
   player.self.remove();
   delete player;
+  pageNumber = 0;
   camera.y = 0
+  gameAssets = false;
 }
 
 function draw() 
 {
   clear();
-  camera.on();
-  if(gameOver)
-  {
-    // if(!textSprite){
-    //   textSprite= new Sprite(WIDTH * HALF_TILE, player.self.y - HALF_TILE ,0,0);
-    //   console.log(textSprite);
-    // }
-    //draw game over screen, play again?
-    //rewrite using camera.off()
-    for (let i =0; i<HEIGHT;i++){
-      for (let j = 0; j< WIDTH;j++){
-        mapArray[i][j].self.visible = false;
-        if (mapArray[i][j].item){
-          mapArray[i][j].item.self.visible = false;
+  console.log(state)
+  switch(state){
+    case States.gameOver:
+    {
+      for(let i = 0; i<HEIGHT;i++)
+      {
+        for(let j = 0; j<WIDTH;j++)
+        {
+          mapArray[i][j].self.visible = false
+          if (mapArray[i][j].item)
+          {
+            mapArray[i][j].item.self.visible = false;
+          }
         }
       }
+      camera.off();
+      clear();
+      fill(255);
+      textSize(50);
+      text(scoreStr+"\nGame Over!\nPress 'r' to restart",canvas.w/2-50,canvas.h/2);
+      //rect(0,0,canvas.w,canvas.h);
+      cameraDY = 0;
+      
+      
+      if(kb.presses("r"))
+      {
+        cleanup();
+        state = States.isTitleScreen
+      }
+      break;
     }
-    camera.off();
-    fill(255);
-    textSize(50);
-    text(scoreStr+"\nGame Over!\nPress 'r' to restart",canvas.w/2-50,canvas.h/2);
-    //rect(0,0,canvas.w,canvas.h);
-    cameraDY = 0;
-    player.self.ani.stop();
-
-    if(kb.presses("r"))
+    case States.isGamePlay:
     {
-      score = 0;
-      cleanup();
-      setup();
-      gameOver = false;
-      isTitleScreen = true;
+      camera.on();
+      let px;
+      if(!gameAssets)
+      {
+        gameSetup(px);
+      }
+      scoreStr = "Score: " + score.toString();
+      blockRow = Math.floor(player.self.y/TILE_SIZE);
+      background(116,204,229);
+
+      if(blockRow > (HEIGHT-2)) //player made it to the bottom
+      {
+        cleanup();
+        pageNumber++;
+        px = player.self.x;
+        score+=10;
+      }
+      else
+      {
+        px = 0
+      }
+      drawAllBlocks();
+      player.move();
+
+      if(player.self.y > camera.y)//if player gets ahead of the camera
+      {
+        camera.y = player.self.y
+      }
+      else if(player.self.y > 3*TILE_SIZE)//normal camera movement starts after player gets to 3rd row
+      {
+        camera.y += cameraDY;
+      } 
+
+      player.self.draw()
+
+      if(player.self.y < Math.floor(camera.y - canvas.h/2-TILE_SIZE))//game over check
+      {
+        state = States.gameOver;
+      }
+      //console.log("camera:",camera.y-(HEIGHT/6)*TILE_SIZE,"player:",player.self.y)
+
+      //drawing UI
+      camera.off()
+      fill(255)
+      textSize(20)
+      text("Score: " + score.toString(), 16,16)
+      break;
+    }
+    case States.isTitleScreen:
+    {
+      //camera.off()
+      drawTitleScreen()
+      if (kb.pressed("x"))
+      {
+        //starts the game
+        setup()
+        state = States.isGamePlay
+      }
+      break;
+    }
+    default:{
+      console.error("state undefined", UndefinedState)
     }
   }
-  else if(isTitleScreen)
-  {
-
-  }
-  else
-  {
-    scoreStr = "Score: " + score.toString();
-    
-    blockRow = Math.floor(player.self.y/TILE_SIZE);
-    background(116,204,229);
-
-    if(blockRow > (HEIGHT-2)) //player made it to the bottom
-    {
-      cleanup();
-      pageNumber++;
-      mapArray = createBlocks();
-      let px = player.self.x;
-      player = new Player(px,HALF_TILE-2);
-      score+=10;
-    }
-    drawAllBlocks();
-    player.move();
-    
-    if(player.self.y > camera.y)//if player gets ahead of the camera
-    {
-      camera.y = player.self.y
-    }
-    else if(player.self.y > 3*TILE_SIZE)//normal camera movement starts after player gets to 3rd row
-    {
-      camera.y += cameraDY;
-    } 
-    
-    player.self.draw()
-    if(player.self.y < camera.y - canvas.h/2-TILE_SIZE)//game over check
-    {
-      gameOver = true;
-    }
-    //console.log("camera:",camera.y-(HEIGHT/6)*TILE_SIZE,"player:",player.self.y)
-  
-  }
-  //drawing UI
-  camera.off()
-  fill(255)
-  textSize(20)
-  text("Score: " + score.toString(), 16,16)
 }
+
+
 
 //debug functions
 function drawGridCoords(rows, cols) 
