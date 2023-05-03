@@ -5,15 +5,14 @@ const HEIGHT = Math.floor(visualViewport.height/TILE_SIZE);
 //var scoreFile = require("high_scores.txt")
 //TODOS
 /* 
-
   sound (bomb,dig,music?,diamond, undiggable)
-  animation (bomb, dig)
+  animation (bomb, dig) line 150
+  dig left/right
 */
 const States = {
   gameOver: 0,
   isTitleScreen: 1,
   isGamePlay: 2,
-
 }
 
 
@@ -115,10 +114,13 @@ class Block
 
 class Item{
   constructor(ex,ey){
+    //exact x,y pixels
     this.x = ex*TILE_SIZE+HALF_TILE;
     this.y = ey*TILE_SIZE+HALF_TILE;
+    //index in mapArray
     this.indexX = ex;
     this.indexY = ey;
+    //sprite instance
     this.self = new Sprite(this.x,this.y,TILE_SIZE,TILE_SIZE);
     this.self.collider="none"
   }
@@ -131,8 +133,10 @@ class Bomb extends Item{
     this.ey = ey;
     this.self.image=bombImage;
   }
-  pickUp(){
-    if(player.self.overlaps(this.self)){
+  pickUp()
+  {
+    if(player.self.overlaps(this.self))
+    {
       //blow up
       score++;
       this.blowUp();
@@ -140,12 +144,18 @@ class Bomb extends Item{
       mapArray[this.indexY][this.indexX].item=null;
     }
   }
-  blowUp(){
-    for(let j = -1; j < 2; j++){
-    for(let i = -1; i < 2;i++){
-        if((mapArray[this.ey+i][this.ex+j].destructable)){
-        mapArray[this.ey+i][this.ex+j].self.collider = "none";
-        mapArray[this.ey+i][this.ex+j].self.image = airTexture;
+  blowUp()
+  {
+    //destroys blocks in a 3x3 area
+    //add animation?
+    for(let j = -1; j < 2; j++)
+    {
+      for(let i = -1; i < 2;i++)
+      {
+        if((mapArray[this.ey+i][this.ex+j].destructable))
+        {
+          mapArray[this.ey+i][this.ex+j].self.collider = "none";
+          mapArray[this.ey+i][this.ex+j].self.image = airTexture;
         }
       }
     }
@@ -368,12 +378,12 @@ let gameAssets = false;
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
   playerImg = loadImage("./img/player.png");
+  unbreakableTexture = loadImage("./img/obsidian-ai2.png");
   dirtTexture = loadImage("./img/dark-dirt-ai.png");
   stoneTexture = loadImage("./img/stone-04.png");
   airTexture = loadImage("./img/air.png");
   diamondImage = loadImage("./img/diamond.png");
   bombImage = loadImage("./img/bomb.png");
-  unbreakableTexture = loadImage("./img/obsidian-ai2.png");
   titleBackground = loadImage("./img/background.png")
 }
 
