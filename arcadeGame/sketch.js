@@ -1,11 +1,15 @@
 const TILE_SIZE = 64;
 const HALF_TILE = TILE_SIZE / 2;
-const WIDTH = Math.floor(visualViewport.width/TILE_SIZE);
-const HEIGHT = Math.floor(visualViewport.height/TILE_SIZE);
+
+//const WIDTH = 15
+//const HEIGHT = 25
+const WIDTH = Math.min(Math.floor(visualViewport.width/TILE_SIZE),1080);
+const HEIGHT =Math.min(Math.floor(visualViewport.height/TILE_SIZE),1920);
 //var scoreFile = require("high_scores.txt")
 //TODOS
 /* 
   sound (bomb,dig,music?,diamond, undiggable)
+  state machine animations for player
   animation (bomb, dig) line 150
   dig left/right
 */
@@ -15,6 +19,11 @@ const States = {
   isGamePlay: 2,
 }
 
+const playerStates = {
+  idle:0,
+  dig:1,
+  fall:2,
+}
 
 class Block
 {
@@ -179,29 +188,25 @@ class Diamond extends Item{
 
 class Player
 {
+  //implement states
+  
   constructor(x,y)
   {
   this.self = new Sprite(x,y,TILE_SIZE-16,TILE_SIZE-2);
-  this.self.addAni("dig","./img/digginAnimations/digginAnimation-01.png",6);
-  this.self.addAni("idle","./img/idleAnimation/idleAnimation-01.png",3);
+  this.self.addAni("dig","./img/diggingAnimation/diggingAnimation1.png",5);
+  this.self.addAni("idle","./img/idleAnimation/idleFrame1.png",3);
+  this.self.addAni("falling","./img/falling_loop/a_falling_loop1.png",3);
   this.self.img = playerImg;
   this.self.collider="d";
   this.self.rotationLock = true;
   this.self.bounciness = 0;
+  this.playerState = playerStates.idle
   }
   move()
   {
-    //this.self.ani = "idle";
-    this.self.ani.frameDelay = 25;
+    //this.playerState = playerStates.idle
     let blockColumn = Math.floor(this.self.x/TILE_SIZE);
     let blockRow = Math.floor(this.self.y/TILE_SIZE);
-
-    if(blockColumn >= 0){
-      this.self.x = WIDTH*TILE_SIZE-HALF_TILE;
-    }
-    else if(blockColumn >= WIDTH){
-      this.self.x=HALF_TILE;
-    }
 
   //let activeBlocks = mapArray[blockColumn][blockRow].adjBlocks;
     
@@ -216,36 +221,80 @@ class Player
 
     this.self.vel.x = 0;
 
-    if(kb.pressed('left') && activeBlocks.left.self.collider=="none"){
+    if(kb.presses('left') && activeBlocks.left.self.collider=="none"){
       this.self.moveTowards(
         createVector(this.self.x-TILE_SIZE,this.self.y),1);
     }
-    if(kb.pressed('right') && activeBlocks.right.self.collider=="none"){
+    if(kb.presses('right') && activeBlocks.right.self.collider=="none"){
       this.self.moveTowards(
         createVector(this.self.x+TILE_SIZE,this.self.y),1);
     }
     if(kb.pressed("x"))
     {
-      this.self.ani.frameDelay = 10;
-      this.self.ani = ["dig","idle"];
       let success = activeBlocks.down.digBlock();
+      this.playerState = playerStates.dig
       if(success){
         //play dig sound
       }else{
         //play doink sound
       }
     }
-    
+    if(this.self.vel.y > 0.1)
+    {
+      this.playerState = playerStates.fall;
+    }
+
     this.self.x = activeBlocks.inside.x;
 
     if(activeBlocks.inside.item){
       activeBlocks.inside.item.pickUp();
     }
 
+    switch(this.playerState)
+    {
+      case playerStates.idle:
+      {
+        this.self.ani.frameDelay = 25;
+        this.self.ani = "idle";
+      }
+      case playerStates.dig:
+      {
+        this.self.ani.frameDelay = 10;
+        this.self.ani = ["dig",'idle'];
+      }
+      case playerStates.fall:
+      {
+        this.self.ani.frameDelay = 7;
+        this.self.ani = "falling";
+        this.self.ani.loop();
+      }
+      default:
+      {
+        console.log("bad player state")
+        this.self.ani = "idle";
+      }
+    }
+    console.log(this.self.ani)
   }
+
 }
 
-function createBlocks()
+function makeWeightArray(weights=[])
+{
+  //createBlocks helper function
+  //takes in an unlimited number of weights and returns an array with the appropriate number of items
+  let weightArray = [];
+  for(var i = 0;i<weights.length;i++ )
+  {
+    for(var j = 0; j < weights[i];j++)
+    {
+      weightArray.push(i);
+    }
+  }
+  return weightArray;
+}
+
+function createBlocks(airWeight,dirtWeight,stoneWeight,obsidianWeight)
 {
   //game start creates 2d array
   let mapArray = new Array(HEIGHT);
@@ -307,7 +356,7 @@ function createBlocks()
             }
             else
             {
-              let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3,0,0,1,1,1,1]; //types weighted within array (change for balancing)
+              let blockTypes = makeWeightArray([airWeight,dirtWeight,stoneWeight,obsidianWeight]);
               let itemTypes = [0,1,2];
               const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
               const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
@@ -317,7 +366,7 @@ function createBlocks()
           }
           else
           {
-            let blockTypes = [0,0,1,1,1,0,0,1,1,1,2,3]; //types weighted within array (change for balancing)
+            let blockTypes = makeWeightArray([airWeight,dirtWeight,stoneWeight,obsidianWeight]);
             let itemTypes = [0,1,2];
             const t = blockTypes[Math.floor(Math.random() * blockTypes.length)];
             const it = itemTypes[Math.floor(Math.random() * itemTypes.length)];
@@ -377,12 +426,12 @@ let gameAssets = false;
 
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
-  playerImg = loadImage("./img/player.png");
+  playerImg = loadImage("./img/player-02.png");
   unbreakableTexture = loadImage("./img/obsidian-ai2.png");
   dirtTexture = loadImage("./img/dark-dirt-ai.png");
   stoneTexture = loadImage("./img/stone-04.png");
   airTexture = loadImage("./img/air.png");
-  diamondImage = loadImage("./img/diamond.png");
+  diamondImage = loadImage("./img/dollaz.png");
   bombImage = loadImage("./img/bomb.png");
   titleBackground = loadImage("./img/background.png")
 }
@@ -396,7 +445,7 @@ function gameSetup(px)
   {
     player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
   }
-  mapArray = createBlocks();
+  mapArray = createBlocks(40,40,20,10);
   gameAssets = true;
 }
 
@@ -524,7 +573,7 @@ function draw()
       camera.off()
       fill(255)
       textSize(20)
-      text("Score: " + score.toString(), 16,16)
+      text("Boss dollars: $" + score.toString(), 16,16)
       break;
     }
     case States.isTitleScreen:
@@ -544,8 +593,6 @@ function draw()
     }
   }
 }
-
-
 
 //debug functions
 function drawGridCoords(rows, cols) 
