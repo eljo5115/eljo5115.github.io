@@ -442,9 +442,9 @@ let gameAssets = false;
 // SYSTEM RESERVED FUNCTIONS
 function preload(){
   playerImg = loadImage("./img/player-02.png");
-  unbreakableTexture = loadImage("./img/obsidian-ai2.png");
-  dirtTexture = loadImage("./img/dark-dirt-ai.png");
-  stoneTexture = loadImage("./img/stone-04.png");
+  unbreakableTexture = loadImage("./img/asset-07.png");
+  dirtTexture = loadImage("./img/asset-06.png");
+  stoneTexture = loadImage("./img/asset-04.png");
   airTexture = loadImage("./img/air.png");
   dollazImage = loadImage("./img/dollaz.png");
   mo_dollazImage = loadImage("./img/mo_dollaz.png")
