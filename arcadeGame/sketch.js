@@ -174,12 +174,27 @@ class Bomb extends Item{
 class Diamond extends Item{
   constructor(x,y){
     super(x,y)
-    this.self.image=diamondImage;
+    var type = Math.floor(Math.random()*4)
+    if (type < 3)
+    {
+      this.self.image=dollazImage;
+    }
+    else
+    {
+      this.self.image=mo_dollazImage
+    }
   }
   pickUp(){
     if(this.self.overlaps(player.self)){
       //increase score
-      score++;
+      if(this.self.image == dollazImage)
+      {
+        score++;
+      }
+      else if (this.self.image == mo_dollazImage)
+      {
+        score+=10;
+      }
       this.self.remove();
       mapArray[this.indexY][this.indexX].item=null;
     }
@@ -400,7 +415,7 @@ function drawTitleScreen()
   fill(0);
   textSize(24)
   strokeWeight(1);
-  startText = text("Press x to start", 400,400);
+  startText = text("Press x to clock in.", 400,400);
 
 }
 
@@ -431,7 +446,8 @@ function preload(){
   dirtTexture = loadImage("./img/dark-dirt-ai.png");
   stoneTexture = loadImage("./img/stone-04.png");
   airTexture = loadImage("./img/air.png");
-  diamondImage = loadImage("./img/dollaz.png");
+  dollazImage = loadImage("./img/dollaz.png");
+  mo_dollazImage = loadImage("./img/mo_dollaz.png")
   bombImage = loadImage("./img/bomb.png");
   titleBackground = loadImage("./img/background.png")
 }
@@ -445,7 +461,7 @@ function gameSetup(px)
   {
     player = new Player(TILE_SIZE*(WIDTH/2)+HALF_TILE,HALF_TILE-2);
   }
-  mapArray = createBlocks(40,40,20,10);
+  mapArray = createBlocks(40,40,15,5);
   gameAssets = true;
 }
 
@@ -514,7 +530,7 @@ function draw()
       clear();
       fill(255);
       textSize(50);
-      text(scoreStr+"\nGame Over!\nPress 'r' to restart",canvas.w/2-50,canvas.h/2);
+      text("You made $"+score.toString()+" for The Company."+"\nGame Over!\nPress 'r' to restart",canvas.w/2-250,canvas.h/2);
       //rect(0,0,canvas.w,canvas.h);
       cameraDY = 0;
       
@@ -534,7 +550,6 @@ function draw()
       {
         gameSetup(px);
       }
-      scoreStr = "Score: " + score.toString();
       blockRow = Math.floor(player.self.y/TILE_SIZE);
       background(116,204,229);
 
@@ -573,7 +588,7 @@ function draw()
       camera.off()
       fill(255)
       textSize(20)
-      text("Boss dollars: $" + score.toString(), 16,16)
+      text("Company Profit: $" + score.toString(), 16,16)
       break;
     }
     case States.isTitleScreen:
