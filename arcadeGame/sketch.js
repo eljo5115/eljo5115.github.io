@@ -475,7 +475,7 @@ function setup()
   stroke(0);
   strokeWeight(1);
   score = 0;
-  cameraDY = 1;
+  cameraDY = 1.5;
   state = States.isTitleScreen;
   //camera.y = 0;
 }
