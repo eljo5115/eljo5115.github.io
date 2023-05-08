@@ -1,10 +1,10 @@
 const TILE_SIZE = 64;
 const HALF_TILE = TILE_SIZE / 2;
 
-//const WIDTH = 15
-//const HEIGHT = 25
-const WIDTH = Math.min(Math.floor(visualViewport.width/TILE_SIZE),1080);
-const HEIGHT =Math.min(Math.floor(visualViewport.height/TILE_SIZE),1920);
+const WIDTH = 15
+const HEIGHT = 25
+//const WIDTH = Math.min(Math.floor(visualViewport.width/TILE_SIZE),1080);
+//const HEIGHT =Math.min(Math.floor(visualViewport.height/TILE_SIZE),1920);
 //var scoreFile = require("high_scores.txt")
 //TODOS
 /* 
