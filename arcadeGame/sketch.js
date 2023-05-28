@@ -8,7 +8,11 @@ const HEIGHT = 25
 //var scoreFile = require("high_scores.txt")
 //TODOS
 /* 
-  sound (bomb,dig,music?,diamond, undiggable)
+  sound
+    bomb,
+    music (main menu and gameplay),
+    money pick up (some sort of cha-ching), 
+    undiggable block (ba-ding)
   state machine animations for player
   animation (bomb, dig) line 150
   dig left/right
@@ -93,6 +97,7 @@ class Block
     {
       this.self.image=airTexture;
       this.self.collider = "none";
+      digSound.play()
       return 1; // successful dig
     }
     else
@@ -450,6 +455,9 @@ function preload(){
   mo_dollazImage = loadImage("./img/mo_dollaz.png")
   bombImage = loadImage("./img/bomb.png");
   titleBackground = loadImage("./img/background.png")
+  // sound
+  digSound = loadSound("./sound/shoveling-clean.mp3")
+  // dig, bomb, cash pickup, undiggable
 }
 
 function gameSetup(px)
