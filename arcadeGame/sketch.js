@@ -457,6 +457,8 @@ function preload(){
   titleBackground = loadImage("./img/background.png")
   // sound
   digSound = loadSound("./sound/shoveling-clean.mp3")
+  mainMenuSong = loadSound("./sound/dig-menu.mp3")
+  gameplaySong = loadSound("./sound/dig-menu.mp3")
   // dig, bomb, cash pickup, undiggable
 }
 
@@ -552,6 +554,9 @@ function draw()
     }
     case States.isGamePlay:
     {
+      if (!gameplaySong.isPlaying()){
+        gameplaySong.play()
+      }
       camera.on();
       let px;
       if(!gameAssets)
@@ -563,6 +568,7 @@ function draw()
 
       if(blockRow > (HEIGHT-2)) //player made it to the bottom
       {
+        // add sound here
         cleanup();
         pageNumber++;
         px = player.self.x;
@@ -588,6 +594,8 @@ function draw()
 
       if(player.self.y < Math.floor(camera.y - canvas.h/2-TILE_SIZE))//game over check
       {
+        // game over sound
+        gameplaySong.stop()
         state = States.gameOver;
       }
       //console.log("camera:",camera.y-(HEIGHT/6)*TILE_SIZE,"player:",player.self.y)
@@ -602,11 +610,15 @@ function draw()
     case States.isTitleScreen:
     {
       //camera.off()
+      if (!mainMenuSong.isPlaying()){
+        mainMenuSong.play()
+      }
       drawTitleScreen()
       if (kb.pressed("x"))
       {
         //starts the game
         setup()
+        mainMenuSong.stop()
         state = States.isGamePlay
       }
       break;
