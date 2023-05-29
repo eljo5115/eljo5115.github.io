@@ -9,10 +9,6 @@ const HEIGHT = 25
 //TODOS
 /* 
   sound
-    bomb,
-    music (main menu and gameplay),
-    money pick up (some sort of cha-ching), 
-    undiggable block (ba-ding)
   state machine animations for player
   animation (bomb, dig) line 150
   dig left/right
@@ -162,6 +158,9 @@ class Bomb extends Item{
   {
     //destroys blocks in a 3x3 area
     //add animation?
+    if (!bombSound.isPlaying()){
+      bombSound.play()
+    }
     for(let j = -1; j < 2; j++)
     {
       for(let i = -1; i < 2;i++)
@@ -191,6 +190,9 @@ class Diamond extends Item{
   }
   pickUp(){
     if(this.self.overlaps(player.self)){
+      if (!moneySound.isPlaying()){
+        moneySound.play()
+      }
       //increase score
       if(this.self.image == dollazImage)
       {
@@ -255,8 +257,14 @@ class Player
       this.playerState = playerStates.dig
       if(success){
         //play dig sound
+        if (!digSound.isPlaying()){
+          digSound.play()
+        }
       }else{
         //play doink sound
+        if (!noDigSound.isPlaying()){
+          noDigSound.play()
+        }
       }
     }
     if(this.self.vel.y > 0.1)
@@ -457,8 +465,13 @@ function preload(){
   titleBackground = loadImage("./img/background.png")
   // sound
   digSound = loadSound("./sound/shoveling-clean.mp3")
+  bombSound = loadSound("./sound/boom.mp3")
+  moneySound = loadSound("./sound/cha_ching.mp3")
   mainMenuSong = loadSound("./sound/dig-menu.mp3")
-  gameplaySong = loadSound("./sound/dig-menu.mp3")
+  gameplaySong = loadSound("./sound/dig-game.mp3")
+  noDigSound = loadSound("./sound/nodig.mp3")
+  gameOverSound = loadSound("./sound/game-over.mp3")
+  clearedLevelSound = loadSound("./sound/level-clear.mp3")
   // dig, bomb, cash pickup, undiggable
 }
 
@@ -573,6 +586,9 @@ function draw()
         pageNumber++;
         px = player.self.x;
         score+=10;
+        if (!clearedLevelSound.isPlaying()){
+          clearedLevelSound.play()
+        }
       }
       else
       {
@@ -596,6 +612,9 @@ function draw()
       {
         // game over sound
         gameplaySong.stop()
+        if (!gameOverSound.isPlaying()){
+          gameOverSound.play()
+        }
         state = States.gameOver;
       }
       //console.log("camera:",camera.y-(HEIGHT/6)*TILE_SIZE,"player:",player.self.y)
