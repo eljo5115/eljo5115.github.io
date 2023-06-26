@@ -81,7 +81,7 @@ body{
     background-color: cornflowerblue;
 }
 #wrapper >.item:nth-child(7){
-    background-color: #D1C6AD;
+    background-color: orange;
 }
 #wrapper >.item:nth-child(8){
     background-color: #52796F;
