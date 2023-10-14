@@ -84,12 +84,16 @@ body{
     background-color: orange;
 }
 #wrapper >.item:nth-child(8){
-    background-color: #52796F;
+    background-color: #FF0000;
 }
 /*hover effect*/
 #wrapper > .item:nth-child(1):hover{
-background: rgb(131,58,180);
-background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); ;
+    background: #6e5494;
+    /* background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); ; */
+    background-image: url("../img/github-mark.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 #wrapper >.item:nth-child(2):hover{
     background: rgb(34,193,195);
@@ -98,26 +102,47 @@ background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(184,51,106,1) 50
 #wrapper >.item:nth-child(3):hover{
     background: rgb(34,193,195);
     background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(232,215,16,1) 100%);
+
 }
 #wrapper >.item:nth-child(4):hover{
-    background: rgb(196,144,209);
-    background: radial-gradient(circle, rgba(196,144,209,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%);
+    /* background: rgb(196,144,209);
+    background: radial-gradient(circle, rgba(196,144,209,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); */
+    background-image: url("../img/itchio-logo-textless-black.png");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 #wrapper >.item:nth-child(5):hover{
-    background: rgb(131,58,180);
-    background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); ;
+    /* background: rgb(131,58,180);
+    background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); */
+    background-image: url("../img/Instagram_Glyph_Black.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
 }
 #wrapper >.item:nth-child(6):hover{
-    background: rgb(34,193,195);
-    background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(232,215,16,1) 100%);
+    /* background: rgb(34,193,195);
+    background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(232,215,16,1) 100%); */
+    background-size: contain;
+    background-image: url("../img/LI-In-Bug.png");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 #wrapper >.item:nth-child(7):hover{
-    background: rgb(34,193,195);
-    background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(209,198,173,1) 100%);
+
+    background-image: url("../img/soundcloud_logo.png");
+    background-size:contain;
+    background-position:center;
+    background-repeat: no-repeat;
 }
 #wrapper >.item:nth-child(8):hover{
-    background: rgb(34,193,195);
-    background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(82,121,111,1) 100%);
+    /* background: rgb(255,20,10); */
+    /* background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(82,121,111,1) 100%); */
+    background-image: url("../img/yt_logo_rgb_symbol.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 
