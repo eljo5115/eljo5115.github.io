@@ -1,0 +1,12 @@
+<h1>Image gallery example</h1>
+
+<div class="full-img">
+  <img
+    class="displayed-img"
+    src="images/pic1.jpg"
+    alt="Closeup of a blue human eye" />
+  <div class="overlay"></div>
+  <button class="dark">Darken</button>
+</div>
+
+<div class="thumb-bar"></div>
