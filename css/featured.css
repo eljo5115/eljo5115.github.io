@@ -123,200 +123,24 @@ img{
 #wrapper[data-configuration = "1"] > .item:nth-child(1){
     left:0;
     top: 20%;
-    height: 40%;
+    height: 100%;
     width: 20%;
 }
 #wrapper[data-configuration = "1"] > .item:nth-child(2){
     left:20% ;
     top: 0%;
-    height: 80%;
+    height: 100%;
     width: 20%;
 }
 #wrapper[data-configuration = "1"] > .item:nth-child(3){
     left:40% ;
-    top: 30%;
-    height: 60%;
-    width: 60%;
-}
-#wrapper[data-configuration = "1"] > .item:nth-child(4){
-    right:0%;
-    bottom:10%;
-    height: 30%;
-    width: 30%;
-}
-#wrapper[data-configuration = "1"] > .item:nth-child(5){
-    right:0%;
-    bottom: 10%;
-    height: 20%;
-    width: 20%;
-}
-#wrapper[data-configuration = "1"] > .item:nth-child(6){
-    right:0%;
-    top: 0%;
-    height: 30%;
-    width: 60%;
-}
-#wrapper[data-configuration = "1"] > .item:nth-child(7){
-    right:0%;
-    top: 0%;
-    height: 30%;
-    width: 20%;
-}
-#wrapper[data-configuration = "1"] > .item:nth-child(8){
-    right:0%;
-    bottom: 10%;
-    height: 20%;
-    width: 20%;
-}
-
-
-/*configuration 2*/
-#wrapper[data-configuration = "2"] > .item:nth-child(1){
-    left:0%;
-    top: 0%;
-    height: 40%;
-    width: 20%;
-}
-#wrapper[data-configuration = "2"] > .item:nth-child(2){
-    left:20% ;
-    top: 0%;
-    height: 40%;
-    width: 40%;
-}
-#wrapper[data-configuration = "2"] > .item:nth-child(3){
-    left:0% ;
-    bottom: 0%;
-    height: 60%;
-    width: 60%;
-}
-#wrapper[data-configuration = "2"] > .item:nth-child(4){
-    right:0%;
-    top:0%;
-    height: 70%;
-    width: 40%;
-}
-#wrapper[data-configuration = "2"] > .item:nth-child(5){
-    right:0%;
-    bottom: 0%;
-    height: 30%;
-    width: 40%;
-}
-#wrapper[data-configuration = "2"] > .item:nth-child(6){
-    left:0%;
-    bottom: 0%;
-    height: 40%;
-    width: 40%;
-}
-#wrapper[data-configuration = "2"] > .item:nth-child(7){
-    left:0%;
-    bottom: 0%;
-    height: 20%;
-    width: 20%;
-}
-#wrapper[data-configuration = "2"] > .item:nth-child(8){
-    left:50%;
-    top: 0%;
-    height: 20%;
-    width: 30%;
-}
-
-
-/*configuration 3*/
-#wrapper[data-configuration = "3"] > .item:nth-child(1){
-    left:0;
-    top: 0%;
-    height: 40%;
-    width: 20%;
-}
-#wrapper[data-configuration = "3"] > .item:nth-child(2){
-    left:20% ;
-    top: 0%;
+    top: 10%;
     height: 100%;
     width: 20%;
 }
-#wrapper[data-configuration = "3"] > .item:nth-child(3){
-    left:40% ;
-    top:0%;
-    height: 60%;
-    width: 20%;
-}
-#wrapper[data-configuration = "3"] > .item:nth-child(4){
-    left:40%;
-    bottom:0%;
-    height: 40%;
-    width: 20%;
-}
-#wrapper[data-configuration = "3"] > .item:nth-child(5){
+#wrapper[data-configuration = "1"] > .item:nth-child(4){
     left:60%;
-    bottom: 0%;
-    height: 60%;
-    width: 40%;
-}
-#wrapper[data-configuration = "3"] > .item:nth-child(6){
-    right:0%;
-    top: 0%;
-    height: 60%;
-    width: 40%;
-}
-#wrapper[data-configuration = "3"] > .item:nth-child(7){
-    right:0%;
-    bottom: 0%;
-    height: 20%;
+    top:20%;
+    height: 100%;
     width: 20%;
-}
-#wrapper[data-configuration = "3"] > .item:nth-child(8){
-    left:0%;
-    bottom: 0%;
-    height: 60%;
-    width: 20%;
-}
-
-/*This looks like ELI*/
-#wrapper[data-configuration = "4"] > .item:nth-child(1){
-    left:0;
-    top: 0%;
-    height: 20%;
-    width: 30%;
-}
-#wrapper[data-configuration = "4"] > .item:nth-child(2){
-    left:0%;
-    top: 20%;
-    height: 60%;
-    width: 10%;
-}
-#wrapper[data-configuration = "4"] > .item:nth-child(3){
-    left:0% ;
-    bottom:0%;
-    height: 20%;
-    width: 30%;
-}
-#wrapper[data-configuration = "4"] > .item:nth-child(4){
-    left:45%;
-    top:0%;
-    height: 80%;
-    width: 10%;
-}
-#wrapper[data-configuration = "4"] > .item:nth-child(5){
-    left:45%;
-    bottom: 0%;
-    height: 20%;
-    width: 25%;
-}
-#wrapper[data-configuration = "4"] > .item:nth-child(6){
-    left:0%;
-    bottom: 40%;
-    height: 20%;
-    width: 20%;
-}
-#wrapper[data-configuration = "4"] > .item:nth-child(7){
-    right:10%;
-    bottom: 0%;
-    height: 70%;
-    width: 10%;
-}
-#wrapper[data-configuration = "4"] > .item:nth-child(8){
-    right:10%;
-    top: 0%;
-    height: 15%;
-    width: 10%;
 }
