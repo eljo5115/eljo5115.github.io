@@ -84,14 +84,16 @@ img{
 #wrapper > .item:nth-child(1):hover{
     background: #6e5494;
     /* background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); ; */
-    background-image: url("../img/pitaPit.jpg");
+    background-image: url("/arcadeGame/img/background.png");
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
 }
 #wrapper >.item:nth-child(2):hover{
-    background-image: url("../img/pitaPit.jpg");
+    background-image: url("/img/vault.png");
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
 }
 #wrapper >.item:nth-child(3):hover{
     background-image: url("../img/pitaPit.jpg");
