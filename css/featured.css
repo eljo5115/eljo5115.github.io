@@ -1,0 +1,322 @@
+/*color palette*/
+    .rasperry-rose { color: #B8336A; }
+    .rasperry-rose { color: #D1C6AD; }
+    .rasperry-rose { color: #52796F; }
+    .rasperry-rose { color: #C490D1; }
+    .rasperry-rose { color: #E8D710; }
+
+
+body{
+    width: 100vw;
+    height: 100vh;
+    background-color:blanchedalmond;
+    margin:0px;
+    display: grid;
+    place-items: center;
+}
+img{
+    position:relative;
+    max-width: 100%;
+    max-height: 100%;
+}
+#wrapper{
+    aspect-ratio: 1.619;
+    width:90vmin;
+    position: relative;
+}
+
+#wrapper > .item{
+    position: absolute;
+    transition: left,top, height, width, border-radius;
+    transition-duration: 750ms;
+    transition-timing-function: ease-in-out;
+}
+.item .tooltip-text{
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+  
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+  
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.item:hover .tooltip-text{
+    visibility: visible;
+    opacity: 1;
+}
+.item .tooltip-text::after{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+/*standard appearance colors*/
+#wrapper > .item:nth-child(1){
+    background-color:#B8336A ;
+}
+#wrapper >.item:nth-child(2){
+    background-color:#D1C6AD ;
+}
+#wrapper >.item:nth-child(3){
+    background-color: #E8D710;
+}
+#wrapper >.item:nth-child(4){
+    background-color:#C490D1;
+}
+
+/*hover effect*/
+#wrapper > .item:nth-child(1):hover{
+    background: #6e5494;
+    /* background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); ; */
+    background-image: url("../img/pitaPit.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#wrapper >.item:nth-child(2):hover{
+    background-image: url("../img/pitaPit.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#wrapper >.item:nth-child(3):hover{
+    background-image: url("../img/pitaPit.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#wrapper >.item:nth-child(4):hover{
+    /* background: rgb(196,144,209);
+    background: radial-gradient(circle, rgba(196,144,209,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); */
+    background-image: url("../img/intro.png");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+
+/*roundess data*/
+#wrapper[data-roundness = "1"] > .item {
+    border-radius: 6rem;
+}
+#wrapper[data-roundness = "2"] > .item {
+    border-radius: 0rem;
+}
+#wrapper[data-roundness = "3"] > .item {
+    border-radius: 30em;
+}
+
+/*config 1*/
+#wrapper[data-configuration = "1"] > .item:nth-child(1){
+    left:0;
+    top: 20%;
+    height: 40%;
+    width: 20%;
+}
+#wrapper[data-configuration = "1"] > .item:nth-child(2){
+    left:20% ;
+    top: 0%;
+    height: 80%;
+    width: 20%;
+}
+#wrapper[data-configuration = "1"] > .item:nth-child(3){
+    left:40% ;
+    top: 30%;
+    height: 60%;
+    width: 60%;
+}
+#wrapper[data-configuration = "1"] > .item:nth-child(4){
+    right:0%;
+    bottom:10%;
+    height: 30%;
+    width: 30%;
+}
+#wrapper[data-configuration = "1"] > .item:nth-child(5){
+    right:0%;
+    bottom: 10%;
+    height: 20%;
+    width: 20%;
+}
+#wrapper[data-configuration = "1"] > .item:nth-child(6){
+    right:0%;
+    top: 0%;
+    height: 30%;
+    width: 60%;
+}
+#wrapper[data-configuration = "1"] > .item:nth-child(7){
+    right:0%;
+    top: 0%;
+    height: 30%;
+    width: 20%;
+}
+#wrapper[data-configuration = "1"] > .item:nth-child(8){
+    right:0%;
+    bottom: 10%;
+    height: 20%;
+    width: 20%;
+}
+
+
+/*configuration 2*/
+#wrapper[data-configuration = "2"] > .item:nth-child(1){
+    left:0%;
+    top: 0%;
+    height: 40%;
+    width: 20%;
+}
+#wrapper[data-configuration = "2"] > .item:nth-child(2){
+    left:20% ;
+    top: 0%;
+    height: 40%;
+    width: 40%;
+}
+#wrapper[data-configuration = "2"] > .item:nth-child(3){
+    left:0% ;
+    bottom: 0%;
+    height: 60%;
+    width: 60%;
+}
+#wrapper[data-configuration = "2"] > .item:nth-child(4){
+    right:0%;
+    top:0%;
+    height: 70%;
+    width: 40%;
+}
+#wrapper[data-configuration = "2"] > .item:nth-child(5){
+    right:0%;
+    bottom: 0%;
+    height: 30%;
+    width: 40%;
+}
+#wrapper[data-configuration = "2"] > .item:nth-child(6){
+    left:0%;
+    bottom: 0%;
+    height: 40%;
+    width: 40%;
+}
+#wrapper[data-configuration = "2"] > .item:nth-child(7){
+    left:0%;
+    bottom: 0%;
+    height: 20%;
+    width: 20%;
+}
+#wrapper[data-configuration = "2"] > .item:nth-child(8){
+    left:50%;
+    top: 0%;
+    height: 20%;
+    width: 30%;
+}
+
+
+/*configuration 3*/
+#wrapper[data-configuration = "3"] > .item:nth-child(1){
+    left:0;
+    top: 0%;
+    height: 40%;
+    width: 20%;
+}
+#wrapper[data-configuration = "3"] > .item:nth-child(2){
+    left:20% ;
+    top: 0%;
+    height: 100%;
+    width: 20%;
+}
+#wrapper[data-configuration = "3"] > .item:nth-child(3){
+    left:40% ;
+    top:0%;
+    height: 60%;
+    width: 20%;
+}
+#wrapper[data-configuration = "3"] > .item:nth-child(4){
+    left:40%;
+    bottom:0%;
+    height: 40%;
+    width: 20%;
+}
+#wrapper[data-configuration = "3"] > .item:nth-child(5){
+    left:60%;
+    bottom: 0%;
+    height: 60%;
+    width: 40%;
+}
+#wrapper[data-configuration = "3"] > .item:nth-child(6){
+    right:0%;
+    top: 0%;
+    height: 60%;
+    width: 40%;
+}
+#wrapper[data-configuration = "3"] > .item:nth-child(7){
+    right:0%;
+    bottom: 0%;
+    height: 20%;
+    width: 20%;
+}
+#wrapper[data-configuration = "3"] > .item:nth-child(8){
+    left:0%;
+    bottom: 0%;
+    height: 60%;
+    width: 20%;
+}
+
+/*This looks like ELI*/
+#wrapper[data-configuration = "4"] > .item:nth-child(1){
+    left:0;
+    top: 0%;
+    height: 20%;
+    width: 30%;
+}
+#wrapper[data-configuration = "4"] > .item:nth-child(2){
+    left:0%;
+    top: 20%;
+    height: 60%;
+    width: 10%;
+}
+#wrapper[data-configuration = "4"] > .item:nth-child(3){
+    left:0% ;
+    bottom:0%;
+    height: 20%;
+    width: 30%;
+}
+#wrapper[data-configuration = "4"] > .item:nth-child(4){
+    left:45%;
+    top:0%;
+    height: 80%;
+    width: 10%;
+}
+#wrapper[data-configuration = "4"] > .item:nth-child(5){
+    left:45%;
+    bottom: 0%;
+    height: 20%;
+    width: 25%;
+}
+#wrapper[data-configuration = "4"] > .item:nth-child(6){
+    left:0%;
+    bottom: 40%;
+    height: 20%;
+    width: 20%;
+}
+#wrapper[data-configuration = "4"] > .item:nth-child(7){
+    right:10%;
+    bottom: 0%;
+    height: 70%;
+    width: 10%;
+}
+#wrapper[data-configuration = "4"] > .item:nth-child(8){
+    right:10%;
+    top: 0%;
+    height: 15%;
+    width: 10%;
+}
