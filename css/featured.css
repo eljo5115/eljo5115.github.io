@@ -90,10 +90,10 @@ img{
     background-size: contain;
 }
 #wrapper >.item:nth-child(2):hover{
-    background-image: url("/img/vault.png");
+    background-image: url("/dataStory/pics/MoneyPattern.png");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: contain;
+
 }
 #wrapper >.item:nth-child(3):hover{
     background-image: url("../img/pitaPit.jpg");
