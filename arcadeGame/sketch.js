@@ -1,8 +1,10 @@
 const TILE_SIZE = 64;
 const HALF_TILE = TILE_SIZE / 2;
 
-const WIDTH = 15
-const HEIGHT = 25
+const WIDTH = 15;
+const HEIGHT = 25;
+
+const _DEBUG = false;
 //const WIDTH = Math.min(Math.floor(visualViewport.width/TILE_SIZE),1080);
 //const HEIGHT =Math.min(Math.floor(visualViewport.height/TILE_SIZE),1920);
 //var scoreFile = require("high_scores.txt")
@@ -298,11 +300,15 @@ class Player
       }
       default:
       {
-        console.log("bad player state")
+        if(_DEBUG){
+          console.log("bad player state")
+        }
         this.self.ani = "idle";
       }
     }
-    console.log(this.self.ani)
+    if(_DEBUG){
+      console.log(this.self.ani)
+    }
   }
 
 }
@@ -493,7 +499,7 @@ function setup()
   let canvas = new Canvas(WIDTH * TILE_SIZE, visualViewport.height);
   world.gravity.y=10;
   //canvas.center("vertical");
-  canvas.center("horizontal");
+  //canvas.center("horizontal");
   background(255);
   stroke(0);
   strokeWeight(1);
@@ -534,7 +540,9 @@ function cleanup()
 function draw() 
 {
   clear();
-  console.log(state)
+  if(_DEBUG){
+    console.log(state)
+  }
   switch(state){
     case States.gameOver:
     {
@@ -617,7 +625,10 @@ function draw()
         }
         state = States.gameOver;
       }
-      //console.log("camera:",camera.y-(HEIGHT/6)*TILE_SIZE,"player:",player.self.y)
+      if(_DEBUG){
+        console.log("camera:",camera.y-(HEIGHT/6)*TILE_SIZE,"player:",player.self.y)
+
+      }
 
       //drawing UI
       camera.off()
