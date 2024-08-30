@@ -15,9 +15,16 @@ const controls = new OrbitControls( camera, renderer.domElement );
 const loader = new GLTFLoader();
 
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const material = new THREE.MeshStandardMaterial( { color: 0x00ff00 } );
 const cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
+
+const pointLight = new THREE.PointLight(0xFFFFFF);
+pointLight.position.set( 5, 5, 5 );
+const ambientLight = new THREE.AmbientLight(0xFFFFFF);
+scene.add( pointLight,ambientLight );
+
+
 
 camera.position.z = 5;
 
@@ -27,4 +34,12 @@ function animate() {
     cube.rotation.y += 0.01;
 	renderer.render( scene, camera );
 }
+
+function drawHelpers()
+{
+    const pointLightHelper = new THREE.PointLightHelper(pointLight);
+    const gridHelper = new THREE.GridHelper(200,50);
+    scene.add( gridHelper,pointLightHelper );
+}
+drawHelpers();
 animate();
