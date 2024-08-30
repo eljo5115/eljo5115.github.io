@@ -14,6 +14,24 @@ body{
     display: grid;
     place-items: center;
 }
+nav{
+    width: 100%;
+    height: 10%;
+    top:0;
+    margin-bottom: 0;
+    margin-top: 0;
+    grid-row-start: 0;
+    grid-row-end: 1;
+
+}
+nav a {
+    left:0;
+    top:0;
+    text-decoration: none;
+    color: #52796F;
+}:hover{
+    color: #C490D1;
+}
 img{
     position:relative;
     max-width: 100%;
@@ -23,6 +41,9 @@ img{
     aspect-ratio: 1.619;
     width:90vmin;
     position: relative;
+    top:0;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 #wrapper > .item{
