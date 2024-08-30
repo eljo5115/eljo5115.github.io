@@ -108,23 +108,25 @@ img{
     background-image: url("/arcadeGame/img/background.png");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: contain;
+    background-size: cover;
 }
 #wrapper >.item:nth-child(2):hover{
     background-image: url("/dataStory/pics/MoneyPattern.png");
     background-repeat: no-repeat;
     background-position: center;
+    background-size: cover;
 
 }
 #wrapper >.item:nth-child(3):hover{
-    background-image: url("/img/spaseballs.png");
+    background-image: url("/img/sbaseballs.png");
     background-repeat: no-repeat;
     background-position: center;
+    background-size: cover;
 }
 #wrapper >.item:nth-child(4):hover{
     /* background: rgb(196,144,209);
     background: radial-gradient(circle, rgba(196,144,209,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); */
-    background-image: url("");
+    background-image: url("/img/CKONGIO.png");
     background-position: center;
     background-repeat: no-repeat;
 }
