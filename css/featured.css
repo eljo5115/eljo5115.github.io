@@ -117,14 +117,14 @@ img{
 
 }
 #wrapper >.item:nth-child(3):hover{
-    background-image: url("../img/pitaPit.jpg");
+    background-image: url("/img/spaseballs.png");
     background-repeat: no-repeat;
     background-position: center;
 }
 #wrapper >.item:nth-child(4):hover{
     /* background: rgb(196,144,209);
     background: radial-gradient(circle, rgba(196,144,209,1) 0%, rgba(184,51,106,1) 50%, rgba(252,176,69,1) 100%); */
-    background-image: url("../img/intro.png");
+    background-image: url("");
     background-position: center;
     background-repeat: no-repeat;
 }
