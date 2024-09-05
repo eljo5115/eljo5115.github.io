@@ -3,18 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Portfolio with Three.js</title>
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
-          }
+    <link rel="stylesheet" href="/css/3index.css">
+    <script defer type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
         }
-      </script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r119/three.min.js" integrity="sha512-E1+SnTWyHYoY5MN8wpL0SI4TYbpWN12sHXyEViwbzzEyq6GHxQrPFDzEeUDab4emXcf3Yj41Tht2JZnpo3kjwA==" crossorigin="anonymous"></script>
-      <script type="module" src="./js/threeScript.js"></script>
+      }
+    </script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r119/three.min.js" integrity="sha512-E1+SnTWyHYoY5MN8wpL0SI4TYbpWN12sHXyEViwbzzEyq6GHxQrPFDzEeUDab4emXcf3Yj41Tht2JZnpo3kjwA==" crossorigin="anonymous"></script>
+    <script defer type="module" src="./js/threeScript.js"></script>
 </head>
 <body>
+  <!--background scene-->
+  <canvas id="three-canvas"></canvas>
+  <!--div with everything else (text) etc-->
+  <div id="overlay-div">
+    <div id="inside-overlay-left">
+      <h1>left side</h1>
+      <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Ullamcorper tortor tortor torquent non nulla urna. Nullam conubia lobortis metus mi vel maximus tempor. Class fames penatibus neque sociosqu donec varius. Rhoncus donec nibh donec lobortis curae; odio penatibus iaculis quam. Nibh interdum aptent rhoncus, malesuada fames erat class congue.</p>
+    </div>
+    <div id="inside-overlay-right">
+      <h3>right side</h3>
+      <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Ullamcorper tortor tortor torquent non nulla urna. Nullam conubia lobortis metus mi vel maximus tempor. Class fames penatibus neque sociosqu donec varius. Rhoncus donec nibh donec lobortis curae; odio penatibus iaculis quam. Nibh interdum aptent rhoncus, malesuada fames erat class congue.</p>
+    </div>
 
+  </div>
 </body>
+
 </html>
