@@ -1,3 +1,8 @@
+body {
+    margin: 0;
+}
+
+/* ids */
 #three-canvas {
     position: fixed;
     left: 0;
@@ -54,4 +59,8 @@
 }
 #inside-overlay-right p{
     color: black;
+}
+
+.hidden{
+    display: none !important;
 }
