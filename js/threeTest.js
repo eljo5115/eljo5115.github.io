@@ -1,29 +1,31 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Clock } from 'three';
+
 const materialsArray = [
-    new THREE.MeshPhongMaterial({color:0xffffff}) //white
+    new THREE.MeshPhongMaterial({color:0xffffff})
     ,new THREE.MeshPhongMaterial({color:0xff0000}) //red
+    ,new THREE.MeshPhongMaterial({color:0x00ff00}) //green
     ,new THREE.MeshPhongMaterial({color:0x0000ff}) //blue
 ]
+let icosahedronArray = [];
 
 let scene,camera,canvas,renderer,controls,loader,globalClock;
 function init(){
 
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    camera.position.z = 5;
-    camera.position.y = 2;
-    camera.lookAt(1,0,1);
+    camera.position.z = 0;
+    camera.position.y = 15;
+
 
     canvas = document.getElementById("three-canvas");
     renderer = new THREE.WebGLRenderer({
         antialias:true
         ,canvas:canvas
         ,shadowMap:true
-        ,toneMapped:false
     });
     //enable shadows 
+
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputEncoding = THREE.sRGBEncoding;
@@ -31,33 +33,18 @@ function init(){
     scene.background = new THREE.Color( 0xffffff );
     renderer.setSize( window.innerWidth, window.innerHeight );
     controls = new OrbitControls( camera, renderer.domElement );
-    loader = new GLTFLoader();
+
     controls.update();
-    globalClock = new Clock();
 
 }
 
-// document.body.appendChild( renderer.domElement );
-let directionalLight;
-function lights(){
-
-    //Set up shadow properties for the light
-    directionalLight = new THREE.DirectionalLight( 0xffffff,1 );
-    directionalLight.position.set(320, 400, 100);
-    directionalLight.target.position.set(0, 10, 0);
-    directionalLight.shadow.camera.top = 2000;
-    directionalLight.shadow.camera.bottom = - 2000;
-    directionalLight.shadow.camera.left = - 2000;
-    directionalLight.shadow.camera.right = 2000;
-    directionalLight.shadow.camera.near = 1;
-    directionalLight.shadow.camera.far = 2000;
-    directionalLight.castShadow = true;
-
-    scene.add(directionalLight);
-    // scene.traverse((child) => {
-
-    //     child.castShadow = true;
-    // });
+function animate() {
+	requestAnimationFrame(animate);
+    icosahedronArray.forEach((i) => {
+        animateIcosahedron(i);
+    });
+    controls.update();
+	renderer.render(scene,camera);
 }
 let icoClock;
 function createIcosahedron(location){
@@ -92,7 +79,6 @@ function createIcosahedron(location){
     return icosahedron; // group of 2
 }
 
-
 function createPlatform(position){
     //create upper platform (small section)
     const upperPlatformGeo = new THREE.CylinderGeometry(0.5,0.8,0.8,16,2,false);
@@ -122,52 +108,40 @@ function createPlatform(position){
     platform.position.copy(position);
     return platform;
 }
-let ico,sphere,ground;
-function drawObjects(){
-    //draw plane
-    const groundGeo = new THREE.BoxGeometry(500,500,0.1,100,100);
-    ground = new THREE.Mesh(groundGeo,materialsArray[0]);
-    ground.rotation.x = -Math.PI / 2;
-    scene.add(ground);
 
-    const cube = new THREE.Mesh(new THREE.BoxGeometry(1,1),materialsArray[1]);
-    cube.position.y = 0.5;
-    cube.castShadow = true;
-    scene.add(cube);
-
-    ico = createIcosahedron(new THREE.Vector3(-2,2.5,-5));
-    scene.add(ico);
-    const plat = createPlatform(new THREE.Vector3(-2,0.5,-5));
-    scene.add(plat);
-    sphere = new THREE.Mesh(new THREE.SphereGeometry(2,16,16),new THREE.MeshStandardMaterial({color:0xEEEEEE}));
-    sphere.position.y = 3;
-    scene.add(sphere);
-
+function addPlatPlusIco(icoPosition){
+    const ico = createIcosahedron(icoPosition);
+    const platPosition = icoPosition.add(new THREE.Vector3(0,-2.5,0));
+    const platform = createPlatform(platPosition);
+    icosahedronArray.push(ico);
+    scene.add(ico,platform);
 }
+let ico;
+function drawShapes(){
+    const icoLocations = [
+        new THREE.Vector3(10,3,10)
+        ,new THREE.Vector3(0,3,7)
+        ,new THREE.Vector3(3,3,14)
+        ,new THREE.Vector3(-4,3,-7)
+    ]
+    const plane = new THREE.Mesh(new THREE.BoxGeometry(100,100,0.1),new THREE.MeshPhongMaterial({color:0x555555}));
+    plane.rotation.x = -Math.PI /2;
+    plane.receiveShadow = true;
 
+    icoLocations.forEach((i)=>addPlatPlusIco(i));
+    scene.add(plane);
+}
 function animateIcosahedron(icosahedron){
     icosahedron.position.y += (Math.sin(icoClock.getDelta()) * 0.015);
     icosahedron.rotation.x +=0.01;
     icosahedron.rotation.y +=0.01;
 }
-
-function animateSphere(){
-    sphere.position.x += Math.sin(globalClock.getDelta());
-}
-
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-
-function animate() {
-	requestAnimationFrame(animate);
-    animateIcosahedron(ico);
-    animateSphere();
-    controls.update();
-	renderer.render(scene,camera);
+let directionalLight;
+function lights(){
+    directionalLight = new THREE.DirectionalLight(0xffffff,1);
+    directionalLight.castShadow = true;
+    directionalLight.position.set(225,75,150);
+    scene.add(directionalLight);
 }
 
 function drawHelpers()
@@ -183,9 +157,9 @@ function drawHelpers()
         );
     
 }
+
 init();
-drawObjects();
+drawShapes();
 lights();
-ground.castShadow = false;
 animate();
-//drawHelpers();
+drawHelpers();
