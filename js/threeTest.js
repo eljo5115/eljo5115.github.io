@@ -7,6 +7,19 @@ const materialsArray = [
     ,new THREE.MeshPhongMaterial({color:0xff0000}) //red
     ,new THREE.MeshPhongMaterial({color:0x00ff00}) //green
     ,new THREE.MeshPhongMaterial({color:0x0000ff}) //blue
+    ,new THREE.MeshPhongMaterial({color:0xfdfdfd}) //grey
+]
+
+const icosahedronMaterialsArray = [
+    new THREE.MeshPhongMaterial({
+        color:0x5f5f5f
+        ,transparent: true
+        ,opacity:0.4})
+    ,new THREE.MeshPhongMaterial({
+        color: 0xff255a
+        ,transparent:false
+        ,opacity:0.8
+    })
 ]
 let icosahedronArray = [];
 
@@ -16,7 +29,7 @@ function init(){
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
     camera.position.z = 0;
     camera.position.y = 15;
-
+    camera.lookAt(10,3,10);
 
     canvas = document.getElementById("three-canvas");
     renderer = new THREE.WebGLRenderer({
@@ -58,7 +71,7 @@ function createIcosahedron(location){
         ,transparent: true
         ,opacity:0.4
     });
-    const outerIco = new THREE.Mesh(outerGeo, outerMat);
+    const outerIco = new THREE.Mesh(outerGeo, icosahedronMaterialsArray[0]);
     let icosahedron = new THREE.Object3D();
     icosahedron.add(outerIco);
     
@@ -69,7 +82,7 @@ function createIcosahedron(location){
         ,transparent:false
         ,opacity:0.8
     });
-    const innerIco = new THREE.Mesh(innerGeo,innerMat);
+    const innerIco = new THREE.Mesh(innerGeo,icosahedronMaterialsArray[1]);
     innerIco.castShadow = true;
     icosahedron.add(innerIco);
     
@@ -81,7 +94,7 @@ function createIcosahedron(location){
 
 function createPlatform(position){
     //create upper platform (small section)
-    const upperPlatformGeo = new THREE.CylinderGeometry(0.5,0.8,0.8,16,2,false);
+    const upperPlatformGeo = new THREE.CylinderGeometry(0.5,0.8,0.3,16,2,false);
     const upperPlatformMat = new THREE.MeshStandardMaterial({
         color:0xdfdfdf
         ,
@@ -92,11 +105,7 @@ function createPlatform(position){
 
     //create lower platform (large section)
     const lowerPlatformGeo = new THREE.CylinderGeometry(1,1,0.5,16,2);
-    const lowerPlatformMat = new THREE.MeshStandardMaterial({
-        color:0xdfdfdf
-        ,
-    });
-    const lowerPlatform = new THREE.Mesh(lowerPlatformGeo,lowerPlatformMat);
+    const lowerPlatform = new THREE.Mesh(lowerPlatformGeo,materialsArray[4]);
     lowerPlatform.position.y -= 0.3;
     platform.add(lowerPlatform);
 
@@ -124,7 +133,7 @@ function drawShapes(){
         ,new THREE.Vector3(3,3,14)
         ,new THREE.Vector3(-4,3,-7)
     ]
-    const plane = new THREE.Mesh(new THREE.BoxGeometry(100,100,0.1),new THREE.MeshPhongMaterial({color:0x555555}));
+    const plane = new THREE.Mesh(new THREE.BoxGeometry(300,300,0.1),new THREE.MeshPhongMaterial({color:0xffffff}));
     plane.rotation.x = -Math.PI /2;
     plane.receiveShadow = true;
 
@@ -140,15 +149,22 @@ let directionalLight;
 function lights(){
     directionalLight = new THREE.DirectionalLight(0xffffff,1);
     directionalLight.castShadow = true;
-    directionalLight.position.set(225,75,150);
-    scene.add(directionalLight);
+    directionalLight.position.set(225,300,150);
+    directionalLight.shadow.camera.top = 200;
+    directionalLight.shadow.camera.bottom = - 200;
+    directionalLight.shadow.camera.left = - 200;
+    directionalLight.shadow.camera.right = 200;
+    directionalLight.shadow.camera.near = 1;
+    directionalLight.shadow.camera.far = 2000;
+    const ambientLight = new THREE.AmbientLight(0xffffff,1);
+    scene.add(directionalLight,ambientLight);
 }
 
 function drawHelpers()
 {
     const gridHelper = new THREE.GridHelper(200,50);
     const axes = new THREE.AxesHelper(5);
-    const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight,10,0xffffff);
+    const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight,100,0xffffff);
     scene.add( 
         gridHelper
         ,axes
@@ -157,9 +173,14 @@ function drawHelpers()
         );
     
 }
-
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
 init();
 drawShapes();
 lights();
 animate();
 drawHelpers();
+window.addEventListener("resize",onWindowResize);
