@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Clock } from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const materialsArray = [
     new THREE.MeshPhongMaterial({color:0xffffff})
@@ -22,7 +23,7 @@ const icosahedronMaterialsArray = [
     })
 ]
 let icosahedronArray = [];
-
+let modelsArray = [];
 let scene,camera,canvas,renderer,controls,loader,globalClock;
 function init(){
 
@@ -46,7 +47,23 @@ function init(){
     scene.background = new THREE.Color( 0xffffff );
     renderer.setSize( window.innerWidth, window.innerHeight );
     controls = new OrbitControls( camera, renderer.domElement );
-
+    loader = new GLTFLoader();
+    loader.load("/objects/github_logo.glb", (gltf) => {
+        const model = gltf.scene;
+        model.castShadow = true;
+        model.position.set(3, 3, 5);
+        modelsArray.push(model);
+        scene.add(model);
+        console.log(model);
+    });
+    loader.load("/objects/Can_Models.gltf", (gltf) => {
+        const model = gltf.scene;
+        model.castShadow = true;
+        model.position.set(0, 3, 5);
+        model.scale.set(10,10,10);
+        modelsArray.push(model);
+        scene.add(model);
+    })
     controls.update();
 
 }
@@ -56,6 +73,9 @@ function animate() {
     icosahedronArray.forEach((i) => {
         animateIcosahedron(i);
     });
+    modelsArray.forEach((i) => {
+        animateModel(i);
+    })
     controls.update();
 	renderer.render(scene,camera);
 }
@@ -145,6 +165,11 @@ function animateIcosahedron(icosahedron){
     icosahedron.rotation.x +=0.01;
     icosahedron.rotation.y +=0.01;
 }
+function animateModel(model){
+    model.position.y += (Math.sin(icoClock.getDelta()) * 0.015);
+    //model.rotation.x +=0.01;
+    model.rotation.y +=0.01;
+}
 let directionalLight;
 function lights(){
     directionalLight = new THREE.DirectionalLight(0xffffff,1);
@@ -158,10 +183,14 @@ function lights(){
     directionalLight.shadow.camera.far = 2000;
     const ambientLight = new THREE.AmbientLight(0xffffff,1);
     scene.add(directionalLight,ambientLight);
+    scene.traverse((child) => {
+        if(typeof(child) === THREE.Object3D){
+            child.castShadow = true;
+        }
+    });
 }
 
-function drawHelpers()
-{
+function drawHelpers() {
     const gridHelper = new THREE.GridHelper(200,50);
     const axes = new THREE.AxesHelper(5);
     const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight,100,0xffffff);
