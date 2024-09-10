@@ -65,8 +65,13 @@ function init(){
         scene.add(model);
     })
     controls.update();
-
+    projector = new THREE.Projector();
+    mouseVector = new THREE.Vector3();
+    mouseVector.x = 2 * (e.clientX / containerWidth) - 1;
+    mouseVector.y = 1 - 2 * ( e.clientY / containerHeight );
 }
+var raycaster = projector.pickingRay( mouseVector.clone(), camera );
+var intersects = raycaster.intersectObjects( cubes.children );
 
 function animate() {
 	requestAnimationFrame(animate);
@@ -213,3 +218,4 @@ lights();
 animate();
 drawHelpers();
 window.addEventListener("resize",onWindowResize);
+canvas.addEventListener("mousemove",onMouseMove,false);
