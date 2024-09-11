@@ -1,3 +1,16 @@
+/*
+TODOS
+class for icosahedrons
+    create/init
+    activate (for onClick event)
+
+more models
+"links"
+sorting intersect raycasting
+*/
+
+
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Clock } from 'three';
@@ -22,9 +35,29 @@ const icosahedronMaterialsArray = [
         ,opacity:0.8
     })
 ]
+
+class clickableObject {
+    constructor(object){
+        if(typeof(object)===THREE.Object3D){
+            this.object = object;
+
+        }else{
+            this.object = new THREE.Object3D(); // empty object at (0,0,0)
+        }
+    }
+    activate(page){
+        //idk how yet but set page to not have hidden class
+        //every other page adds hidden class
+    }
+}
+
+
+
 let icosahedronArray = [];
 let modelsArray = [];
-let scene,camera,canvas,renderer,controls,loader,globalClock;
+
+let scene,camera,canvas,renderer,controls,loader,globalClock,raycaster,pointer,intersects;
+let containerWidth,containerHeight;
 function init(){
 
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -46,6 +79,8 @@ function init(){
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
     renderer.setSize( window.innerWidth, window.innerHeight );
+    containerWidth = window.innerWidth;
+    containerHeight = window.innerHeight;
     controls = new OrbitControls( camera, renderer.domElement );
     loader = new GLTFLoader();
     loader.load("/objects/github_logo.glb", (gltf) => {
@@ -65,16 +100,33 @@ function init(){
         scene.add(model);
     })
     controls.update();
-    projector = new THREE.Projector();
-    mouseVector = new THREE.Vector3();
-    mouseVector.x = 2 * (e.clientX / containerWidth) - 1;
-    mouseVector.y = 1 - 2 * ( e.clientY / containerHeight );
-}
-var raycaster = projector.pickingRay( mouseVector.clone(), camera );
-var intersects = raycaster.intersectObjects( cubes.children );
+    raycaster = new THREE.Raycaster();
+    pointer = new THREE.Vector2();
 
+}
+
+function onPointerMove(e){
+
+    pointer.x = 2 * (e.clientX / containerWidth) - 1;
+    pointer.y = 1 - 2 * ( e.clientY / containerHeight );
+
+}
+
+/*
+Main animate loop
+*/
 function animate() {
 	requestAnimationFrame(animate);
+    raycaster.setFromCamera(pointer, camera);
+    intersects = raycaster.intersectObjects(scene.children);
+    intersects.forEach((i) => {
+        if(icosahedronArray.includes(i) || modelsArray.includes(i)){
+            console.log(i)
+        }
+    });
+    // if(intersects.length > 0){
+    //     console.log(intersects);
+    // }
     icosahedronArray.forEach((i) => {
         animateIcosahedron(i);
     });
@@ -84,6 +136,10 @@ function animate() {
     controls.update();
 	renderer.render(scene,camera);
 }
+
+/* 
+Creates an icosahedron at given location (THREE.Vector3)
+*/
 let icoClock;
 function createIcosahedron(location){
     // if(typeof(location) != THREE.Vector3){
@@ -110,13 +166,16 @@ function createIcosahedron(location){
     const innerIco = new THREE.Mesh(innerGeo,icosahedronMaterialsArray[1]);
     innerIco.castShadow = true;
     icosahedron.add(innerIco);
-    
+    icosahedron.name = "icosahedron";
     //set position of group
     icosahedron.position.copy(location);
     icoClock = new Clock();
     return icosahedron; // group of 2
 }
-
+/*
+Creates a platform at given position (THREE.Vector3)
+fuck I need to add an interactive light to this
+*/
 function createPlatform(position){
     //create upper platform (small section)
     const upperPlatformGeo = new THREE.CylinderGeometry(0.5,0.8,0.3,16,2,false);
@@ -142,7 +201,11 @@ function createPlatform(position){
     platform.position.copy(position);
     return platform;
 }
-
+/*
+Creates icosahedron floating above platform (THREE.Vector3)
+Icosahedron should be about 3 y
+Platform will be -2.5 dy from icosahedron
+*/
 function addPlatPlusIco(icoPosition){
     const ico = createIcosahedron(icoPosition);
     const platPosition = icoPosition.add(new THREE.Vector3(0,-2.5,0));
@@ -150,6 +213,10 @@ function addPlatPlusIco(icoPosition){
     icosahedronArray.push(ico);
     scene.add(ico,platform);
 }
+
+/*
+Function to draw all shapes 
+*/
 let ico;
 function drawShapes(){
     const icoLocations = [
@@ -165,16 +232,25 @@ function drawShapes(){
     icoLocations.forEach((i)=>addPlatPlusIco(i));
     scene.add(plane);
 }
+/*
+Makes icosahedron bounce and rotate
+*/
 function animateIcosahedron(icosahedron){
     icosahedron.position.y += (Math.sin(icoClock.getDelta()) * 0.015);
     icosahedron.rotation.x +=0.01;
     icosahedron.rotation.y +=0.01;
 }
+/*
+Makes given model spin (called in animate)
+*/
 function animateModel(model){
     model.position.y += (Math.sin(icoClock.getDelta()) * 0.015);
     //model.rotation.x +=0.01;
     model.rotation.y +=0.01;
 }
+/*
+Draws all lights (directional and ambient)
+*/
 let directionalLight;
 function lights(){
     directionalLight = new THREE.DirectionalLight(0xffffff,1);
@@ -194,7 +270,9 @@ function lights(){
         }
     });
 }
-
+/*
+Draws helpers for lights, grid, etc
+ */
 function drawHelpers() {
     const gridHelper = new THREE.GridHelper(200,50);
     const axes = new THREE.AxesHelper(5);
@@ -212,10 +290,14 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+/**
+All function calls
+ */
 init();
 drawShapes();
 lights();
 animate();
 drawHelpers();
 window.addEventListener("resize",onWindowResize);
-canvas.addEventListener("mousemove",onMouseMove,false);
+canvas.addEventListener("pointermove",onPointerMove,false);
