@@ -9,8 +9,6 @@ more models
 sorting intersect raycasting
 */
 
-
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Clock } from 'three';
@@ -36,7 +34,19 @@ const icosahedronMaterialsArray = [
     })
 ]
 
-class clickableObject {
+//array for clickable objects
+//pushed on clickableObject instantiation
+const clickableArray = [];
+
+/*
+Class to store clickable/interactable objects
+attributes:
+    object - THREE.Object3D instance of object3D that intersect will use to call
+
+methods:
+    activate - called with onClick to show relevant page
+*/
+class ClickableObject {
     constructor(object){
         if(typeof(object)===THREE.Object3D){
             this.object = object;
@@ -44,7 +54,13 @@ class clickableObject {
         }else{
             this.object = new THREE.Object3D(); // empty object at (0,0,0)
         }
+        clickableArray.push(this);
+        console.log(this.object);
     }
+    /*
+    Method to handle interacting with object
+    page - reference to HTML div to show information
+    */
     activate(page){
         //idk how yet but set page to not have hidden class
         //every other page adds hidden class
@@ -89,7 +105,7 @@ function init(){
         model.position.set(3, 3, 5);
         modelsArray.push(model);
         scene.add(model);
-        console.log(model);
+        //console.log(model);
     });
     loader.load("/objects/Can_Models.gltf", (gltf) => {
         const model = gltf.scene;
@@ -117,10 +133,11 @@ Main animate loop
 */
 function animate() {
 	requestAnimationFrame(animate);
+    //code for intersect objects
     raycaster.setFromCamera(pointer, camera);
     intersects = raycaster.intersectObjects(scene.children);
     intersects.forEach((i) => {
-        if(icosahedronArray.includes(i) || modelsArray.includes(i)){
+        if(clickableArray.includes(i)){
             console.log(i)
         }
     });
@@ -207,11 +224,15 @@ Icosahedron should be about 3 y
 Platform will be -2.5 dy from icosahedron
 */
 function addPlatPlusIco(icoPosition){
+    const platformPlusIco = new THREE.Object3D();
     const ico = createIcosahedron(icoPosition);
     const platPosition = icoPosition.add(new THREE.Vector3(0,-2.5,0));
     const platform = createPlatform(platPosition);
+    platformPlusIco.add(ico);
+    platformPlusIco.add(platform);
     icosahedronArray.push(ico);
-    scene.add(ico,platform);
+    scene.add(platformPlusIco);
+    new ClickableObject(ico);
 }
 
 /*
