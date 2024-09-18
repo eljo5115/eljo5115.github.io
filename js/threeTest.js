@@ -128,6 +128,11 @@ function onPointerMove(e){
 
 }
 
+function onClick(){
+    console.log(intersects[0]);
+    intersects[0].activate();
+}
+
 /*
 Main animate loop
 */
@@ -322,3 +327,4 @@ animate();
 drawHelpers();
 window.addEventListener("resize",onWindowResize);
 canvas.addEventListener("pointermove",onPointerMove,false);
+canvas.addEventListener("onclick",onClick)
