@@ -1,0 +1,367 @@
+/* --- Color Palette & Variables --- */
+:root {
+	--color-bg: #050505;
+	--color-text: #ffffff;
+	--color-primary: #00ff87; /* Spring Green */
+	--color-secondary: #33ff57; /* Lighter Green */
+	--color-tertiary: #00b359; /* Darker Green */
+	--color-accent: #c0ff33; /* Lime Green */
+	--card-radius: 16px;
+	--card-bg: rgba(255, 255, 255, 0.03);
+	--card-border: rgba(255, 255, 255, 0.1);
+	--card-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.5);
+	--transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* --- Basic Resets & Global Styles --- */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	color: var(--color-text);
+	min-height: 100vh;
+	overflow-x: hidden;
+	line-height: 1.5;
+}
+@keyframes fade-out-and-hide {
+    to {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
+/* --- Animated Background --- */
+.background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	background-color: var(--color-bg);
+	overflow: hidden;
+}
+
+.gradient-blob {
+	position: absolute;
+	border-radius: 100%;
+	filter: blur(80px);
+	opacity: 0.5;
+	animation: float 20s infinite alternate ease-in-out;
+}
+
+.gradient-blob:nth-child(1) {
+	background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+	width: 60vw;
+	height: 60vw;
+	top: -20%;
+	left: -10%;
+	animation-delay: 0s;
+}
+
+.gradient-blob:nth-child(2) {
+	background: linear-gradient(to right, var(--color-tertiary), var(--color-secondary));
+	width: 60vw;
+	height: 60vw;
+	bottom: -30%;
+	right: -10%;
+	animation-delay: -5s;
+}
+
+.gradient-blob:nth-child(3) {
+	background: linear-gradient( to right, var(--color-accent), var(--color-primary));
+	width: 40vw;
+	height: 40vw;
+	top: 40%;
+	left: 30%;
+	animation-delay: -10s;
+}
+
+@keyframes float {
+	0% { transform: translate(0, 0) scale(1); }
+	50% { transform: translate(2%, 2%) scale(1.02); }
+	100% { transform: translate(-2%, -2%) scale(0.98); }
+}
+
+/* --- Intro Screen --- */
+#intro-screen {
+    position: fixed;
+    inset: 0;
+    background-color: var(--color-bg);
+    z-index: 9999;
+    overflow: hidden;
+}
+/* The SVG container for the graph */
+#graph-svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* A subtle glow effect for the line */
+    filter: drop-shadow(0 0 8px rgba(63, 185, 80, 0.4));
+}
+
+.graph-line {
+    fill: none;
+    stroke: #3fb950; /* GitHub green */
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    /* The animation that "draws" the line */
+    animation: draw-line 6s ease-out forwards;
+}
+
+.graph-end-dot {
+    fill: #58a6ff; /* A bright blue accent */
+    stroke: var(--color-bg);
+    stroke-width: 4;
+    opacity: 0;
+    /* This animation starts after the line is drawn */
+    animation: appear-and-pulse 1.5s ease-in-out forwards;
+    animation-delay: 6s;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+@keyframes draw-line {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes appear-and-pulse {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+/* Utility class to hide elements accessibly */
+.hidden {
+    visibility: hidden;
+}
+
+/* Main content styling */
+#main-content { /* This is the <main> tag */
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+    opacity: 0;
+    transition: opacity 0.5s ease-in 0.4s; /* Added a 0.4s delay */
+    position: relative;
+	z-index: 1;
+}
+
+#main-content h1 {
+	font-size: 2.5rem;
+	font-weight: 800;
+	margin-bottom: 0.5rem;
+	line-height: 1.1;
+	background: linear-gradient(to right, var(--color-text), rgba(255, 255, 255, 0.7));
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	text-align: center;
+}
+
+#main-content header p {
+	font-size: 1.25rem;
+	text-align: center;
+	margin-bottom: 4rem;
+	opacity: 0.8;
+}
+
+/*
+  When the intro is finished, we'll add these classes
+  to fade the elements in and out smoothly.
+*/
+.intro-fading-out {
+    animation: fade-out-and-hide 0.8s ease-out forwards;
+}
+#main-content.main-content-visible {
+    opacity: 1;
+}
+
+/* --- Projects Section --- */
+#projects {
+    margin-top: 3rem;
+}
+
+#projects h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+.cards-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 1.5rem;
+	perspective: 1000px;
+}
+
+.card {
+	position: relative;
+	min-height: 350px;
+	border-radius: var(--card-radius);
+	background: var(--card-bg);
+	border: 1px solid var(--card-border);
+	box-shadow: var(--card-shadow);
+	transform-style: preserve-3d;
+	transition: var(--transition);
+	cursor: pointer;
+	overflow: hidden;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+}
+
+.card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(
+		circle at var(--x, 50%) var(--y, 50%),
+		rgba(255, 255, 255, 0.1) 0%,
+		transparent 50%
+	);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.card:hover::before {
+	opacity: 1;
+}
+
+.card-content {
+	position: relative;
+	padding: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	transform-style: preserve-3d;
+	transition: transform 0.5s ease;
+}
+
+.card h2 {
+	font-size: 1.5rem;
+	margin-bottom: 0.75rem;
+	font-weight: 700;
+	transform: translateZ(20px);
+	background: linear-gradient(to right, var(--color-text), rgba(255, 255, 255, 0.8));
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.card p {
+	margin-bottom: 1.5rem;
+	font-size: 0.9rem;
+	opacity: 0.8;
+	transform: translateZ(15px);
+}
+
+.card-footer {
+	margin-top: auto;
+	display: flex;
+    gap: 0.75rem;
+	align-items: center;
+	transform: translateZ(15px);
+}
+
+.card-button {
+    display: inline-block;
+	padding: 0.6rem 1.2rem;
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 100px;
+	color: var(--color-text);
+	font-weight: 600;
+	font-size: 0.85rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	backdrop-filter: blur(5px);
+    text-decoration: none;
+}
+
+.card-button:hover {
+	background: rgba(255, 255, 255, 0.2);
+	transform: translateY(-2px);
+}
+
+/* --- Holdings Section --- */
+#holdings {
+    margin-top: 5rem;
+}
+
+#holdings h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* For responsiveness on small screens */
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 1rem;
+    box-shadow: var(--card-shadow);
+}
+
+/* Custom scrollbar for a cleaner look */
+.table-container::-webkit-scrollbar { height: 8px; }
+.table-container::-webkit-scrollbar-track { background: transparent; }
+.table-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+.table-container::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* Prevent table from getting too squished */
+}
+
+thead tr {
+    border-bottom: 1px solid var(--card-border);
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    white-space: nowrap;
+}
+
+th {
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Align numeric data to the right and use a monospace font */
+td:not(:first-child), th:not(:first-child) {
+    text-align: right;
+    font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+}
