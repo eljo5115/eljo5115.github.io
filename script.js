@@ -62,6 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Now, add the class that triggers the fade-in transition
         mainContent.classList.add('main-content-visible');
+
+        // Fetch portfolio data now that the main content is being shown.
+        // This will happen while the content is fading in.
+        fetchPortfolioHoldings();
+
     }
 
     /**
@@ -129,6 +134,66 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startIntro();
+
+    // --- Portfolio Holdings Logic ---
+    async function fetchPortfolioHoldings() {
+        const apiUrl = 'http://dozencrust.com:5001/api/portfolio';
+        const tableBody = document.querySelector('#holdings tbody');
+
+        if (!tableBody) {
+            console.error('Holdings table body not found!');
+            return;
+        }
+
+        // Show a loading message while we fetch data
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading holdings...</td></tr>';
+
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            const holdings = await response.json();
+
+            // Clear the loading message
+            tableBody.innerHTML = '';
+
+            if (holdings && holdings.length > 0) {
+                // Assuming the API returns an array of objects like:
+                // { symbol: 'SPY', qty: '10', current_price: '450.00', market_value: '4500.00' }
+                holdings.forEach(holding => {
+                    const row = tableBody.insertRow();
+
+                    row.insertCell().textContent = holding.symbol;
+                    row.insertCell().textContent = holding.qty;
+
+                    // Format price and market value as US currency
+                    const lastPriceCell = row.insertCell();
+                    lastPriceCell.textContent = parseFloat(holding.current_price).toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD'
+                    });
+
+                    const marketValueCell = row.insertCell();
+                    marketValueCell.textContent = parseFloat(holding.market_value).toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD'
+                    });
+                });
+            } else {
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No holdings to display.</td></tr>';
+            }
+        } catch (error) {
+            console.error('Failed to fetch portfolio holdings:', error);
+            let errorMessage = 'Error loading portfolio data.';
+            // Your GitHub Pages site is on HTTPS, but the API is on HTTP.
+            // Browsers block these "mixed content" requests for security.
+            if (window.location.protocol === 'https:' && apiUrl.startsWith('http:')) {
+                errorMessage += ' This may be due to a mixed content security error.';
+            }
+            tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center;">${errorMessage}</td></tr>`;
+        }
+    }
 
     // --- Interactive Card Logic ---
 	const cards = document.querySelectorAll(".card");
