@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const introScreen = document.getElementById('intro-screen');
     const graphSvg = document.getElementById('graph-svg');
     const mainContent = document.getElementById('main-content');
+    let introTimeoutId = null; // To hold the timer for the intro
 
     /**
      * Generates a series of points for the graph line that trend upwards.
@@ -45,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
      * Fades out the intro and shows the main content.
      */
     function endIntro() {
+        // Clear the scheduled timeout in case this was triggered by a click
+        if (introTimeoutId) {
+            clearTimeout(introTimeoutId);
+            introTimeoutId = null;
+        }
+
         // Prevent this from running multiple times
         if (introScreen.classList.contains('intro-fading-out')) {
             return;
@@ -109,7 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
         line.style.strokeDashoffset = lineLength;
 
         // Set a timer to end the intro
-        setTimeout(endIntro, INTRO_DURATION_MS);
+        introTimeoutId = setTimeout(endIntro, INTRO_DURATION_MS);
+
+        // Allow skipping the intro by clicking. The { once: true } option automatically removes the listener after it's called.
+        introScreen.addEventListener('click', endIntro, { once: true });
 
         // --- Camera Animation Logic ---
         const animationStartTime = performance.now();
