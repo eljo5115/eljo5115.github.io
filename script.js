@@ -50,6 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Set the flag in sessionStorage so the intro is skipped on reload
+        try {
+            sessionStorage.setItem('hasSeenIntroInSession', 'true');
+        } catch (e) {
+            // This might fail in private browsing modes where storage is restricted.
+            console.warn('Could not set sessionStorage item. Intro will play on every reload.', e);
+        }
+
         // Start the fade-out transition
         introScreen.classList.add('intro-fading-out');
 
@@ -133,7 +141,32 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animateCamera);
     }
 
-    startIntro();
+    // --- MAIN EXECUTION LOGIC ---
+    const storageKey = 'hasSeenIntroInSession';
+
+    /**
+     * Skips the intro animation and shows the main content directly.
+     */
+    function skipIntro() {
+        introScreen.style.display = 'none';
+        mainContent.classList.remove('hidden');
+        mainContent.classList.add('main-content-visible'); // This class should set opacity: 1
+        fetchPortfolioHoldings();
+    }
+
+    // Check if the intro has been seen before in this session.
+    // Use a try...catch block in case sessionStorage is disabled (e.g., private browsing).
+    try {
+        if (sessionStorage.getItem(storageKey) === 'true') {
+            console.log('Session flag found. Skipping intro.');
+            skipIntro();
+        } else {
+            startIntro();
+        }
+    } catch (e) {
+        console.error('Could not access sessionStorage. Starting intro by default.', e);
+        startIntro(); // Fallback to running the animation if storage is inaccessible
+    }
 
     // --- Portfolio Holdings Logic ---
     async function fetchPortfolioHoldings() {
