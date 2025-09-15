@@ -153,32 +153,41 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 throw new Error(`Network response was not ok: ${response.statusText}`);
             }
-            const holdings = await response.json();
+            const portfolioData = await response.json();
+            const holdings = portfolioData.positions; // The API response is an object with a 'positions' array
 
             // Clear the loading message
             tableBody.innerHTML = '';
 
             if (holdings && holdings.length > 0) {
-                // Assuming the API returns an array of objects like:
-                // { symbol: 'SPY', qty: '10', current_price: '450.00', market_value: '4500.00' }
+                // The API returns an array of objects like:
+                // { symbol: '...', quantity: '5', current_price: '53.08', market_value: '265.4' }
                 holdings.forEach(holding => {
                     const row = tableBody.insertRow();
 
                     row.insertCell().textContent = holding.symbol;
-                    row.insertCell().textContent = holding.qty;
+                    row.insertCell().textContent = holding.quantity; // Use 'quantity' from the API response
 
-                    // Format price and market value as US currency
+                    // Format price and market value as US currency, handling potential null values
                     const lastPriceCell = row.insertCell();
-                    lastPriceCell.textContent = parseFloat(holding.current_price).toLocaleString('en-US', {
-                        style: 'currency',
-                        currency: 'USD'
-                    });
+                    if (holding.current_price !== null && holding.current_price !== undefined) {
+                        lastPriceCell.textContent = parseFloat(holding.current_price).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD'
+                        });
+                    } else {
+                        lastPriceCell.textContent = 'N/A';
+                    }
 
                     const marketValueCell = row.insertCell();
-                    marketValueCell.textContent = parseFloat(holding.market_value).toLocaleString('en-US', {
-                        style: 'currency',
-                        currency: 'USD'
-                    });
+                    if (holding.market_value !== null && holding.market_value !== undefined) {
+                        marketValueCell.textContent = parseFloat(holding.market_value).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD'
+                        });
+                    } else {
+                        marketValueCell.textContent = 'N/A';
+                    }
                 });
             } else {
                 tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No holdings to display.</td></tr>';
