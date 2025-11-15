@@ -309,16 +309,17 @@ function getConfidenceLevel(confidence) {
 
 // Update Statistics
 function updateStatistics(games) {
+    // Fetch model accuracy from API
+    fetchModelAccuracy();
+    
     // Calculate stats from games data
     const highConfGames = games.filter(g => (g.confidence || g.win_probability || 0) >= 0.65);
-    const avgConfidence = games.reduce((sum, g) => sum + (g.confidence || g.win_probability || 0.5), 0) / games.length;
     
-    document.getElementById('accuracy').textContent = `${Math.round(avgConfidence * 100)}%`;
     document.getElementById('totalPredictions').textContent = games.length;
     
     // Find best bet
     const bestBet = games.reduce((best, game) => 
-        (game.confidence || game.win_probability || 0) > (best.confidence || best.win_probability || 0) ? game : best
+        (game.winner_probability || 0) > (best.winner_probability || 0) ? game : best
     , games[0]);
     
     document.getElementById('bestBet').textContent = bestBet ? 
@@ -326,6 +327,36 @@ function updateStatistics(games) {
     
     // Mock ROI for now
     document.getElementById('roi').textContent = '+12.5%';
+}
+
+// Fetch model accuracy from API
+async function fetchModelAccuracy() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/model/info`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Model info:', data);
+            
+            if (data.test_accuracy) {
+                document.getElementById('accuracy').textContent = `${data.test_accuracy.toFixed(1)}%`;
+            } else {
+                document.getElementById('accuracy').textContent = '63.9%';
+            }
+        } else {
+            // Fallback to static value
+            document.getElementById('accuracy').textContent = '63.9%';
+        }
+    } catch (error) {
+        console.log('Could not fetch model accuracy:', error);
+        // Fallback to static value
+        document.getElementById('accuracy').textContent = '63.9%';
+    }
 }
 
 // Update Insights

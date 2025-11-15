@@ -231,9 +231,31 @@ function applyFiltersAndSort() {
         case 'confidence-high':
             evBetsData.sort((a, b) => (b.confidence || b.win_probability || 0) - (a.confidence || a.win_probability || 0));
             break;
+        case 'confidence-low':
+            evBetsData.sort((a, b) => (a.confidence || a.win_probability || 0) - (b.confidence || b.win_probability || 0));
+            break;
         case 'roi-high':
             evBetsData.sort((a, b) => (b.roi || 0) - (a.roi || 0));
             break;
+        case 'roi-low':
+            evBetsData.sort((a, b) => (a.roi || 0) - (b.roi || 0));
+            break;
+        case 'kelly-high':
+            evBetsData.sort((a, b) => {
+                const kellyA = a.kelly_percentage || calculateKellyCriterion(a.expected_value || 0, (a.confidence || 0) * 100);
+                const kellyB = b.kelly_percentage || calculateKellyCriterion(b.expected_value || 0, (b.confidence || 0) * 100);
+                return kellyB - kellyA;
+            });
+            break;
+        case 'date':
+            evBetsData.sort((a, b) => {
+                const dateA = a.game_time ? new Date(a.game_time) : new Date(0);
+                const dateB = b.game_time ? new Date(b.game_time) : new Date(0);
+                return dateA - dateB;
+            });
+            break;
+        default:
+            evBetsData.sort((a, b) => (b.expected_value || b.ev || 0) - (a.expected_value || a.ev || 0));
     }
     
     updateSummaryStats();
