@@ -1,0 +1,434 @@
+/* EV Page Specific Styles */
+
+/* Navigation */
+.main-nav {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+}
+
+.nav-link {
+    padding: 0.75rem 2rem;
+    background: var(--surface-light);
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    min-width: 160px;
+}
+
+.nav-link:hover {
+    border-color: var(--accent-color);
+    background: var(--surface);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(251, 79, 20, 0.2);
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(251, 79, 20, 0.4);
+}
+
+/* EV Banner */
+.ev-banner {
+    background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--success);
+}
+
+.ev-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.ev-summary-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.ev-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.ev-summary-content h3 {
+    font-size: 2rem;
+    color: var(--success);
+    margin: 0;
+    line-height: 1;
+}
+
+.ev-summary-content p {
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+}
+
+/* Filters Section */
+.filters-section {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.filters-header h2 {
+    margin: 0;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    padding: 0.75rem 1rem;
+    background: var(--surface-light);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+/* EV Bets List */
+.ev-bets-section {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+}
+
+.ev-bets-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.ev-bet-card {
+    background: var(--surface-light);
+    border: 2px solid var(--border);
+    border-left: 6px solid var(--success);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.ev-bet-card:hover {
+    transform: translateX(4px);
+    border-left-color: var(--accent-color);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.ev-bet-card.high-value {
+    border-left-width: 8px;
+    border-left-color: #10b981;
+}
+
+.ev-bet-card.medium-value {
+    border-left-color: #f59e0b;
+}
+
+.ev-bet-card.low-value {
+    border-left-color: #6b7280;
+}
+
+.ev-bet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.ev-bet-game {
+    flex: 1;
+    min-width: 200px;
+}
+
+.ev-bet-matchup {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.ev-bet-time {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.ev-badge-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.ev-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.ev-badge.primary {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    font-size: 1.2rem;
+}
+
+.ev-badge.secondary {
+    background: rgba(251, 79, 20, 0.2);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+.ev-bet-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.ev-bet-section {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.ev-bet-section h4 {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+}
+
+.ev-bet-pick {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+.ev-bet-odds {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.ev-bet-details {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.ev-detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.ev-detail-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+.ev-detail-value {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.ev-detail-value.success {
+    color: var(--success);
+}
+
+.ev-detail-value.warning {
+    color: var(--warning);
+}
+
+.ev-bet-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.ev-bet-recommendation {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.ev-bet-recommendation strong {
+    color: var(--success);
+}
+
+.stake-suggestion {
+    padding: 0.5rem 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--success);
+    border-radius: 6px;
+    color: var(--success);
+    font-weight: 600;
+}
+
+/* No EV Message */
+.no-ev-message {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.no-ev-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.no-ev-message h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.no-ev-message p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.no-ev-hint {
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* EV Explanation Section */
+.ev-explanation {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.explanation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.explanation-card {
+    background: var(--surface-light);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+}
+
+.explanation-card h3 {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.explanation-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ev-summary-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filters-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+    }
+    
+    .filter-select {
+        width: 100%;
+    }
+    
+    .ev-bet-header {
+        flex-direction: column;
+    }
+    
+    .ev-bet-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .ev-bet-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .explanation-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .ev-summary-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .ev-badge-container {
+        justify-content: center;
+    }
+    
+    .main-nav {
+        flex-direction: column;
+    }
+    
+    .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+}

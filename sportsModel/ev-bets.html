@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>+EV Bets - NFL Betting Model</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ev-style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>🏈 NFL Betting Model</h1>
+                <p class="subtitle">Powered by DozenCrust Analytics API</p>
+            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">All Predictions</a>
+                <a href="ev-bets.html" class="nav-link active">+EV Bets</a>
+            </nav>
+            <div class="api-status" id="apiStatus">
+                <span class="status-indicator"></span>
+                <span class="status-text">Checking API...</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- EV Summary Banner -->
+        <section class="ev-banner">
+            <div class="ev-summary-grid">
+                <div class="ev-summary-card">
+                    <div class="ev-icon">💰</div>
+                    <div class="ev-summary-content">
+                        <h3 id="totalEVBets">--</h3>
+                        <p>+EV Opportunities</p>
+                    </div>
+                </div>
+                <div class="ev-summary-card">
+                    <div class="ev-icon">📈</div>
+                    <div class="ev-summary-content">
+                        <h3 id="avgEV">--</h3>
+                        <p>Average EV</p>
+                    </div>
+                </div>
+                <div class="ev-summary-card">
+                    <div class="ev-icon">🎯</div>
+                    <div class="ev-summary-content">
+                        <h3 id="bestEV">--</h3>
+                        <p>Best EV This Week</p>
+                    </div>
+                </div>
+                <div class="ev-summary-card">
+                    <div class="ev-icon">💵</div>
+                    <div class="ev-summary-content">
+                        <h3 id="projectedROI">--</h3>
+                        <p>Projected ROI</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Week Selector -->
+        <section class="week-selector">
+            <h2>Select Week</h2>
+            <div class="week-controls">
+                <button id="prevWeek" class="btn btn-secondary">← Previous</button>
+                <select id="weekSelect" class="week-select">
+                    <!-- Will be populated by JS -->
+                </select>
+                <button id="nextWeek" class="btn btn-secondary">Next →</button>
+            </div>
+        </section>
+
+        <!-- Filters and Sort -->
+        <section class="filters-section">
+            <div class="filters-header">
+                <h2>+EV Betting Opportunities</h2>
+                <div class="filter-controls">
+                    <select id="sortBy" class="filter-select">
+                        <option value="ev-high">Highest EV</option>
+                        <option value="ev-low">Lowest EV</option>
+                        <option value="confidence-high">Highest Confidence</option>
+                        <option value="roi-high">Best ROI</option>
+                    </select>
+                    <select id="minEV" class="filter-select">
+                        <option value="0">All EV</option>
+                        <option value="2">EV &gt; 2%</option>
+                        <option value="5">EV &gt; 5%</option>
+                        <option value="10">EV &gt; 10%</option>
+                    </select>
+                    <button id="refreshBtn" class="btn btn-primary">↻ Refresh</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- EV Bets List -->
+        <section class="ev-bets-section">
+            <div id="evBetsContainer" class="ev-bets-list">
+                <!-- EV bet cards will be inserted here -->
+            </div>
+            <div id="loadingSpinner" class="loading">
+                <div class="spinner"></div>
+                <p>Loading +EV opportunities...</p>
+            </div>
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <p>Failed to load data. Please try again.</p>
+            </div>
+            <div id="noEVMessage" class="no-ev-message" style="display: none;">
+                <div class="no-ev-icon">📊</div>
+                <h3>No +EV Bets Found</h3>
+                <p>No positive expected value opportunities detected for the current filters.</p>
+                <p class="no-ev-hint">Try adjusting your filters or check back later for updated odds.</p>
+            </div>
+        </section>
+
+        <!-- EV Explanation -->
+        <section class="ev-explanation">
+            <h2>Understanding +EV Betting</h2>
+            <div class="explanation-grid">
+                <div class="explanation-card">
+                    <h3>🎲 What is Expected Value?</h3>
+                    <p>Expected Value (EV) measures the average amount you can expect to win or lose per bet over the long run. Positive EV (+EV) means the bet is mathematically profitable.</p>
+                </div>
+                <div class="explanation-card">
+                    <h3>📊 How We Calculate EV</h3>
+                    <p>EV = (Win Probability × Payout) - (Loss Probability × Stake). Our model compares predicted probabilities against market odds to find value.</p>
+                </div>
+                <div class="explanation-card">
+                    <h3>💡 Using +EV Bets</h3>
+                    <p>Focus on bets with higher EV percentages and reasonable confidence levels. Remember, even +EV bets can lose - it's about long-term profitability.</p>
+                </div>
+                <div class="explanation-card">
+                    <h3>⚠️ Risk Management</h3>
+                    <p>Never bet more than 1-5% of your bankroll on a single bet. Diversify across multiple +EV opportunities to reduce variance.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 DozenCrust Analytics | API: <a href="https://api.dozencrust.com/nfl/" target="_blank">api.dozencrust.com/nfl/</a></p>
+            <p class="disclaimer">For entertainment purposes only. Please gamble responsibly.</p>
+        </div>
+    </footer>
+
+    <script src="ev-script.js"></script>
+</body>
+</html>
