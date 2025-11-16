@@ -322,14 +322,38 @@ function createEVBetCard(bet) {
     let betDetail = '';
     
     if (betTypeDisplay === 'Spread') {
-        // For spread bets
-        const spreadValue = bet.spread_line || 'N/A';
-        if (bet.recommendation && bet.recommendation.includes('to cover')) {
-            pickDisplay = bet.recommendation;
+        // For spread bets - spread is from away team's perspective
+        let spreadValue = bet.spread_line;
+        
+        if (spreadValue !== 'N/A' && bet.recommendation) {
+            // Extract team name from recommendation
+            const teamMatch = bet.recommendation.match(/(?:BET:|LEAN:)?\s*(.+?)\s+to cover/i);
+            if (teamMatch) {
+                const teamName = teamMatch[1].trim();
+                
+                // Determine if this is the away team or home team
+                const isAwayTeam = bet.away_team && teamName.toLowerCase().includes(bet.away_team.toLowerCase());
+                
+                // Parse the spread value
+                let spreadNum = parseFloat(spreadValue);
+                
+                // If it's the home team, reverse the sign
+                if (!isAwayTeam && !isNaN(spreadNum)) {
+                    spreadNum = -spreadNum;
+                }
+                
+                // Format with proper sign
+                const spreadDisplay = spreadNum > 0 ? `+${spreadNum}` : spreadNum.toString();
+                pickDisplay = `${teamName} ${spreadDisplay}`;
+                betDetail = `Point Spread: ${spreadDisplay}`;
+            } else {
+                pickDisplay = bet.recommendation;
+                betDetail = `Point Spread: ${spreadValue}`;
+            }
         } else {
-            pickDisplay = `${bet.recommendation || bet.pick || 'Spread Bet'}`;
+            pickDisplay = bet.recommendation || bet.pick || 'Spread Bet';
+            betDetail = `Point Spread: ${spreadValue}`;
         }
-        betDetail = `Point Spread: ${spreadValue}`;
     } else if (betTypeDisplay === 'Total') {
         // For over/under bets
         const totalValue = bet.total_line || 'N/A';
