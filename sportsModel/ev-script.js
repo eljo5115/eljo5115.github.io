@@ -175,8 +175,10 @@ function transformAPIResponse(data) {
     
     // API returns all_positive_ev_bets array
     if (data.all_positive_ev_bets && data.all_positive_ev_bets.length > 0) {
+        console.log('Sample bet from API:', data.all_positive_ev_bets[0]); // Debug
         data.all_positive_ev_bets.forEach(item => {
             const bet = item.bet;
+            console.log(`Bet probability: ${bet.probability}%`); // Debug each bet
             transformedBets.push({
                 away_team: item.away_team,
                 home_team: item.home_team,
@@ -185,8 +187,8 @@ function transformAPIResponse(data) {
                 bet_type: bet.bet_type,
                 expected_value: bet.expected_value,
                 confidence: bet.probability / 100, // Convert to decimal
-                odds: calculateOddsDisplay(bet.probability),
-                market_odds: '-110', // Default
+                odds: '-110', // Standard odds (API doesn't provide actual market odds)
+                market_odds: '-110', // Standard odds
                 fair_odds: calculateFairOdds(bet.probability),
                 edge: bet.expected_value,
                 roi: bet.expected_value * 1.5,
@@ -315,12 +317,41 @@ function createEVBetCard(bet) {
     let betTypeDisplay = bet.bet_type || 'Moneyline';
     betTypeDisplay = betTypeDisplay.charAt(0).toUpperCase() + betTypeDisplay.slice(1);
     
-    // Format the pick display
-    let pickDisplay = bet.recommendation || bet.pick || 'TBD';
-    if (betTypeDisplay === 'Spread' && bet.spread_line) {
-        pickDisplay += ` (${bet.spread_line})`;
-    } else if (betTypeDisplay === 'Total' && bet.total_line) {
-        pickDisplay += ` ${bet.total_line}`;
+    // Format the pick display - make it crystal clear what the bet is
+    let pickDisplay = '';
+    let betDetail = '';
+    
+    if (betTypeDisplay === 'Spread') {
+        // For spread bets
+        const spreadValue = bet.spread_line || 'N/A';
+        if (bet.recommendation && bet.recommendation.includes('to cover')) {
+            pickDisplay = bet.recommendation;
+        } else {
+            pickDisplay = `${bet.recommendation || bet.pick || 'Spread Bet'}`;
+        }
+        betDetail = `Point Spread: ${spreadValue}`;
+    } else if (betTypeDisplay === 'Total') {
+        // For over/under bets
+        const totalValue = bet.total_line || 'N/A';
+        if (bet.recommendation) {
+            // Extract OVER or UNDER from recommendation
+            const isOver = bet.recommendation.toUpperCase().includes('OVER');
+            const isUnder = bet.recommendation.toUpperCase().includes('UNDER');
+            if (isOver) {
+                pickDisplay = `OVER ${totalValue}`;
+            } else if (isUnder) {
+                pickDisplay = `UNDER ${totalValue}`;
+            } else {
+                pickDisplay = bet.recommendation;
+            }
+        } else {
+            pickDisplay = `Total ${totalValue}`;
+        }
+        betDetail = `Total Points Line`;
+    } else {
+        // Moneyline or other
+        pickDisplay = bet.recommendation || bet.pick || 'TBD';
+        betDetail = 'Moneyline';
     }
     
     card.innerHTML = `
@@ -342,7 +373,7 @@ function createEVBetCard(bet) {
                 <h4>Recommended Bet</h4>
                 <div class="ev-bet-pick">${pickDisplay}</div>
                 <div class="ev-bet-odds">
-                    ${betTypeDisplay} | Odds: ${bet.odds || '-110'}
+                    ${betTypeDisplay}: ${betDetail} | Odds: ${bet.odds || '-110'}
                 </div>
             </div>
             
@@ -386,7 +417,7 @@ function createEVBetCard(bet) {
         <div class="ev-bet-footer">
             <div class="ev-bet-recommendation">
                 <span>💡</span>
-                <span>${bet.recommendation || getRecommendation(ev, confidence)}</span>
+                <span>${getBestRecommendation(bet.recommendation, ev, confidence)}</span>
             </div>
             <div class="stake-suggestion">
                 Suggested Stake: ${kellyPct.toFixed(1)}% of bankroll
@@ -422,10 +453,24 @@ function calculateKellyCriterion(ev, winProb) {
 
 // Get Recommendation
 function getRecommendation(ev, confidence) {
-    if (ev >= 10 && confidence >= 65) return 'Strong Bet';
-    if (ev >= 5 && confidence >= 60) return 'Good Value';
-    if (ev >= 2 && confidence >= 55) return 'Moderate Value';
-    return 'Proceed with Caution';
+    // Simple recommendation based on EV and confidence
+    if (ev >= 20) return 'BET: Excellent Value';
+    if (ev >= 10 && confidence >= 55) return 'BET: Strong Value';
+    if (ev >= 10) return 'BET: High EV';
+    if (ev >= 5 && confidence >= 60) return 'BET: Good Value';
+    if (ev >= 5) return 'LEAN: Moderate EV';
+    if (ev >= 2 && confidence >= 55) return 'LEAN: Small Edge';
+    return 'PASS - Low Edge';
+}
+
+// Get best recommendation - prefer API, fallback to our logic
+function getBestRecommendation(apiRecommendation, ev, confidence) {
+    // Use API recommendation if it exists and is valid
+    if (apiRecommendation && !apiRecommendation.includes('undefined')) {
+        return apiRecommendation;
+    }
+    // Otherwise use our logic
+    return getRecommendation(ev, confidence);
 }
 
 // Generate Mock EV Data

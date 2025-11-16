@@ -302,8 +302,9 @@ function createGameCard(game) {
 // Get Confidence Level
 function getConfidenceLevel(confidence) {
     const conf = parseFloat(confidence);
-    if (conf >= 0.65) return 'High';
-    if (conf >= 0.55) return 'Medium';
+    // Match API thresholds: high >= 70%, moderate 60-70%, low < 60%
+    if (conf >= 0.70) return 'High';
+    if (conf >= 0.60) return 'Medium';
     return 'Low';
 }
 
