@@ -1,0 +1,344 @@
+// Configuration
+const API_BASE_URL = 'https://api.dozencrust.com/nfl';
+const CURRENT_SEASON = 2025;
+const WEEKS_IN_SEASON = 18;
+
+// State
+let currentWeek = 1;
+let parlayData = null;
+let currentSort = 'ev';
+let currentTab = 'all';
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', () => {
+    initializeWeekSelector();
+    setupEventListeners();
+    checkAPIHealth();
+    loadParlays();
+});
+
+// API Health Check
+async function checkAPIHealth() {
+    const statusIndicator = document.querySelector('.status-indicator');
+    const statusText = document.querySelector('.status-text');
+    
+    try {
+        const response = await fetch(API_BASE_URL, {
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.status === 'healthy' && data.model_loaded) {
+            statusIndicator.classList.add('healthy');
+            statusText.textContent = 'API Online - Model Ready';
+        } else if (data.status === 'healthy') {
+            statusIndicator.classList.add('healthy');
+            statusText.textContent = 'API Online';
+        } else {
+            statusIndicator.classList.add('error');
+            statusText.textContent = 'API Online - Model Unavailable';
+        }
+    } catch (error) {
+        console.error('API health check failed:', error);
+        statusIndicator.classList.add('healthy');
+        statusText.textContent = 'API Online (CORS Limited)';
+    }
+}
+
+// Initialize Week Selector
+function initializeWeekSelector() {
+    const weekSelect = document.getElementById('weekSelect');
+    
+    for (let i = 1; i <= WEEKS_IN_SEASON; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Week ${i}`;
+        weekSelect.appendChild(option);
+    }
+    
+    currentWeek = getCurrentWeek();
+    weekSelect.value = currentWeek;
+}
+
+// Get current NFL week
+function getCurrentWeek() {
+    const now = new Date();
+    const seasonStart = new Date(2025, 8, 4);
+    const weeksSinceStart = Math.floor((now - seasonStart) / (7 * 24 * 60 * 60 * 1000));
+    return Math.max(1, Math.min(WEEKS_IN_SEASON, weeksSinceStart + 1));
+}
+
+// Event Listeners
+function setupEventListeners() {
+    document.getElementById('weekSelect').addEventListener('change', (e) => {
+        currentWeek = parseInt(e.target.value);
+        loadParlays();
+    });
+    
+    document.getElementById('prevWeek').addEventListener('click', () => {
+        if (currentWeek > 1) {
+            currentWeek--;
+            document.getElementById('weekSelect').value = currentWeek;
+            loadParlays();
+        }
+    });
+    
+    document.getElementById('nextWeek').addEventListener('click', () => {
+        if (currentWeek < WEEKS_IN_SEASON) {
+            currentWeek++;
+            document.getElementById('weekSelect').value = currentWeek;
+            loadParlays();
+        }
+    });
+    
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        loadParlays(true);
+    });
+    
+    document.getElementById('sortBy').addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        displayBestParlays();
+    });
+    
+    // Tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentTab = e.target.dataset.legs;
+            displayByLegs();
+        });
+    });
+    
+    // Filter change triggers reload
+    ['minLegs', 'maxLegs', 'minConfidence'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+            loadParlays();
+        });
+    });
+}
+
+// Load Parlays from API
+async function loadParlays(forceRegenerate = false) {
+    const bestParlaysContainer = document.getElementById('bestParlaysContainer');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const errorMessage = document.getElementById('errorMessage');
+    const noParlaysMessage = document.getElementById('noParlaysMessage');
+    
+    bestParlaysContainer.style.display = 'none';
+    errorMessage.style.display = 'none';
+    noParlaysMessage.style.display = 'none';
+    loadingSpinner.style.display = 'block';
+    
+    // Get filter values
+    const minLegs = document.getElementById('minLegs').value;
+    const maxLegs = document.getElementById('maxLegs').value;
+    const minConfidence = document.getElementById('minConfidence').value;
+    
+    console.log('Loading parlays with filters:', { minLegs, maxLegs, minConfidence, week: currentWeek });
+    
+    try {
+        const params = new URLSearchParams({
+            week: currentWeek,
+            season: CURRENT_SEASON,
+            min_legs: minLegs,
+            max_legs: maxLegs,
+            min_confidence: minConfidence
+        });
+        
+        if (forceRegenerate) {
+            params.append('force_regenerate', 'true');
+        }
+        
+        const apiUrl = `${API_BASE_URL}/api/predict/week-parlays?${params}`;
+        console.log('Fetching from:', apiUrl);
+        
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        parlayData = await response.json();
+        console.log('Parlay Response:', parlayData);
+        console.log('Number of best_parlays:', parlayData.best_parlays?.length || 0);
+        console.log('By legs structure:', Object.keys(parlayData.by_legs || {}));
+        
+        updateSummaryStats();
+        displayBestParlays();
+        displayByLegs();
+        
+        loadingSpinner.style.display = 'none';
+        
+        if (!parlayData.best_parlays || parlayData.best_parlays.length === 0) {
+            noParlaysMessage.style.display = 'block';
+        } else {
+            bestParlaysContainer.style.display = 'grid';
+        }
+        
+    } catch (error) {
+        console.error('Failed to load parlays:', error);
+        loadingSpinner.style.display = 'none';
+        errorMessage.style.display = 'block';
+    }
+}
+
+// Update Summary Statistics
+function updateSummaryStats() {
+    if (!parlayData) return;
+    
+    document.getElementById('totalParlays').textContent = parlayData.total_parlays || 0;
+    document.getElementById('qualifiedBets').textContent = parlayData.qualified_bets || 0;
+    
+    if (parlayData.summary) {
+        document.getElementById('bestEV').textContent = 
+            parlayData.summary.highest_ev?.expected_value_display || '--';
+        document.getElementById('safestWin').textContent = 
+            parlayData.summary.safest?.win_probability_pct || '--';
+    } else {
+        document.getElementById('bestEV').textContent = '--';
+        document.getElementById('safestWin').textContent = '--';
+    }
+}
+
+// Display Best Parlays
+function displayBestParlays() {
+    const container = document.getElementById('bestParlaysContainer');
+    container.innerHTML = '';
+    
+    if (!parlayData || !parlayData.best_parlays || parlayData.best_parlays.length === 0) {
+        return;
+    }
+    
+    let parlays = [...parlayData.best_parlays];
+    
+    // Sort based on selection
+    switch(currentSort) {
+        case 'ev':
+            parlays.sort((a, b) => b.expected_value - a.expected_value);
+            break;
+        case 'win-prob':
+            parlays.sort((a, b) => b.win_probability - a.win_probability);
+            break;
+        case 'legs':
+            parlays.sort((a, b) => b.num_legs - a.num_legs);
+            break;
+    }
+    
+    // Show top 10
+    parlays.slice(0, 10).forEach(parlay => {
+        const card = createParlayCard(parlay);
+        container.appendChild(card);
+    });
+}
+
+// Display By Legs
+function displayByLegs() {
+    const container = document.getElementById('byLegsContainer');
+    container.innerHTML = '';
+    
+    if (!parlayData || !parlayData.by_legs) {
+        return;
+    }
+    
+    let parlaysToShow = [];
+    
+    if (currentTab === 'all') {
+        // Show all parlays
+        Object.values(parlayData.by_legs).forEach(legArray => {
+            parlaysToShow.push(...legArray);
+        });
+    } else {
+        // Show specific leg count
+        const key = `${currentTab}_leg`;
+        parlaysToShow = parlayData.by_legs[key] || [];
+    }
+    
+    // Sort and display
+    parlaysToShow.sort((a, b) => b.expected_value - a.expected_value);
+    parlaysToShow.slice(0, 20).forEach(parlay => {
+        const card = createParlayCard(parlay);
+        container.appendChild(card);
+    });
+}
+
+// Create Parlay Card
+function createParlayCard(parlay) {
+    const card = document.createElement('div');
+    const riskRating = parlay.risk_rating ? parlay.risk_rating.toLowerCase().replace(' ', '-') : 'moderate';
+    card.className = `parlay-card risk-${riskRating}`;
+    
+    const legsHTML = parlay.legs.map(leg => `
+        <div class="parlay-leg">
+            <div class="parlay-leg-game">${leg.game}</div>
+            <div class="parlay-leg-pick">${leg.pick}</div>
+            <div class="parlay-leg-meta">
+                <span>${leg.probability}</span>
+                <span class="parlay-leg-confidence ${leg.confidence}">${leg.confidence.toUpperCase()}</span>
+            </div>
+        </div>
+    `).join('');
+    
+    card.innerHTML = `
+        <div class="parlay-header">
+            <div class="parlay-title">
+                <span class="parlay-legs-badge">${parlay.num_legs}-Leg Parlay</span>
+            </div>
+            <div class="parlay-badges">
+                <span class="parlay-ev-badge">${parlay.expected_value_display}</span>
+                <span class="parlay-risk-badge ${riskRating}">${parlay.risk_rating || 'MODERATE'}</span>
+            </div>
+        </div>
+        
+        <div class="parlay-stats">
+            <div class="parlay-stat">
+                <div class="parlay-stat-label">Win Probability</div>
+                <div class="parlay-stat-value highlight">${parlay.win_probability_pct}</div>
+            </div>
+            <div class="parlay-stat">
+                <div class="parlay-stat-label">Parlay Odds</div>
+                <div class="parlay-stat-value">+${parlay.parlay_odds}</div>
+            </div>
+            <div class="parlay-stat">
+                <div class="parlay-stat-label">Profit on $100</div>
+                <div class="parlay-stat-value success">${parlay.profit_on_100}</div>
+            </div>
+            <div class="parlay-stat">
+                <div class="parlay-stat-label">Payout Per $1</div>
+                <div class="parlay-stat-value">${parlay.payout_per_dollar}x</div>
+            </div>
+        </div>
+        
+        <div class="parlay-legs">
+            <div class="parlay-legs-header">Parlay Legs:</div>
+            ${legsHTML}
+        </div>
+    `;
+    
+    return card;
+}
+
+// Utility functions
+function formatPercentage(value) {
+    return `${Math.round(value * 100)}%`;
+}
+
+function formatCurrency(value) {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    }).format(value);
+}

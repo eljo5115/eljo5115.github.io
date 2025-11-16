@@ -1,0 +1,481 @@
+/* Parlay Page Specific Styles */
+
+/* Parlay Banner */
+.parlay-banner {
+    background: linear-gradient(135deg, #6b21a8 0%, #4c1d95 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid #7c3aed;
+}
+
+.parlay-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.parlay-summary-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.parlay-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.parlay-summary-content h3 {
+    font-size: 2rem;
+    color: #a78bfa;
+    margin: 0;
+    line-height: 1;
+}
+
+.parlay-summary-content p {
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+}
+
+/* Filters Section */
+.filters-section {
+    background: var(--surface);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+}
+
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.filters-header h2 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-select {
+    background: var(--surface-light);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.filter-select:hover {
+    border-color: #7c3aed;
+    background: rgba(124, 58, 237, 0.1);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.filter-select option {
+    background: var(--background);
+    color: var(--text-primary);
+}
+
+/* Parlays Grid */
+.parlays-section {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+}
+
+.parlays-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Parlay Card */
+.parlay-card {
+    background: var(--surface-light);
+    border: 2px solid var(--border);
+    border-left: 6px solid #7c3aed;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.parlay-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+}
+
+.parlay-card.risk-low {
+    border-left-color: #10b981;
+}
+
+.parlay-card.risk-moderate {
+    border-left-color: #f59e0b;
+}
+
+.parlay-card.risk-high {
+    border-left-color: #ef4444;
+}
+
+.parlay-card.risk-very-high {
+    border-left-color: #dc2626;
+}
+
+/* Parlay Header */
+.parlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.parlay-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.parlay-legs-badge {
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%);
+    color: white;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.parlay-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.parlay-ev-badge {
+    padding: 0.4rem 0.8rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.parlay-risk-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.parlay-risk-badge.low {
+    background: #10b981;
+    color: white;
+}
+
+.parlay-risk-badge.moderate {
+    background: #f59e0b;
+    color: white;
+}
+
+.parlay-risk-badge.high {
+    background: #ef4444;
+    color: white;
+}
+
+.parlay-risk-badge.very-high {
+    background: #dc2626;
+    color: white;
+}
+
+/* Parlay Stats */
+.parlay-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.parlay-stat {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.parlay-stat-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.parlay-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.parlay-stat-value.highlight {
+    color: #a78bfa;
+}
+
+.parlay-stat-value.success {
+    color: #10b981;
+}
+
+/* Parlay Legs */
+.parlay-legs {
+    margin-top: 1.5rem;
+}
+
+.parlay-legs-header {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.parlay-leg {
+    background: rgba(124, 58, 237, 0.1);
+    border-left: 3px solid #7c3aed;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.parlay-leg:hover {
+    background: rgba(124, 58, 237, 0.2);
+    border-left-width: 4px;
+}
+
+.parlay-leg-game {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.parlay-leg-pick {
+    color: #a78bfa;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.parlay-leg-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.parlay-leg-confidence {
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.parlay-leg-confidence.high {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.parlay-leg-confidence.moderate {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.parlay-leg-confidence.low {
+    background: rgba(107, 114, 128, 0.2);
+    color: #9ca3af;
+}
+
+/* No Parlays Message */
+.no-parlays-message {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.no-parlays-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.no-parlays-message h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.no-parlays-message p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.no-parlays-hint {
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* By Legs Section */
+.by-legs-section {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+}
+
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: var(--surface-light);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.tab-btn:hover {
+    border-color: #7c3aed;
+    background: var(--surface);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%);
+    border-color: transparent;
+    color: white;
+}
+
+/* Parlay Education */
+.parlay-education {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.education-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.education-card {
+    background: var(--surface-light);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+}
+
+.education-card h3 {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.education-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.education-card strong {
+    color: var(--text-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .parlay-summary-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .parlays-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .parlay-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .parlay-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .tabs {
+        flex-direction: column;
+    }
+    
+    .tab-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .education-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .parlay-summary-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .parlay-badges {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .parlay-ev-badge,
+    .parlay-risk-badge {
+        width: 100%;
+        text-align: center;
+    }
+}

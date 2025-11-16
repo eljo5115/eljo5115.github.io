@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parlay Builder - NFL Betting Model</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="parlay-style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>🏈 NFL Betting Model</h1>
+                <p class="subtitle">Powered by DozenCrust Analytics API</p>
+            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">All Predictions</a>
+                <a href="ev-bets.html" class="nav-link">+EV Bets</a>
+                <a href="parlays.html" class="nav-link active">Parlays</a>
+            </nav>
+            <div class="api-status" id="apiStatus">
+                <span class="status-indicator"></span>
+                <span class="status-text">Checking API...</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Parlay Summary Banner -->
+        <section class="parlay-banner">
+            <div class="parlay-summary-grid">
+                <div class="parlay-summary-card">
+                    <div class="parlay-icon">🎰</div>
+                    <div class="parlay-summary-content">
+                        <h3 id="totalParlays">--</h3>
+                        <p>Total Parlays</p>
+                    </div>
+                </div>
+                <div class="parlay-summary-card">
+                    <div class="parlay-icon">💎</div>
+                    <div class="parlay-summary-content">
+                        <h3 id="bestEV">--</h3>
+                        <p>Best EV</p>
+                    </div>
+                </div>
+                <div class="parlay-summary-card">
+                    <div class="parlay-icon">🛡️</div>
+                    <div class="parlay-summary-content">
+                        <h3 id="safestWin">--</h3>
+                        <p>Safest Parlay</p>
+                    </div>
+                </div>
+                <div class="parlay-summary-card">
+                    <div class="parlay-icon">⚡</div>
+                    <div class="parlay-summary-content">
+                        <h3 id="qualifiedBets">--</h3>
+                        <p>Qualified Bets</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Week Selector -->
+        <section class="week-selector">
+            <h2>Select Week</h2>
+            <div class="week-controls">
+                <button id="prevWeek" class="btn btn-secondary">← Previous</button>
+                <select id="weekSelect" class="week-select">
+                    <!-- Will be populated by JS -->
+                </select>
+                <button id="nextWeek" class="btn btn-secondary">Next →</button>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="filters-section">
+            <div class="filters-header">
+                <h2>🎰 Parlay Recommendations</h2>
+                <div class="filter-controls">
+                    <select id="minLegs" class="filter-select">
+                        <option value="2" selected>Min 2 Legs</option>
+                        <option value="3">Min 3 Legs</option>
+                        <option value="4">Min 4 Legs</option>
+                        <option value="5">Min 5 Legs</option>
+                    </select>
+                    <select id="maxLegs" class="filter-select">
+                        <option value="2">Max 2 Legs</option>
+                        <option value="3">Max 3 Legs</option>
+                        <option value="4" selected>Max 4 Legs</option>
+                        <option value="5">Max 5 Legs</option>
+                        <option value="6">Max 6 Legs</option>
+                    </select>
+                    <select id="minConfidence" class="filter-select">
+                        <option value="low">All Confidence</option>
+                        <option value="moderate" selected>Moderate+</option>
+                        <option value="high">High Only</option>
+                    </select>
+                    <select id="sortBy" class="filter-select">
+                        <option value="ev">Highest EV</option>
+                        <option value="win-prob">Safest</option>
+                        <option value="legs">Most Legs</option>
+                    </select>
+                    <button id="refreshBtn" class="btn btn-primary">↻ Refresh</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Best Parlays Grid -->
+        <section class="parlays-section">
+            <div id="bestParlaysContainer" class="parlays-grid">
+                <!-- Best parlays will be inserted here -->
+            </div>
+            <div id="loadingSpinner" class="loading">
+                <div class="spinner"></div>
+                <p>Building optimal parlays...</p>
+            </div>
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <p>Failed to load parlays. Please try again.</p>
+            </div>
+            <div id="noParlaysMessage" class="no-parlays-message" style="display: none;">
+                <div class="no-parlays-icon">🎲</div>
+                <h3>No Parlays Available</h3>
+                <p>No qualifying parlays found with current filters.</p>
+                <p class="no-parlays-hint">Try adjusting your filters or selecting a different week.</p>
+            </div>
+        </section>
+
+        <!-- Parlays by Legs -->
+        <section class="by-legs-section">
+            <h2>Browse by Number of Legs</h2>
+            <div class="tabs">
+                <button class="tab-btn active" data-legs="all">All Parlays</button>
+                <button class="tab-btn" data-legs="2">2-Leg</button>
+                <button class="tab-btn" data-legs="3">3-Leg</button>
+                <button class="tab-btn" data-legs="4">4-Leg</button>
+                <button class="tab-btn" data-legs="5">5-Leg</button>
+            </div>
+            <div id="byLegsContainer" class="parlays-grid">
+                <!-- Parlays filtered by legs will be shown here -->
+            </div>
+        </section>
+
+        <!-- Parlay Education -->
+        <section class="parlay-education">
+            <h2>Understanding Parlays</h2>
+            <div class="education-grid">
+                <div class="education-card">
+                    <h3>🎲 What is a Parlay?</h3>
+                    <p>A parlay combines multiple bets into one. ALL legs must win for the parlay to pay out. Higher risk, but exponentially higher rewards.</p>
+                </div>
+                <div class="education-card">
+                    <h3>📊 Risk Ratings Explained</h3>
+                    <p><strong>LOW:</strong> ≥50% win prob<br><strong>MODERATE:</strong> 30-49%<br><strong>HIGH:</strong> 15-29%<br><strong>VERY HIGH:</strong> &lt;15%</p>
+                </div>
+                <div class="education-card">
+                    <h3>💰 Expected Value (EV)</h3>
+                    <p>EV shows long-term profitability. +200% EV on a 3-leg parlay means if you bet this exact combination 100 times, you'd profit 200% on average.</p>
+                </div>
+                <div class="education-card">
+                    <h3>🎯 Optimal Strategy</h3>
+                    <p>Stick to 2-3 leg parlays with HIGH confidence picks (70%+). Use 1-2% of bankroll max. More legs = exponentially lower win probability.</p>
+                </div>
+                <div class="education-card">
+                    <h3>⚠️ Common Mistakes</h3>
+                    <p>Don't parlay correlated bets. Avoid "lottery ticket" 10-leg parlays. Never chase losses. Remember: sportsbooks love parlays for a reason.</p>
+                </div>
+                <div class="education-card">
+                    <h3>📈 Win Probability Math</h3>
+                    <p>3 legs at 80% each = 0.80 × 0.80 × 0.80 = 51.2% combined win probability. Each leg multiplies, not adds!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 DozenCrust Analytics | API: <a href="https://api.dozencrust.com/nfl/" target="_blank">api.dozencrust.com/nfl/</a></p>
+            <p class="disclaimer">For entertainment purposes only. Please gamble responsibly. Parlays are high-risk bets.</p>
+        </div>
+    </footer>
+
+    <script src="parlay-script.js"></script>
+</body>
+</html>
