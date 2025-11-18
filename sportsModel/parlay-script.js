@@ -8,12 +8,14 @@ let currentWeek = 1;
 let parlayData = null;
 let currentSort = 'ev';
 let currentTab = 'all';
+let availableWeeks = []; // Track weeks with available data
 
 // Initialize app
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     initializeWeekSelector();
     setupEventListeners();
     checkAPIHealth();
+    await determineCurrentWeek(); // Determine week before loading data
     loadParlays();
 });
 
@@ -68,12 +70,84 @@ function initializeWeekSelector() {
     weekSelect.value = currentWeek;
 }
 
-// Get current NFL week
+// Get current NFL week based on date calculation
 function getCurrentWeek() {
     const now = new Date();
-    const seasonStart = new Date(2025, 8, 4);
+    // 2025 NFL Season starts on Thursday, September 4, 2025
+    const seasonStart = new Date(2025, 8, 4); // Month is 0-indexed (8 = September)
     const weeksSinceStart = Math.floor((now - seasonStart) / (7 * 24 * 60 * 60 * 1000));
-    return Math.max(1, Math.min(WEEKS_IN_SEASON, weeksSinceStart + 1));
+    const calculatedWeek = weeksSinceStart + 1;
+    
+    // Ensure week is within valid range (1-18 for regular season)
+    return Math.max(1, Math.min(WEEKS_IN_SEASON, calculatedWeek));
+}
+
+// Determine the current week by checking API for available data
+async function determineCurrentWeek() {
+    try {
+        // Try to fetch data for the calculated week and nearby weeks
+        const calculatedWeek = getCurrentWeek();
+        console.log(`Calculated week based on date: ${calculatedWeek}`);
+        
+        // Check a range of weeks to find which have data
+        const weeksToCheck = [
+            calculatedWeek, 
+            calculatedWeek + 1, 
+            calculatedWeek - 1,
+            calculatedWeek + 2
+        ].filter(w => w >= 1 && w <= WEEKS_IN_SEASON);
+        
+        availableWeeks = [];
+        
+        for (const week of weeksToCheck) {
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/parlays/week?week=${week}&season=${CURRENT_SEASON}`,
+                    {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    }
+                );
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.parlays && (data.parlays.two_team?.length > 0 || data.parlays.three_team?.length > 0)) {
+                        const totalParlays = (data.parlays.two_team?.length || 0) + (data.parlays.three_team?.length || 0);
+                        availableWeeks.push({
+                            week: week,
+                            gameCount: totalParlays
+                        });
+                        console.log(`Week ${week} has ${totalParlays} parlays with data`);
+                    }
+                }
+            } catch (error) {
+                console.log(`Week ${week} data not available`);
+            }
+        }
+        
+        // Sort available weeks and select the earliest one with data
+        if (availableWeeks.length > 0) {
+            availableWeeks.sort((a, b) => a.week - b.week);
+            // Choose the first week that's >= calculated week, or the last available week
+            const targetWeek = availableWeeks.find(w => w.week >= calculatedWeek) || availableWeeks[availableWeeks.length - 1];
+            currentWeek = targetWeek.week;
+            console.log(`Selected week ${currentWeek} with ${targetWeek.gameCount} parlays`);
+        } else {
+            // Fallback to calculated week if no data found
+            currentWeek = calculatedWeek;
+            console.log(`No data found, using calculated week ${currentWeek}`);
+        }
+        
+        // Update the select dropdown
+        const weekSelect = document.getElementById('weekSelect');
+        if (weekSelect) {
+            weekSelect.value = currentWeek;
+        }
+        
+    } catch (error) {
+        console.error('Error determining current week:', error);
+        currentWeek = getCurrentWeek(); // Fallback to date calculation
+    }
 }
 
 // Event Listeners
