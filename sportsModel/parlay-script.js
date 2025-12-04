@@ -125,17 +125,36 @@ async function determineCurrentWeek() {
             }
         }
         
-        // Sort available weeks and select the earliest one with data
+        // Sort available weeks and select the next upcoming week with data
         if (availableWeeks.length > 0) {
             availableWeeks.sort((a, b) => a.week - b.week);
-            // Choose the first week that's >= calculated week, or the last available week
-            const targetWeek = availableWeeks.find(w => w.week >= calculatedWeek) || availableWeeks[availableWeeks.length - 1];
+            
+            // Priority: Look for the next week (calculated + 1) first for upcoming games
+            // If that doesn't exist, use calculated week
+            // This ensures we show future games, not games that may have already been played
+            let targetWeek = availableWeeks.find(w => w.week === calculatedWeek + 1);
+            
+            if (!targetWeek) {
+                // If next week doesn't have data, try the week after
+                targetWeek = availableWeeks.find(w => w.week > calculatedWeek);
+            }
+            
+            if (!targetWeek) {
+                // If no future weeks, use current calculated week
+                targetWeek = availableWeeks.find(w => w.week === calculatedWeek);
+            }
+            
+            if (!targetWeek) {
+                // Last resort: use the latest available week
+                targetWeek = availableWeeks[availableWeeks.length - 1];
+            }
+            
             currentWeek = targetWeek.week;
-            console.log(`Selected week ${currentWeek} with ${targetWeek.gameCount} parlays`);
+            console.log(`Selected week ${currentWeek} with ${targetWeek.gameCount} parlays (calculated week was ${calculatedWeek})`);
         } else {
-            // Fallback to calculated week if no data found
-            currentWeek = calculatedWeek;
-            console.log(`No data found, using calculated week ${currentWeek}`);
+            // Fallback to calculated week + 1 if no data found (prefer upcoming week)
+            currentWeek = Math.min(calculatedWeek + 1, WEEKS_IN_SEASON);
+            console.log(`No data found, using calculated week + 1: ${currentWeek}`);
         }
         
         // Update the select dropdown
