@@ -284,6 +284,10 @@
     color: var(--warning);
 }
 
+.ev-detail-value.info {
+    color: #3b82f6; /* Blue color for Half Kelly */
+}
+
 .ev-bet-footer {
     margin-top: 1rem;
     padding-top: 1rem;
@@ -308,12 +312,19 @@
 }
 
 .stake-suggestion {
-    padding: 0.5rem 1rem;
-    background: rgba(16, 185, 129, 0.1);
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
     border: 1px solid var(--success);
-    border-radius: 6px;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.stake-suggestion strong {
     color: var(--success);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 /* No EV Message */

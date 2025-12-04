@@ -501,8 +501,12 @@ function createEVBetCard(bet) {
                         <span class="ev-detail-value">${confidence.toFixed(0)}%</span>
                     </div>
                     <div class="ev-detail-item">
-                        <span class="ev-detail-label">Kelly %</span>
+                        <span class="ev-detail-label">Full Kelly</span>
                         <span class="ev-detail-value warning">${kellyPct.toFixed(1)}%</span>
+                    </div>
+                    <div class="ev-detail-item">
+                        <span class="ev-detail-label">Half Kelly</span>
+                        <span class="ev-detail-value info">${(kellyPct / 2).toFixed(1)}%</span>
                     </div>
                     <div class="ev-detail-item">
                         <span class="ev-detail-label">ROI</span>
@@ -518,7 +522,7 @@ function createEVBetCard(bet) {
                 <span>${getBestRecommendation(bet.recommendation, ev, confidence)}</span>
             </div>
             <div class="stake-suggestion">
-                Suggested Stake: ${kellyPct.toFixed(1)}% of bankroll
+                <strong>Suggested Stakes:</strong> Full Kelly: ${kellyPct.toFixed(1)}% | Half Kelly: ${(kellyPct / 2).toFixed(1)}% of bankroll
             </div>
         </div>
     `;
