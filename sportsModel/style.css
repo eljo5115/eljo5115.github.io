@@ -482,11 +482,21 @@ h2 {
 .footer a {
     color: var(--accent-color);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    display: inline-block;
+    border: 2px solid transparent;
+    background: rgba(251, 79, 20, 0.1);
 }
 
 .footer a:hover {
-    color: var(--secondary-color);
+    color: var(--text-primary);
+    background: rgba(251, 79, 20, 0.25);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(251, 79, 20, 0.3);
 }
 
 .disclaimer {
