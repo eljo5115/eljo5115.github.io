@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bet Sizing Calculator - NFL Betting Model</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="bet-calculator-style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>🏈 NFL Betting Model</h1>
+                <p class="subtitle">Powered by DozenCrust Analytics API</p>
+            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">All Predictions</a>
+                <a href="ev-bets.html" class="nav-link">+EV Bets</a>
+                <a href="parlays.html" class="nav-link">Parlays</a>
+                <a href="bet-calculator.html" class="nav-link active">Bet Calculator</a>
+            </nav>
+            <div class="api-status" id="apiStatus">
+                <span class="status-indicator"></span>
+                <span class="status-text">Checking API...</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Bankroll Input Section -->
+        <section class="bankroll-section">
+            <div class="bankroll-card">
+                <h2>💰 Set Your Bankroll</h2>
+                <div class="bankroll-input-group">
+                    <div class="input-wrapper">
+                        <label for="bankrollInput">Total Bankroll ($)</label>
+                        <input 
+                            type="number" 
+                            id="bankrollInput" 
+                            placeholder="1000" 
+                            min="1" 
+                            step="1"
+                            value="1000"
+                        >
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="kellyMode">Bet Sizing Method</label>
+                        <select id="kellyMode">
+                            <option value="half">Half Kelly (Recommended)</option>
+                            <option value="full">Full Kelly (Aggressive)</option>
+                            <option value="quarter">Quarter Kelly (Conservative)</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="maxAllocation">Max Allocation (%)</label>
+                        <input 
+                            type="number" 
+                            id="maxAllocation" 
+                            placeholder="100" 
+                            min="1" 
+                            max="100"
+                            step="1"
+                            value="100"
+                            title="Maximum percentage of bankroll to allocate across all bets"
+                        >
+                    </div>
+                    <button id="calculateBtn" class="btn btn-primary">Calculate Bets</button>
+                </div>
+                <div class="bankroll-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Bankroll:</span>
+                        <span class="summary-value" id="totalBankroll">$1,000</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total to Wager:</span>
+                        <span class="summary-value" id="totalWager">$0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Number of Bets:</span>
+                        <span class="summary-value" id="totalBets">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Expected Return:</span>
+                        <span class="summary-value success" id="expectedReturn">$0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Week Selector -->
+        <section class="week-selector">
+            <h2>Select Week</h2>
+            <div class="week-controls">
+                <button id="prevWeek" class="btn btn-secondary">← Previous</button>
+                <select id="weekSelect" class="week-select">
+                    <!-- Will be populated by JS -->
+                </select>
+                <button id="nextWeek" class="btn btn-secondary">Next →</button>
+            </div>
+        </section>
+
+        <!-- Bet Slip -->
+        <section class="bet-slip-section">
+            <h2>📋 Your Betting Slip - Week <span id="currentWeekDisplay">--</span></h2>
+            <div id="betSlipContainer" class="bet-slip-list">
+                <!-- Bet slip items will be inserted here -->
+            </div>
+            <div id="loadingSpinner" class="loading">
+                <div class="spinner"></div>
+                <p>Loading betting opportunities...</p>
+            </div>
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <p>Failed to load data. Please try again.</p>
+            </div>
+            <div id="noBetsMessage" class="no-bets-message" style="display: none;">
+                <div class="no-bets-icon">📊</div>
+                <h3>No +EV Bets Found</h3>
+                <p>No positive expected value opportunities detected for this week.</p>
+            </div>
+        </section>
+
+        <!-- Export Options -->
+        <section class="export-section" id="exportSection" style="display: none;">
+            <h3>Export Your Betting Slip</h3>
+            <div class="export-buttons">
+                <button id="exportCSV" class="btn btn-secondary">📄 Export to CSV</button>
+                <button id="printSlip" class="btn btn-secondary">🖨️ Print Slip</button>
+                <button id="copyToClipboard" class="btn btn-secondary">📋 Copy to Clipboard</button>
+            </div>
+        </section>
+
+        <!-- Instructions -->
+        <section class="instructions-section">
+            <h2>How to Use the Bet Calculator</h2>
+            <div class="instruction-grid">
+                <div class="instruction-card">
+                    <div class="instruction-number">1</div>
+                    <h3>Enter Your Bankroll</h3>
+                    <p>Input your total betting bankroll. This is the amount you're willing to allocate for sports betting.</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-number">2</div>
+                    <h3>Choose Kelly Method</h3>
+                    <p><strong>Half Kelly</strong> (recommended) reduces variance. <strong>Full Kelly</strong> maximizes growth. <strong>Quarter Kelly</strong> is most conservative.</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-number">3</div>
+                    <h3>Review Your Bets</h3>
+                    <p>See all +EV opportunities with exact dollar amounts to wager. Bets are sorted by highest expected value.</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-number">4</div>
+                    <h3>Export & Track</h3>
+                    <p>Export your betting slip to CSV, print it, or copy to clipboard for easy reference when placing bets.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 DozenCrust Analytics</p>
+            <p class="disclaimer">For entertainment purposes only. Please gamble responsibly. Never bet more than you can afford to lose.</p>
+        </div>
+    </footer>
+
+    <script src="bet-calculator-script.js"></script>
+</body>
+</html>

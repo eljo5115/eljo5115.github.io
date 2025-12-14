@@ -1,0 +1,482 @@
+/* Bet Calculator Specific Styles */
+
+/* Bankroll Section */
+.bankroll-section {
+    margin: 2rem 0;
+}
+
+.bankroll-card {
+    background: var(--surface-light);
+    border: 2px solid var(--accent-color);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.bankroll-card h2 {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.bankroll-input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-wrapper label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+#bankrollInput {
+    padding: 1rem;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield;
+}
+
+/* Remove spinner buttons for Chrome, Safari, Edge, Opera */
+#bankrollInput::-webkit-outer-spin-button,
+#bankrollInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#bankrollInput:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(251, 79, 20, 0.1);
+}
+
+#kellyMode {
+    padding: 1rem;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#kellyMode:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+#maxAllocation {
+    padding: 1rem;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-align: center;
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield;
+}
+
+/* Remove spinner buttons for Chrome, Safari, Edge, Opera */
+#maxAllocation::-webkit-outer-spin-button,
+#maxAllocation::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#maxAllocation:focus {
+    outline: none;
+    border-color: var(--warning);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+#maxAllocation:hover {
+    border-color: var(--warning);
+}
+
+#calculateBtn {
+    align-self: flex-end;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    white-space: nowrap;
+}
+
+.bankroll-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border);
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.summary-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.summary-value {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.summary-value.success {
+    color: var(--success);
+}
+
+/* Normalization Notice */
+.normalization-notice {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(245, 158, 11, 0.1);
+    border: 2px solid var(--warning);
+    border-radius: 8px;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.notice-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.notice-content {
+    flex: 1;
+}
+
+.notice-content strong {
+    color: var(--warning);
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.notice-content p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Bet Slip Section */
+.bet-slip-section {
+    margin: 3rem 0;
+}
+
+.bet-slip-section h2 {
+    color: var(--text-primary);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.bet-slip-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.bet-slip-item {
+    background: var(--surface-light);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.bet-slip-item:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.bet-slip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.bet-slip-game {
+    flex: 1;
+}
+
+.bet-slip-matchup {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.bet-slip-time {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.bet-slip-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.bet-slip-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.bet-slip-badge.primary {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+    border: 1px solid var(--success);
+}
+
+.bet-slip-badge.secondary {
+    background: rgba(251, 79, 20, 0.2);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+.bet-slip-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.bet-slip-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.bet-slip-pick {
+    color: var(--accent-color);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.bet-slip-info {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.bet-slip-amount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 2px solid var(--success);
+    border-radius: 8px;
+}
+
+.bet-amount-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.bet-amount-value {
+    color: var(--success);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.bet-amount-percent {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.bet-slip-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.bet-slip-stat {
+    text-align: center;
+}
+
+.bet-slip-stat-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.bet-slip-stat-value {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* Export Section */
+.export-section {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: var(--surface-light);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.export-section h3 {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.export-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Instructions Section */
+.instructions-section {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: var(--surface);
+    border-radius: 12px;
+}
+
+.instructions-section h2 {
+    color: var(--text-primary);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.instruction-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.instruction-card {
+    background: var(--surface-light);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    position: relative;
+}
+
+.instruction-number {
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--accent-color);
+    color: var(--background);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.instruction-card h3 {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.instruction-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* No Bets Message */
+.no-bets-message {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.no-bets-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.no-bets-message h3 {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.no-bets-message p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .bankroll-input-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .bet-slip-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .bet-slip-amount {
+        align-items: center;
+    }
+    
+    .bet-slip-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .bet-slip-badges {
+        justify-content: flex-start;
+    }
+    
+    .export-buttons {
+        flex-direction: column;
+    }
+    
+    .export-buttons button {
+        width: 100%;
+    }
+}
