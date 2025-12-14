@@ -25,9 +25,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Initialize toggle state on page load
 function initializeToggleState() {
     const normalizeToggle = document.getElementById('normalizeToggle');
-    const toggleText = document.querySelector('.toggle-text');
-    const kellyWrapper = document.querySelector('.input-wrapper:has(#kellyMode)');
+    const toggleText = document.getElementById('normalizeText');
+    const kellyWrapper = document.getElementById('kellyModeWrapper');
     const maxAllocationWrapper = document.getElementById('maxAllocationWrapper');
+    
+    console.log('Initializing toggle state:', {
+        normalizeEnabled,
+        normalizeToggle,
+        toggleText,
+        kellyWrapper,
+        maxAllocationWrapper
+    });
+    
+    if (!normalizeToggle || !toggleText || !kellyWrapper || !maxAllocationWrapper) {
+        console.error('Toggle initialization failed - missing elements');
+        return;
+    }
     
     // Set initial state based on normalizeEnabled
     normalizeToggle.checked = normalizeEnabled;
@@ -35,12 +48,14 @@ function initializeToggleState() {
     
     // Show/hide inputs based on initial state
     if (normalizeEnabled) {
-        if (kellyWrapper) kellyWrapper.style.display = 'none';
-        if (maxAllocationWrapper) maxAllocationWrapper.style.display = 'flex';
+        kellyWrapper.style.display = 'none';
+        maxAllocationWrapper.style.display = 'flex';
     } else {
-        if (kellyWrapper) kellyWrapper.style.display = 'flex';
-        if (maxAllocationWrapper) maxAllocationWrapper.style.display = 'none';
+        kellyWrapper.style.display = 'flex';
+        maxAllocationWrapper.style.display = 'none';
     }
+    
+    console.log('Toggle state initialized successfully');
 }
 
 // API Health Check
@@ -200,22 +215,40 @@ function setupEventListeners() {
     document.getElementById('normalizeToggle').addEventListener('change', (e) => {
         normalizeEnabled = e.target.checked;
         
+        console.log('Toggle changed:', normalizeEnabled);
+        
         // Update toggle text display
-        const toggleText = document.querySelector('.toggle-text');
-        toggleText.textContent = normalizeEnabled ? 'ON' : 'OFF';
+        const toggleText = document.getElementById('normalizeText');
+        if (toggleText) {
+            toggleText.textContent = normalizeEnabled ? 'ON' : 'OFF';
+        }
         
         // Show/hide Kelly mode and max allocation based on normalization state
-        const kellyWrapper = document.querySelector('.input-wrapper:has(#kellyMode)');
+        const kellyWrapper = document.getElementById('kellyModeWrapper');
         const maxAllocationWrapper = document.getElementById('maxAllocationWrapper');
+        
+        console.log('Elements found:', { kellyWrapper, maxAllocationWrapper });
         
         if (normalizeEnabled) {
             // When normalization is ON, hide Kelly mode (it doesn't matter)
-            if (kellyWrapper) kellyWrapper.style.display = 'none';
-            if (maxAllocationWrapper) maxAllocationWrapper.style.display = 'flex';
+            if (kellyWrapper) {
+                kellyWrapper.style.display = 'none';
+                console.log('Hiding Kelly mode');
+            }
+            if (maxAllocationWrapper) {
+                maxAllocationWrapper.style.display = 'flex';
+                console.log('Showing max allocation');
+            }
         } else {
             // When normalization is OFF, show Kelly mode and hide max allocation
-            if (kellyWrapper) kellyWrapper.style.display = 'flex';
-            if (maxAllocationWrapper) maxAllocationWrapper.style.display = 'none';
+            if (kellyWrapper) {
+                kellyWrapper.style.display = 'flex';
+                console.log('Showing Kelly mode');
+            }
+            if (maxAllocationWrapper) {
+                maxAllocationWrapper.style.display = 'none';
+                console.log('Hiding max allocation');
+            }
         }
         
         // Recalculate if we have bets
