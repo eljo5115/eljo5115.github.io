@@ -52,7 +52,17 @@
                             <option value="quarter">Quarter Kelly (Conservative)</option>
                         </select>
                     </div>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper toggle-input-wrapper">
+                        <label for="normalizeToggle">Normalize Bets</label>
+                        <div class="toggle-container">
+                            <input type="checkbox" id="normalizeToggle" checked>
+                            <label for="normalizeToggle" class="toggle-slider-label">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-text" id="normalizeText">ON</span>
+                        </div>
+                    </div>
+                    <div class="input-wrapper" id="maxAllocationWrapper">
                         <label for="maxAllocation">Max Allocation (%)</label>
                         <input 
                             type="number" 

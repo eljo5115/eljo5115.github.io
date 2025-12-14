@@ -8,17 +8,40 @@ let currentWeek = 1;
 let bankroll = 1000;
 let kellyMode = 'half';
 let maxAllocation = 100; // Maximum % of bankroll to allocate
+let normalizeEnabled = true; // Normalization enabled by default
 let allBets = [];
 let availableWeeks = [];
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
     initializeWeekSelector();
+    initializeToggleState();
     setupEventListeners();
     checkAPIHealth();
     await determineCurrentWeek();
     loadBets();
 });
+
+// Initialize toggle state on page load
+function initializeToggleState() {
+    const normalizeToggle = document.getElementById('normalizeToggle');
+    const toggleText = document.querySelector('.toggle-text');
+    const kellyWrapper = document.querySelector('.input-wrapper:has(#kellyMode)');
+    const maxAllocationWrapper = document.getElementById('maxAllocationWrapper');
+    
+    // Set initial state based on normalizeEnabled
+    normalizeToggle.checked = normalizeEnabled;
+    toggleText.textContent = normalizeEnabled ? 'ON' : 'OFF';
+    
+    // Show/hide inputs based on initial state
+    if (normalizeEnabled) {
+        if (kellyWrapper) kellyWrapper.style.display = 'none';
+        if (maxAllocationWrapper) maxAllocationWrapper.style.display = 'flex';
+    } else {
+        if (kellyWrapper) kellyWrapper.style.display = 'flex';
+        if (maxAllocationWrapper) maxAllocationWrapper.style.display = 'none';
+    }
+}
 
 // API Health Check
 async function checkAPIHealth() {
@@ -173,6 +196,34 @@ function setupEventListeners() {
         }
     });
     
+    // Normalization toggle handler
+    document.getElementById('normalizeToggle').addEventListener('change', (e) => {
+        normalizeEnabled = e.target.checked;
+        
+        // Update toggle text display
+        const toggleText = document.querySelector('.toggle-text');
+        toggleText.textContent = normalizeEnabled ? 'ON' : 'OFF';
+        
+        // Show/hide Kelly mode and max allocation based on normalization state
+        const kellyWrapper = document.querySelector('.input-wrapper:has(#kellyMode)');
+        const maxAllocationWrapper = document.getElementById('maxAllocationWrapper');
+        
+        if (normalizeEnabled) {
+            // When normalization is ON, hide Kelly mode (it doesn't matter)
+            if (kellyWrapper) kellyWrapper.style.display = 'none';
+            if (maxAllocationWrapper) maxAllocationWrapper.style.display = 'flex';
+        } else {
+            // When normalization is OFF, show Kelly mode and hide max allocation
+            if (kellyWrapper) kellyWrapper.style.display = 'flex';
+            if (maxAllocationWrapper) maxAllocationWrapper.style.display = 'none';
+        }
+        
+        // Recalculate if we have bets
+        if (allBets.length > 0) {
+            calculateAndDisplayBets();
+        }
+    });
+    
     document.getElementById('calculateBtn').addEventListener('click', () => {
         calculateAndDisplayBets();
     });
@@ -305,11 +356,13 @@ function calculateAndDisplayBets() {
     const rawKellyBets = allBets.map(bet => {
         let kellyPct = bet.kelly_percentage;
         
-        // Apply kelly mode
-        if (kellyMode === 'half') {
-            kellyPct = kellyPct / 2;
-        } else if (kellyMode === 'quarter') {
-            kellyPct = kellyPct / 4;
+        // Apply kelly mode ONLY if normalization is OFF
+        if (!normalizeEnabled) {
+            if (kellyMode === 'half') {
+                kellyPct = kellyPct / 2;
+            } else if (kellyMode === 'quarter') {
+                kellyPct = kellyPct / 4;
+            }
         }
         
         return {
@@ -323,8 +376,8 @@ function calculateAndDisplayBets() {
     
     console.log(`Total Kelly %: ${totalKellyPct.toFixed(2)}%`);
     
-    // Step 3: Normalize if total exceeds max allocation threshold
-    const needsNormalization = totalKellyPct > maxAllocation;
+    // Step 3: Normalize ONLY if enabled AND total exceeds max allocation threshold
+    const needsNormalization = normalizeEnabled && totalKellyPct > maxAllocation;
     const normalizationFactor = needsNormalization ? maxAllocation / totalKellyPct : 1;
     
     if (needsNormalization) {
@@ -377,6 +430,14 @@ function createBetSlipItem(bet, number) {
     
     const betTypeDisplay = bet.bet_type.charAt(0).toUpperCase() + bet.bet_type.slice(1);
     
+    // Format the pick to include spread for spread bets
+    let pickDisplay = bet.pick;
+    if (bet.bet_type === 'spread' && bet.spread_line && bet.spread_line !== 'N/A') {
+        // Extract team name from pick (it might have BET: or LEAN: prefix removed already)
+        const teamName = bet.pick.trim();
+        pickDisplay = `${teamName} ${bet.spread_line}`;
+    }
+    
     card.innerHTML = `
         <div class="bet-slip-header">
             <div class="bet-slip-game">
@@ -393,7 +454,7 @@ function createBetSlipItem(bet, number) {
         
         <div class="bet-slip-content">
             <div class="bet-slip-details">
-                <div class="bet-slip-pick">${bet.pick}</div>
+                <div class="bet-slip-pick">${pickDisplay}</div>
                 <div class="bet-slip-info">${betTypeDisplay} Bet</div>
                 <div class="bet-slip-info">${bet.recommendation}</div>
             </div>
@@ -460,17 +521,30 @@ function updateSummary(bets, wasNormalized = false, originalTotal = 0) {
 }
 
 // Export to CSV
+// Helper function to format pick display with spread
+function formatPickDisplay(bet) {
+    let pickDisplay = bet.pick;
+    if (bet.bet_type === 'spread' && bet.spread_line && bet.spread_line !== 'N/A') {
+        const teamName = bet.pick.trim();
+        pickDisplay = `${teamName} ${bet.spread_line}`;
+    }
+    return pickDisplay;
+}
+
+// Export to CSV
 function exportToCSV() {
     const bets = allBets.map(bet => {
         let kellyPct = bet.kelly_percentage;
-        if (kellyMode === 'half') kellyPct /= 2;
-        if (kellyMode === 'quarter') kellyPct /= 4;
+        if (!normalizeEnabled) {
+            if (kellyMode === 'half') kellyPct /= 2;
+            if (kellyMode === 'quarter') kellyPct /= 4;
+        }
         const betAmount = (bankroll * kellyPct) / 100;
         
         return {
             Week: bet.week,
             Matchup: `${bet.away_team} @ ${bet.home_team}`,
-            Pick: bet.pick,
+            Pick: formatPickDisplay(bet),
             BetType: bet.bet_type,
             BetAmount: betAmount.toFixed(2),
             Percentage: kellyPct.toFixed(2),
@@ -500,14 +574,18 @@ function printSlip() {
 function copyToClipboard() {
     const bets = allBets.map((bet, i) => {
         let kellyPct = bet.kelly_percentage;
-        if (kellyMode === 'half') kellyPct /= 2;
-        if (kellyMode === 'quarter') kellyPct /= 4;
+        if (!normalizeEnabled) {
+            if (kellyMode === 'half') kellyPct /= 2;
+            if (kellyMode === 'quarter') kellyPct /= 4;
+        }
         const betAmount = (bankroll * kellyPct) / 100;
+        const pickDisplay = formatPickDisplay(bet);
         
-        return `${i + 1}. ${bet.away_team} @ ${bet.home_team}\n   ${bet.pick} - $${betAmount.toFixed(2)} (${kellyPct.toFixed(2)}%)\n   EV: +${bet.expected_value.toFixed(1)}% | Confidence: ${(bet.confidence * 100).toFixed(0)}%`;
+        return `${i + 1}. ${bet.away_team} @ ${bet.home_team}\n   ${pickDisplay} - $${betAmount.toFixed(2)} (${kellyPct.toFixed(2)}%)\n   EV: +${bet.expected_value.toFixed(1)}% | Confidence: ${(bet.confidence * 100).toFixed(0)}%`;
     }).join('\n\n');
     
-    const text = `NFL Betting Slip - Week ${currentWeek}\nBankroll: $${bankroll.toLocaleString()}\nMethod: ${kellyMode.charAt(0).toUpperCase() + kellyMode.slice(1)} Kelly\n\n${bets}`;
+    const methodText = normalizeEnabled ? 'Normalized' : `${kellyMode.charAt(0).toUpperCase() + kellyMode.slice(1)} Kelly`;
+    const text = `NFL Betting Slip - Week ${currentWeek}\nBankroll: $${bankroll.toLocaleString()}\nMethod: ${methodText}\n\n${bets}`;
     
     navigator.clipboard.writeText(text).then(() => {
         alert('Betting slip copied to clipboard!');
