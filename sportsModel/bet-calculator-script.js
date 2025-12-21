@@ -648,15 +648,28 @@ function formatPickDisplay(bet) {
         // Parse the spread value (spread is from away team's perspective)
         let spreadNum = parseFloat(bet.spread_line);
         
+        console.log('Spread Debug:', {
+            matchup: `${bet.away_team} @ ${bet.home_team}`,
+            teamName,
+            away_team: bet.away_team,
+            home_team: bet.home_team,
+            spread_line: bet.spread_line,
+            spreadNum,
+            isAwayTeam,
+            willReverse: !isAwayTeam
+        });
+        
         if (!isNaN(spreadNum)) {
             // If it's the home team, reverse the sign
             if (!isAwayTeam) {
                 spreadNum = -spreadNum;
+                console.log('Reversed to:', spreadNum);
             }
             
             // Format with proper sign
             const spreadDisplay = spreadNum > 0 ? `+${spreadNum}` : spreadNum.toString();
             pickDisplay = `${teamName} ${spreadDisplay}`;
+            console.log('Final display:', pickDisplay);
         } else {
             pickDisplay = `${teamName} ${bet.spread_line}`;
         }
