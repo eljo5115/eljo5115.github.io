@@ -272,6 +272,158 @@
     gap: 1rem;
 }
 
+/* Game Card Styles (Grouped Bets) */
+.game-card {
+    background: var(--surface-light);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.game-card:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.game-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.game-info {
+    flex: 1;
+}
+
+.game-matchup {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.game-time {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.game-totals {
+    text-align: right;
+}
+
+.game-total-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 0.25rem;
+}
+
+.game-total-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.game-bets-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Bet Row Styles (Within Game Card) */
+.bet-row {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1.5fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.bet-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent-color);
+}
+
+.bet-row-pick {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.bet-type-badge {
+    padding: 0.35rem 0.75rem;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bet-pick-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.bet-row-stats {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.bet-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.bet-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bet-stat-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.bet-stat-value.success {
+    color: var(--success);
+}
+
+.bet-row-amount {
+    text-align: right;
+}
+
+.bet-amount-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.bet-expected-return {
+    font-size: 0.8rem;
+    color: var(--success);
+    font-weight: 600;
+}
+
+/* Legacy Bet Slip Item Styles (Kept for Compatibility) */
 .bet-slip-item {
     background: var(--surface-light);
     border: 2px solid var(--border);
@@ -523,6 +675,37 @@
         grid-template-columns: 1fr;
     }
     
+    /* Game Card Responsive */
+    .bet-row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .bet-row-pick {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .bet-row-stats {
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+    
+    .bet-row-amount {
+        text-align: left;
+    }
+    
+    .game-card-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .game-totals {
+        text-align: left;
+    }
+    
+    /* Legacy Styles */
     .bet-slip-content {
         grid-template-columns: 1fr;
     }

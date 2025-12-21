@@ -443,20 +443,100 @@ function calculateAndDisplayBets() {
 }
 
 // Display bets
+// Display bets grouped by game
 function displayBets(bets) {
     const betSlipContainer = document.getElementById('betSlipContainer');
     betSlipContainer.innerHTML = '';
     
-    bets.forEach((bet, index) => {
-        const betCard = createBetSlipItem(bet, index + 1);
-        betSlipContainer.appendChild(betCard);
+    // Group bets by game (using matchup as key)
+    const gameGroups = {};
+    bets.forEach(bet => {
+        const matchup = `${bet.away_team} @ ${bet.home_team}`;
+        if (!gameGroups[matchup]) {
+            gameGroups[matchup] = {
+                matchup: matchup,
+                away_team: bet.away_team,
+                home_team: bet.home_team,
+                week: bet.week,
+                game_time: bet.game_time,
+                bets: []
+            };
+        }
+        gameGroups[matchup].bets.push(bet);
+    });
+    
+    // Create game cards
+    Object.values(gameGroups).forEach((game, gameIndex) => {
+        const gameCard = createGameCard(game, gameIndex + 1);
+        betSlipContainer.appendChild(gameCard);
     });
     
     betSlipContainer.style.display = 'flex';
     document.getElementById('noBetsMessage').style.display = 'none';
 }
 
-// Create bet slip item
+// Create game card with grouped bets
+function createGameCard(game, gameNumber) {
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    
+    // Calculate total for this game
+    const totalBetAmount = game.bets.reduce((sum, bet) => sum + bet.betAmount, 0);
+    const totalEV = game.bets.reduce((sum, bet) => sum + bet.expectedReturn, 0);
+    
+    card.innerHTML = `
+        <div class="game-card-header">
+            <div class="game-info">
+                <div class="game-matchup">${gameNumber}. ${game.matchup}</div>
+                <div class="game-time">Week ${game.week} • ${game.game_time}</div>
+            </div>
+            <div class="game-totals">
+                <div class="game-total-amount">$${totalBetAmount.toFixed(2)}</div>
+                <div class="game-total-label">Total Bet</div>
+            </div>
+        </div>
+        <div class="game-bets-container">
+            ${game.bets.map(bet => createBetRow(bet)).join('')}
+        </div>
+    `;
+    
+    return card;
+}
+
+// Create individual bet row within a game card
+function createBetRow(bet) {
+    const betTypeDisplay = bet.bet_type.charAt(0).toUpperCase() + bet.bet_type.slice(1);
+    const pickDisplay = formatPickDisplay(bet);
+    
+    return `
+        <div class="bet-row">
+            <div class="bet-row-pick">
+                <div class="bet-type-badge">${betTypeDisplay}</div>
+                <div class="bet-pick-text">${pickDisplay}</div>
+            </div>
+            <div class="bet-row-stats">
+                <div class="bet-stat">
+                    <span class="bet-stat-label">EV:</span>
+                    <span class="bet-stat-value success">+${bet.expected_value.toFixed(1)}%</span>
+                </div>
+                <div class="bet-stat">
+                    <span class="bet-stat-label">Win%:</span>
+                    <span class="bet-stat-value">${(bet.confidence * 100).toFixed(0)}%</span>
+                </div>
+                <div class="bet-stat">
+                    <span class="bet-stat-label">Kelly:</span>
+                    <span class="bet-stat-value">${bet.adjustedKelly.toFixed(2)}%</span>
+                </div>
+            </div>
+            <div class="bet-row-amount">
+                <div class="bet-amount-value">$${bet.betAmount.toFixed(2)}</div>
+                <div class="bet-expected-return">+$${bet.expectedReturn.toFixed(2)} EV</div>
+            </div>
+        </div>
+    `;
+}
+
+// Create bet slip item (legacy - keeping for compatibility)
 function createBetSlipItem(bet, number) {
     const card = document.createElement('div');
     card.className = 'bet-slip-item';
@@ -555,12 +635,31 @@ function updateSummary(bets, wasNormalized = false, originalTotal = 0) {
 
 // Export to CSV
 // Helper function to format pick display with spread
+// Helper function to format pick display with spread
 function formatPickDisplay(bet) {
     let pickDisplay = bet.pick;
+    
     if (bet.bet_type === 'spread' && bet.spread_line && bet.spread_line !== 'N/A') {
         const teamName = bet.pick.trim();
-        pickDisplay = `${teamName} ${bet.spread_line}`;
+        // Spread is from away team perspective
+        // If betting on away team, use spread as-is
+        // If betting on home team, flip the sign
+        let spreadValue = bet.spread_line;
+        
+        if (teamName === bet.home_team) {
+            // Home team gets opposite of spread line
+            const numericSpread = parseFloat(bet.spread_line);
+            if (!isNaN(numericSpread)) {
+                spreadValue = numericSpread > 0 ? `-${numericSpread}` : `+${Math.abs(numericSpread)}`;
+            }
+        }
+        
+        pickDisplay = `${teamName} ${spreadValue}`;
+    } else if (bet.bet_type === 'total' && bet.total_line && bet.total_line !== 'N/A') {
+        // For totals, show Over/Under with the line
+        pickDisplay = `${bet.pick} ${bet.total_line}`;
     }
+    
     return pickDisplay;
 }
 
