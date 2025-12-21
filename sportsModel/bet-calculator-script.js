@@ -641,16 +641,29 @@ function formatPickDisplay(bet) {
     
     if (bet.bet_type === 'spread' && bet.spread_line && bet.spread_line !== 'N/A') {
         const teamName = bet.pick.trim();
-        // Spread is from away team perspective
-        // If betting on away team, use spread as-is
-        // If betting on home team, flip the sign
         let spreadValue = bet.spread_line;
         
-        if (teamName === bet.home_team) {
-            // Home team gets opposite of spread line
-            const numericSpread = parseFloat(bet.spread_line);
-            if (!isNaN(numericSpread)) {
-                spreadValue = numericSpread > 0 ? `-${numericSpread}` : `+${Math.abs(numericSpread)}`;
+        // Parse the numeric value from spread_line (could be "-3", "+3", or "3")
+        const numericSpread = parseFloat(bet.spread_line);
+        
+        console.log('Spread formatting:', {
+            teamName,
+            away_team: bet.away_team,
+            home_team: bet.home_team,
+            spread_line: bet.spread_line,
+            numericSpread
+        });
+        
+        if (!isNaN(numericSpread)) {
+            if (teamName === bet.home_team) {
+                // Home team gets opposite of spread line
+                // If away is -3 (favored), home is +3 (underdog)
+                // If away is +3 (underdog), home is -3 (favored)
+                spreadValue = numericSpread > 0 ? numericSpread * -1 : Math.abs(numericSpread);
+                spreadValue = spreadValue > 0 ? `+${spreadValue}` : spreadValue.toString();
+            } else {
+                // Away team keeps the spread as-is, but ensure proper formatting
+                spreadValue = numericSpread > 0 ? `+${numericSpread}` : numericSpread.toString();
             }
         }
         
