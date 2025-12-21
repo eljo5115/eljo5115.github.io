@@ -641,33 +641,25 @@ function formatPickDisplay(bet) {
     
     if (bet.bet_type === 'spread' && bet.spread_line && bet.spread_line !== 'N/A') {
         const teamName = bet.pick.trim();
-        let spreadValue = bet.spread_line;
         
-        // Parse the numeric value from spread_line (could be "-3", "+3", or "3")
-        const numericSpread = parseFloat(bet.spread_line);
+        // Determine if this is the away team or home team
+        const isAwayTeam = bet.away_team && teamName.toLowerCase().includes(bet.away_team.toLowerCase());
         
-        console.log('Spread formatting:', {
-            teamName,
-            away_team: bet.away_team,
-            home_team: bet.home_team,
-            spread_line: bet.spread_line,
-            numericSpread
-        });
+        // Parse the spread value (spread is from away team's perspective)
+        let spreadNum = parseFloat(bet.spread_line);
         
-        if (!isNaN(numericSpread)) {
-            if (teamName === bet.home_team) {
-                // Home team gets opposite of spread line
-                // If away is -3 (favored), home is +3 (underdog)
-                // If away is +3 (underdog), home is -3 (favored)
-                spreadValue = numericSpread > 0 ? numericSpread * -1 : Math.abs(numericSpread);
-                spreadValue = spreadValue > 0 ? `+${spreadValue}` : spreadValue.toString();
-            } else {
-                // Away team keeps the spread as-is, but ensure proper formatting
-                spreadValue = numericSpread > 0 ? `+${numericSpread}` : numericSpread.toString();
+        if (!isNaN(spreadNum)) {
+            // If it's the home team, reverse the sign
+            if (!isAwayTeam) {
+                spreadNum = -spreadNum;
             }
+            
+            // Format with proper sign
+            const spreadDisplay = spreadNum > 0 ? `+${spreadNum}` : spreadNum.toString();
+            pickDisplay = `${teamName} ${spreadDisplay}`;
+        } else {
+            pickDisplay = `${teamName} ${bet.spread_line}`;
         }
-        
-        pickDisplay = `${teamName} ${spreadValue}`;
     } else if (bet.bet_type === 'total' && bet.total_line && bet.total_line !== 'N/A') {
         // For totals, show Over/Under with the line
         pickDisplay = `${bet.pick} ${bet.total_line}`;
