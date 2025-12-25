@@ -14,7 +14,7 @@ const NFL_TEAMS = [
 // State
 let currentWeek = 1;
 let currentSeason = CURRENT_SEASON;
-let currentPosition = 'qb';
+let currentPosition = 'qb-passing';
 let allPredictions = [];
 let filteredPredictions = [];
 
@@ -167,10 +167,26 @@ async function loadPredictions() {
             params.append('team', teamFilter);
         }
         
-        if (currentPosition === 'qb') {
-            apiUrl = `${API_BASE_URL}/api/props/qb/passing-yards/week/${currentWeek}?${params}`;
+        // Map position to API endpoint
+        switch(currentPosition) {
+            case 'qb-passing':
+                apiUrl = `${API_BASE_URL}/api/props/qb/passing-yards/week/${currentWeek}?${params}`;
+                break;
+            case 'rb-rushing':
+                apiUrl = `${API_BASE_URL}/api/props/rb/rushing-yards/week/${currentWeek}?${params}`;
+                break;
+            case 'rb-receiving':
+                apiUrl = `${API_BASE_URL}/api/props/rb/receiving-yards/week/${currentWeek}?${params}`;
+                break;
+            case 'wr-receiving':
+                apiUrl = `${API_BASE_URL}/api/props/wr/receiving-yards/week/${currentWeek}?${params}`;
+                break;
+            case 'anytime-td':
+                apiUrl = `${API_BASE_URL}/api/props/anytime-td/week/${currentWeek}?${params}`;
+                break;
+            default:
+                throw new Error('Invalid position selected');
         }
-        // Add more positions here as they become available
         
         console.log('Fetching from:', apiUrl);
         
@@ -260,15 +276,37 @@ function displayPredictions(predictions) {
 }
 
 // Create prop card
+// Get display information for different stat types
+function getStatDisplayInfo(stat) {
+    const statMap = {
+        'passing_yards': { label: 'Passing Yards', unit: 'yards' },
+        'rushing_yards': { label: 'Rushing Yards', unit: 'yards' },
+        'receiving_yards': { label: 'Receiving Yards', unit: 'yards' },
+        'anytime_td': { label: 'TD Probability', unit: '%' }
+    };
+    
+    return statMap[stat] || { label: stat.replace('_', ' '), unit: '' };
+}
+
 function createPropCard(pred) {
     const card = document.createElement('div');
     card.className = 'prop-card';
     
-    const statDisplay = pred.stat.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const statInfo = getStatDisplayInfo(pred.stat);
     const confidenceClass = pred.confidence.toLowerCase();
     
     // Get strongest recommendation
     const strongestPlay = getStrongestPlay(pred.recommended_lines);
+    
+    // Format prediction value based on stat type
+    let predictionDisplay;
+    if (pred.stat === 'anytime_td') {
+        // For TD probability, show as percentage
+        predictionDisplay = `${(pred.prediction * 100).toFixed(1)}%`;
+    } else {
+        // For yards, show with 1 decimal
+        predictionDisplay = `${pred.prediction.toFixed(1)} ${statInfo.unit}`;
+    }
     
     card.innerHTML = `
         <div class="prop-card-header">
@@ -277,7 +315,7 @@ function createPropCard(pred) {
                 <div class="player-meta">
                     <span class="meta-badge">${pred.position}</span>
                     <span class="meta-badge">${pred.team}</span>
-                    <span class="meta-badge">${statDisplay}</span>
+                    <span class="meta-badge">${statInfo.label}</span>
                 </div>
             </div>
             <div class="matchup-info">
@@ -288,14 +326,14 @@ function createPropCard(pred) {
         
         <div class="prediction-display">
             <div class="prediction-label">Model Prediction</div>
-            <div class="prediction-value">${pred.prediction.toFixed(1)}</div>
+            <div class="prediction-value">${predictionDisplay}</div>
             <div class="prediction-stat">MAE: ${pred.model_mae.toFixed(2)} | R²: ${pred.model_r2.toFixed(3)}</div>
         </div>
         
         <div class="recommended-lines">
             <div class="lines-header">Recommended Lines</div>
             <div class="lines-grid">
-                ${createLineCards(pred.recommended_lines, pred.model_mae)}
+                ${createLineCards(pred.recommended_lines, pred.model_mae, pred.stat)}
             </div>
         </div>
     `;
@@ -319,16 +357,26 @@ function getStrongestPlay(lines) {
 }
 
 // Create line cards
-function createLineCards(lines, mae) {
+function createLineCards(lines, mae, stat = 'passing_yards') {
     return Object.entries(lines).map(([line, details]) => {
         const recClass = details.recommendation.toLowerCase().replace(' ', '-');
         const edgeSign = details.edge > 0 ? '+' : '';
         const edgeClass = details.edge > 0 ? 'positive' : 'negative';
         
+        // Format line value based on stat type
+        let lineDisplay;
+        if (stat === 'anytime_td') {
+            // For TD props, show as odds or percentage
+            lineDisplay = details.line;
+        } else {
+            // For yards, show with decimal
+            lineDisplay = details.line;
+        }
+        
         return `
             <div class="line-card ${recClass}">
                 <div class="line-header">
-                    <div class="line-value">${details.line}</div>
+                    <div class="line-value">${lineDisplay}</div>
                     <div class="line-recommendation ${recClass}">${details.recommendation}</div>
                 </div>
                 <div class="line-stats">
@@ -357,7 +405,21 @@ function updateSummary(summary) {
     summaryBar.style.display = 'flex';
     
     document.getElementById('totalPlayers').textContent = filteredPredictions.length;
-    document.getElementById('avgPrediction').textContent = summary.average_prediction?.toFixed(1) || '0';
+    
+    // Format average prediction based on stat type
+    let avgDisplay;
+    if (summary.average_prediction !== undefined && summary.average_prediction !== null) {
+        // Check if we're dealing with TD probability (values between 0-1)
+        if (filteredPredictions.length > 0 && filteredPredictions[0].stat === 'anytime_td') {
+            avgDisplay = `${(summary.average_prediction * 100).toFixed(1)}%`;
+        } else {
+            avgDisplay = summary.average_prediction.toFixed(1);
+        }
+    } else {
+        avgDisplay = '0';
+    }
+    
+    document.getElementById('avgPrediction').textContent = avgDisplay;
     document.getElementById('highConfidence').textContent = summary.high_confidence_count || '0';
     
     // Count strong plays (strength >= 70)

@@ -361,6 +361,9 @@ async function loadBets() {
             allBets = generateMockData();
         }
         
+        // Auto-select all games when loading
+        autoSelectAllGames();
+        
         calculateAndDisplayBets();
         loadingSpinner.style.display = 'none';
         
@@ -368,8 +371,26 @@ async function loadBets() {
         console.error('Failed to load bets:', error);
         loadingSpinner.style.display = 'none';
         allBets = generateMockData();
+        
+        // Auto-select all games when loading
+        autoSelectAllGames();
+        
         calculateAndDisplayBets();
     }
+}
+
+// Auto-select all games from allBets
+function autoSelectAllGames() {
+    // Clear previous selections when loading new week
+    selectedGames.clear();
+    
+    // Add all unique game matchups to selectedGames
+    allBets.forEach(bet => {
+        const matchup = `${bet.away_team} @ ${bet.home_team}`;
+        selectedGames.add(matchup);
+    });
+    
+    console.log(`Auto-selected ${selectedGames.size} games:`, [...selectedGames]);
 }
 
 // Transform API response
@@ -516,8 +537,6 @@ function displayBets(bets) {
                 game_time: bet.game_time,
                 bets: []
             };
-            // Auto-select new games
-            selectedGames.add(matchup);
         }
         gameGroups[matchup].bets.push(bet);
     });
