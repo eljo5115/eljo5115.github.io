@@ -19,6 +19,7 @@
                 <a href="ev-bets.html" class="nav-link">+EV Bets</a>
                 <a href="parlays.html" class="nav-link">Parlays</a>
                 <a href="bet-calculator.html" class="nav-link active">Bet Calculator</a>
+                <a href="props.html" class="nav-link">Player Props</a>
             </nav>
             <div class="api-status" id="apiStatus">
                 <span class="status-indicator"></span>
@@ -112,7 +113,13 @@
 
         <!-- Bet Slip -->
         <section class="bet-slip-section">
-            <h2>📋 Your Betting Slip - Week <span id="currentWeekDisplay">--</span></h2>
+            <div class="bet-slip-header">
+                <h2>📋 Your Betting Slip - Week <span id="currentWeekDisplay">--</span></h2>
+                <div class="game-selection-controls">
+                    <button id="selectAllGames" class="btn btn-secondary btn-sm">✓ Select All</button>
+                    <button id="deselectAllGames" class="btn btn-secondary btn-sm">✗ Deselect All</button>
+                </div>
+            </div>
             <div id="betSlipContainer" class="bet-slip-list">
                 <!-- Bet slip items will be inserted here -->
             </div>

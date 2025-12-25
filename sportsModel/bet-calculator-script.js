@@ -11,6 +11,7 @@ let maxAllocation = 100; // Maximum % of bankroll to allocate
 let normalizeEnabled = true; // Normalization enabled by default
 let allBets = [];
 let availableWeeks = [];
+let selectedGames = new Set(); // Track which games are selected for betting
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
@@ -288,6 +289,35 @@ function setupEventListeners() {
     document.getElementById('exportCSV').addEventListener('click', exportToCSV);
     document.getElementById('printSlip').addEventListener('click', printSlip);
     document.getElementById('copyToClipboard').addEventListener('click', copyToClipboard);
+    
+    // Game selection controls
+    document.getElementById('selectAllGames').addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.game-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = true;
+            const gameId = checkbox.dataset.gameId;
+            selectedGames.add(gameId);
+            const gameCard = checkbox.closest('.game-card');
+            if (gameCard) {
+                gameCard.classList.remove('game-deselected');
+            }
+        });
+        calculateAndDisplayBets();
+    });
+    
+    document.getElementById('deselectAllGames').addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.game-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+            const gameId = checkbox.dataset.gameId;
+            selectedGames.delete(gameId);
+            const gameCard = checkbox.closest('.game-card');
+            if (gameCard) {
+                gameCard.classList.add('game-deselected');
+            }
+        });
+        calculateAndDisplayBets();
+    });
 }
 
 // Update bankroll display
@@ -382,11 +412,36 @@ function calculateAndDisplayBets() {
         return;
     }
     
+    // Filter bets by selected games
+    const selectedBets = allBets.filter(bet => {
+        const matchup = `${bet.away_team} @ ${bet.home_team}`;
+        return selectedGames.has(matchup);
+    });
+    
+    // If no games are selected, show a message
+    if (selectedBets.length === 0) {
+        document.getElementById('betSlipContainer').innerHTML = `
+            <div class="no-selection-message">
+                <div class="no-selection-icon">⬜</div>
+                <h3>No Games Selected</h3>
+                <p>Select one or more games above to calculate bet amounts.</p>
+            </div>
+        `;
+        document.getElementById('betSlipContainer').style.display = 'flex';
+        // Update summary with zero values
+        document.getElementById('totalBankroll').textContent = `$${bankroll.toLocaleString()}`;
+        document.getElementById('totalWager').textContent = `$0 (0.0%)`;
+        document.getElementById('totalBets').textContent = '0';
+        document.getElementById('expectedReturn').textContent = '$0';
+        document.getElementById('exportSection').style.display = 'none';
+        return;
+    }
+    
     // Sort by EV (highest first)
-    allBets.sort((a, b) => b.expected_value - a.expected_value);
+    selectedBets.sort((a, b) => b.expected_value - a.expected_value);
     
     // Step 1: Apply kelly mode to get raw kelly percentages
-    const rawKellyBets = allBets.map(bet => {
+    const rawKellyBets = selectedBets.map(bet => {
         let kellyPct = bet.kelly_percentage;
         
         // Apply kelly mode ONLY if normalization is OFF
@@ -461,6 +516,8 @@ function displayBets(bets) {
                 game_time: bet.game_time,
                 bets: []
             };
+            // Auto-select new games
+            selectedGames.add(matchup);
         }
         gameGroups[matchup].bets.push(bet);
     });
@@ -479,13 +536,25 @@ function displayBets(bets) {
 function createGameCard(game, gameNumber) {
     const card = document.createElement('div');
     card.className = 'game-card';
+    card.dataset.gameId = game.matchup;
     
     // Calculate total for this game
     const totalBetAmount = game.bets.reduce((sum, bet) => sum + bet.betAmount, 0);
     const totalEV = game.bets.reduce((sum, bet) => sum + bet.expectedReturn, 0);
     
+    // Check if this game is selected (default to true for new games)
+    const isSelected = selectedGames.has(game.matchup);
+    
     card.innerHTML = `
         <div class="game-card-header">
+            <div class="game-checkbox-container">
+                <input type="checkbox" 
+                       class="game-checkbox" 
+                       id="game-${gameNumber}" 
+                       data-game-id="${game.matchup}"
+                       ${isSelected ? 'checked' : ''}>
+                <label for="game-${gameNumber}" class="game-checkbox-label"></label>
+            </div>
             <div class="game-info">
                 <div class="game-matchup">${gameNumber}. ${game.matchup}</div>
                 <div class="game-time">Week ${game.week} • ${game.game_time}</div>
@@ -499,6 +568,29 @@ function createGameCard(game, gameNumber) {
             ${game.bets.map(bet => createBetRow(bet)).join('')}
         </div>
     `;
+    
+    // Add event listener for checkbox
+    setTimeout(() => {
+        const checkbox = card.querySelector('.game-checkbox');
+        if (checkbox) {
+            checkbox.addEventListener('change', (e) => {
+                const gameId = e.target.dataset.gameId;
+                if (e.target.checked) {
+                    selectedGames.add(gameId);
+                    card.classList.remove('game-deselected');
+                } else {
+                    selectedGames.delete(gameId);
+                    card.classList.add('game-deselected');
+                }
+                calculateAndDisplayBets();
+            });
+        }
+    }, 0);
+    
+    // Apply deselected class if not selected
+    if (!isSelected) {
+        card.classList.add('game-deselected');
+    }
     
     return card;
 }

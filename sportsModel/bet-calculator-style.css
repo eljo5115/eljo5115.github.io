@@ -259,6 +259,31 @@
     margin: 3rem 0;
 }
 
+.bet-slip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.bet-slip-header h2 {
+    color: var(--text-primary);
+    font-size: 2rem;
+    margin: 0;
+}
+
+.game-selection-controls {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
 .bet-slip-section h2 {
     color: var(--text-primary);
     font-size: 2rem;
@@ -286,6 +311,18 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* Deselected game state */
+.game-card.game-deselected {
+    opacity: 0.5;
+    background: var(--surface);
+    border-color: #2a2a3a;
+}
+
+.game-card.game-deselected:hover {
+    opacity: 0.7;
+    border-color: var(--border);
+}
+
 .game-card-header {
     display: flex;
     justify-content: space-between;
@@ -293,6 +330,56 @@
     margin-bottom: 1rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--border);
+    gap: 1rem;
+}
+
+/* Checkbox styling */
+.game-checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 0.25rem;
+}
+
+.game-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.game-checkbox:hover {
+    border-color: var(--accent-color);
+}
+
+.game-checkbox:checked {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.game-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.game-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(251, 79, 20, 0.2);
+}
+
+.game-checkbox-label {
+    cursor: pointer;
 }
 
 .game-info {
@@ -669,10 +756,47 @@
     font-size: 1.1rem;
 }
 
+/* No selection message */
+.no-selection-message {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.no-selection-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.no-selection-message h3 {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.no-selection-message p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .bankroll-input-group {
         grid-template-columns: 1fr;
+    }
+    
+    .bet-slip-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .game-selection-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .btn-sm {
+        flex: 1;
     }
     
     /* Game Card Responsive */

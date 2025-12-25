@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Props - NFL Betting Model</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="props-style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>🏈 NFL Betting Model</h1>
+                <p class="subtitle">Powered by DozenCrust Analytics API</p>
+            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">All Predictions</a>
+                <a href="ev-bets.html" class="nav-link">+EV Bets</a>
+                <a href="parlays.html" class="nav-link">Parlays</a>
+                <a href="bet-calculator.html" class="nav-link">Bet Calculator</a>
+                <a href="props.html" class="nav-link active">Player Props</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- API Status -->
+        <div class="status-bar">
+            <div class="status-indicator"></div>
+            <span class="status-text">Connecting to API...</span>
+        </div>
+
+        <!-- Page Title & Info -->
+        <section class="page-header">
+            <h2>Player Props Predictions</h2>
+            <p class="page-description">Machine learning predictions for player statistics with recommended betting lines</p>
+        </section>
+
+        <!-- Filters & Search -->
+        <section class="filters-section">
+            <div class="filters-card">
+                <div class="filters-row">
+                    <!-- Week Selector -->
+                    <div class="filter-group">
+                        <label for="weekSelect">Week</label>
+                        <div class="week-selector">
+                            <button id="prevWeek" class="week-btn">←</button>
+                            <select id="weekSelect" class="week-select">
+                                <!-- Populated by JS -->
+                            </select>
+                            <button id="nextWeek" class="week-btn">→</button>
+                        </div>
+                    </div>
+
+                    <!-- Season Selector -->
+                    <div class="filter-group">
+                        <label for="seasonSelect">Season</label>
+                        <select id="seasonSelect" class="filter-select">
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+
+                    <!-- Position Filter -->
+                    <div class="filter-group">
+                        <label for="positionSelect">Position</label>
+                        <select id="positionSelect" class="filter-select">
+                            <option value="qb">QB - Passing Yards</option>
+                            <!-- Future options -->
+                            <!-- <option value="rb-rushing">RB - Rushing Yards</option>
+                            <option value="rb-receiving">RB - Receiving Yards</option>
+                            <option value="wr">WR - Receiving Yards</option>
+                            <option value="te">TE - Receiving Yards</option> -->
+                        </select>
+                    </div>
+
+                    <!-- Team Filter -->
+                    <div class="filter-group">
+                        <label for="teamFilter">Team</label>
+                        <select id="teamFilter" class="filter-select">
+                            <option value="">All Teams</option>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+
+                    <!-- Player Search -->
+                    <div class="filter-group search-group">
+                        <label for="playerSearch">Search Player</label>
+                        <input 
+                            type="text" 
+                            id="playerSearch" 
+                            class="search-input" 
+                            placeholder="Enter player name..."
+                        >
+                    </div>
+
+                    <!-- Confidence Filter -->
+                    <div class="filter-group">
+                        <label for="confidenceFilter">Min Confidence</label>
+                        <select id="confidenceFilter" class="filter-select">
+                            <option value="">All</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filters-actions">
+                    <button id="clearFilters" class="btn-secondary">Clear Filters</button>
+                    <button id="applyFilters" class="btn-primary">Apply Filters</button>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="summary-bar" id="summaryBar" style="display: none;">
+                <div class="summary-stat">
+                    <span class="summary-label">Total Players:</span>
+                    <span class="summary-value" id="totalPlayers">0</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-label">Avg Prediction:</span>
+                    <span class="summary-value" id="avgPrediction">0</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-label">High Confidence:</span>
+                    <span class="summary-value" id="highConfidence">0</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-label">Strong Plays:</span>
+                    <span class="summary-value success" id="strongPlays">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Props Display -->
+        <section class="props-section">
+            <div id="propsContainer" class="props-container">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- No Data Message -->
+            <div id="noPropsMessage" class="no-data-message" style="display: none;">
+                <div class="no-data-icon">📊</div>
+                <h3>No Predictions Available</h3>
+                <p>Try adjusting your filters or selecting a different week</p>
+            </div>
+
+            <!-- Loading Message -->
+            <div id="loadingMessage" class="loading-message">
+                <div class="spinner"></div>
+                <p>Loading predictions...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="props-script.js"></script>
+</body>
+</html>
