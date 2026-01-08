@@ -2,6 +2,23 @@
 const API_BASE_URL = 'https://api.dozencrust.com/nfl';
 const CURRENT_SEASON = 2025;
 const WEEKS_IN_SEASON = 18;
+const TOTAL_WEEKS = 22; // 18 regular season + 4 playoff weeks
+
+// Playoff week mapping
+const PLAYOFF_WEEKS = {
+    19: 'Wild Card',
+    20: 'Divisional',
+    21: 'Conference',
+    22: 'Super Bowl'
+};
+
+// Get week display name
+function getWeekDisplayName(weekNum) {
+    if (weekNum <= WEEKS_IN_SEASON) {
+        return `Week ${weekNum}`;
+    }
+    return PLAYOFF_WEEKS[weekNum] || `Week ${weekNum}`;
+}
 
 // State
 let currentWeek = 1;
@@ -59,10 +76,19 @@ async function checkAPIHealth() {
 function initializeWeekSelector() {
     const weekSelect = document.getElementById('weekSelect');
     
+    // Regular season weeks
     for (let i = 1; i <= WEEKS_IN_SEASON; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.textContent = `Week ${i}`;
+        weekSelect.appendChild(option);
+    }
+    
+    // Playoff weeks
+    for (let i = 19; i <= TOTAL_WEEKS; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = PLAYOFF_WEEKS[i];
         weekSelect.appendChild(option);
     }
     
@@ -78,8 +104,8 @@ function getCurrentWeek() {
     const weeksSinceStart = Math.floor((now - seasonStart) / (7 * 24 * 60 * 60 * 1000));
     const calculatedWeek = weeksSinceStart + 1;
     
-    // Ensure week is within valid range (1-18 for regular season)
-    return Math.max(1, Math.min(WEEKS_IN_SEASON, calculatedWeek));
+    // Ensure week is within valid range (1-22 including playoffs)
+    return Math.max(1, Math.min(TOTAL_WEEKS, calculatedWeek));
 }
 
 // Determine the current week by checking API for available data
@@ -95,7 +121,7 @@ async function determineCurrentWeek() {
             calculatedWeek + 1, 
             calculatedWeek - 1,
             calculatedWeek + 2
-        ].filter(w => w >= 1 && w <= WEEKS_IN_SEASON);
+        ].filter(w => w >= 1 && w <= TOTAL_WEEKS);
         
         availableWeeks = [];
         
@@ -153,7 +179,7 @@ async function determineCurrentWeek() {
             console.log(`Selected week ${currentWeek} with ${targetWeek.gameCount} parlays (calculated week was ${calculatedWeek})`);
         } else {
             // Fallback to calculated week + 1 if no data found (prefer upcoming week)
-            currentWeek = Math.min(calculatedWeek + 1, WEEKS_IN_SEASON);
+            currentWeek = Math.min(calculatedWeek + 1, TOTAL_WEEKS);
             console.log(`No data found, using calculated week + 1: ${currentWeek}`);
         }
         
@@ -185,7 +211,7 @@ function setupEventListeners() {
     });
     
     document.getElementById('nextWeek').addEventListener('click', () => {
-        if (currentWeek < WEEKS_IN_SEASON) {
+        if (currentWeek < TOTAL_WEEKS) {
             currentWeek++;
             document.getElementById('weekSelect').value = currentWeek;
             loadParlays();

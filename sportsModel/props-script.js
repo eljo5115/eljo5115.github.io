@@ -2,6 +2,23 @@
 const API_BASE_URL = 'https://api.dozencrust.com/nfl';
 const CURRENT_SEASON = 2025;
 const WEEKS_IN_SEASON = 18;
+const TOTAL_WEEKS = 22; // 18 regular season + 4 playoff weeks
+
+// Playoff week mapping
+const PLAYOFF_WEEKS = {
+    19: 'Wild Card',
+    20: 'Divisional',
+    21: 'Conference',
+    22: 'Super Bowl'
+};
+
+// Get week display name
+function getWeekDisplayName(weekNum) {
+    if (weekNum <= WEEKS_IN_SEASON) {
+        return `Week ${weekNum}`;
+    }
+    return PLAYOFF_WEEKS[weekNum] || `Week ${weekNum}`;
+}
 
 // NFL Teams
 const NFL_TEAMS = [
@@ -32,10 +49,19 @@ function initializeWeekSelector() {
     const weekSelect = document.getElementById('weekSelect');
     weekSelect.innerHTML = '';
     
+    // Regular season weeks
     for (let i = 1; i <= WEEKS_IN_SEASON; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.textContent = `Week ${i}`;
+        weekSelect.appendChild(option);
+    }
+    
+    // Playoff weeks
+    for (let i = 19; i <= TOTAL_WEEKS; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = PLAYOFF_WEEKS[i];
         weekSelect.appendChild(option);
     }
     
@@ -76,7 +102,7 @@ function setupEventListeners() {
     });
     
     document.getElementById('nextWeek').addEventListener('click', () => {
-        if (currentWeek < WEEKS_IN_SEASON) {
+        if (currentWeek < TOTAL_WEEKS) {
             currentWeek++;
             document.getElementById('weekSelect').value = currentWeek;
         }
@@ -137,7 +163,7 @@ function determineCurrentWeek() {
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     const calculatedWeek = Math.floor(diffDays / 7) + 1;
     
-    currentWeek = Math.max(1, Math.min(calculatedWeek, WEEKS_IN_SEASON));
+    currentWeek = Math.max(1, Math.min(calculatedWeek, TOTAL_WEEKS));
     document.getElementById('weekSelect').value = currentWeek;
     
     // Auto-load on init
