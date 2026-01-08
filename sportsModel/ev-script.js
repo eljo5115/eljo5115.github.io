@@ -302,17 +302,19 @@ function transformAPIResponse(data) {
                 away_team: item.away_team,
                 home_team: item.home_team,
                 game_time: item.gameday || 'TBD',
-                pick: bet.recommendation.replace('BET: ', '').replace('LEAN: ', ''),
+                pick: bet.recommendation.replace('BET: ', '').replace('LEAN: ', '').replace('STRONG BET: ', ''),
                 bet_type: bet.bet_type,
                 expected_value: bet.expected_value,
                 confidence: bet.probability / 100, // Convert to decimal
+                confidence_level: bet.confidence, // API confidence level (high/moderate/low)
                 odds: '-110', // Standard odds (API doesn't provide actual market odds)
                 market_odds: '-110', // Standard odds
                 fair_odds: calculateFairOdds(bet.probability),
                 edge: bet.expected_value,
                 roi: bet.expected_value * 1.5,
-                spread_line: item.spread_line || 'N/A',
-                total_line: item.total_line || 'N/A',
+                spread_line: item.spread_line,
+                total_line: item.total_line,
+                pick_spread: bet.pick_spread, // The actual spread for the pick from API
                 recommendation: bet.recommendation,
                 kelly_percentage: bet.kelly_percentage
             });
@@ -441,37 +443,25 @@ function createEVBetCard(bet) {
     let betDetail = '';
     
     if (betTypeDisplay === 'Spread') {
-        // For spread bets - spread is from away team's perspective
-        let spreadValue = bet.spread_line;
+        // For spread bets - use pick_spread from API (already correctly signed)
+        const pickSpread = bet.pick_spread;
         
-        if (spreadValue !== 'N/A' && bet.recommendation) {
+        if (pickSpread !== null && pickSpread !== undefined && bet.recommendation) {
             // Extract team name from recommendation
-            const teamMatch = bet.recommendation.match(/(?:BET:|LEAN:)?\s*(.+?)\s+to cover/i);
+            const teamMatch = bet.recommendation.match(/(?:STRONG BET:|BET:|LEAN:)?\s*(.+?)\s+to cover/i);
             if (teamMatch) {
                 const teamName = teamMatch[1].trim();
-                
-                // Determine if this is the away team or home team
-                const isAwayTeam = bet.away_team && teamName.toLowerCase().includes(bet.away_team.toLowerCase());
-                
-                // Parse the spread value
-                let spreadNum = parseFloat(spreadValue);
-                
-                // If it's the home team, reverse the sign
-                if (!isAwayTeam && !isNaN(spreadNum)) {
-                    spreadNum = -spreadNum;
-                }
-                
                 // Format with proper sign
-                const spreadDisplay = spreadNum > 0 ? `+${spreadNum}` : spreadNum.toString();
+                const spreadDisplay = pickSpread > 0 ? `+${pickSpread}` : pickSpread.toString();
                 pickDisplay = `${teamName} ${spreadDisplay}`;
                 betDetail = `Point Spread: ${spreadDisplay}`;
             } else {
                 pickDisplay = bet.recommendation;
-                betDetail = `Point Spread: ${spreadValue}`;
+                betDetail = `Point Spread: ${pickSpread}`;
             }
         } else {
             pickDisplay = bet.recommendation || bet.pick || 'Spread Bet';
-            betDetail = `Point Spread: ${spreadValue}`;
+            betDetail = `Point Spread: ${bet.spread_line || 'N/A'}`;
         }
     } else if (betTypeDisplay === 'Total') {
         // For over/under bets
