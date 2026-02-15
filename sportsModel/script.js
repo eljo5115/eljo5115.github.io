@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'https://api.dozencrust.com/nfl';
+const API_BASE_URL = 'https://api.dozencrust.com/sports/nfl';
 const CURRENT_SEASON = 2025;
 const WEEKS_IN_SEASON = 18;
 const TOTAL_WEEKS = 22; // 18 regular season + 4 playoff weeks
