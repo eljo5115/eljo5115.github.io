@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Portfolio Holdings Logic ---
     async function fetchPortfolioHoldings() {
-        const apiUrl = 'https://api.dozencrust.com/api/portfolio';
+        const apiUrl = 'https://api.dozencrust.com/portfolio/holdings';
         const tableBody = document.querySelector('#holdings tbody');
 
         if (!tableBody) {
